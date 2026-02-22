@@ -1,0 +1,2 @@
+# Chirashi
+Unofficial Crunchyroll API.
