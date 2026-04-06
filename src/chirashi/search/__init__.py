@@ -2,10 +2,13 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from chirashi.base_api_endpoint import BaseEndpoint
 from chirashi.search.models import Search as SearchModel
+
+if TYPE_CHECKING:
+    from chirashi.search.models import Item
 
 
 class Search(BaseEndpoint[SearchModel]):
@@ -87,3 +90,41 @@ class Search(BaseEndpoint[SearchModel]):
             locale=locale,
         )
         return self.parse(data)
+
+    @staticmethod
+    def _extract_type(
+        input_data: SearchModel,
+        content_type: str,
+    ) -> list[Item]:
+        """Extract items matching a content type from search results."""
+        for datum in input_data.data:
+            if datum.type == content_type:
+                return datum.items
+        # If the search has no results at all data will be an empty array, it will not
+        # even include the categories.
+        return []
+
+    @staticmethod
+    def extract_music(input_data: SearchModel) -> list[Item]:
+        """Extract music items from search results."""
+        return Search._extract_type(input_data, "music")
+
+    @staticmethod
+    def extract_series(input_data: SearchModel) -> list[Item]:
+        """Extract series items from search results."""
+        return Search._extract_type(input_data, "series")
+
+    @staticmethod
+    def extract_episodes(input_data: SearchModel) -> list[Item]:
+        """Extract episode items from search results."""
+        return Search._extract_type(input_data, "episode")
+
+    @staticmethod
+    def extract_top_results(input_data: SearchModel) -> list[Item]:
+        """Extract top results items from search results."""
+        return Search._extract_type(input_data, "top_results")
+
+    @staticmethod
+    def extract_movie_listings(input_data: SearchModel) -> list[Item]:
+        """Extract movie listing items from search results."""
+        return Search._extract_type(input_data, "movie_listing")

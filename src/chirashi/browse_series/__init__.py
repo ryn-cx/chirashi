@@ -88,12 +88,12 @@ class BrowseSeries(BaseEndpoint[BrowseSeriesModel]):
 
     def get_since_datetime(
         self,
+        end_datetime: datetime | None = None,
         *,
         n: int = 36,
         locale: str = "en-US",
         sort_by: str = "newly_added",
         ratings: str = "true",
-        end_datetime: datetime | None = None,
     ) -> list[BrowseSeriesModel]:
         """Gets all browse pages until end_date is reached (inclusive).
 

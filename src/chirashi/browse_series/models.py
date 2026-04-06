@@ -8,9 +8,9 @@ from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
 
 class ExtendedMaturityRating(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    level: str
-    rating: str
-    system: str
+    level: str | None = None
+    rating: str | None = None
+    system: str | None = None
 
 
 class LanguagePresentation(BaseModel):
@@ -130,19 +130,10 @@ class Rating(BaseModel):
     rating: str | None = None
 
 
-class PromoImageItem(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-    height: int
-    source: str
-    type: str
-    width: int
-
-
 class Images1(BaseModel):
     model_config = ConfigDict(extra="forbid")
     poster_tall: list[list[PosterTallItem]]
     poster_wide: list[list[PosterWideItem]]
-    promo_image: list[list[PromoImageItem]] | None = None
 
 
 class Datum(BaseModel):

@@ -6,6 +6,30 @@ from typing import Any
 from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
 
 
+class Availability(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    end_date: AwareDatetime = Field(..., alias="endDate")
+    start_date: AwareDatetime = Field(..., alias="startDate")
+
+
+class Artist(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    id: str
+    name: str
+    slug: str
+
+
+class Genre(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    display_value: str = Field(..., alias="displayValue")
+    id: str
+
+
+class SearchMetadata(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    score: float
+
+
 class Thumbnail(BaseModel):
     model_config = ConfigDict(extra="forbid")
     height: int
@@ -45,24 +69,6 @@ class Images(BaseModel):
     poster_wide: list[list[PosterWideItem]] | None = None
 
 
-class Artist(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-    id: str
-    name: str
-    slug: str
-
-
-class SearchMetadata(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-    score: float
-
-
-class Genre(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-    display_value: str = Field(..., alias="displayValue")
-    id: str
-
-
 class MainArtistItem(BaseModel):
     model_config = ConfigDict(extra="forbid")
     connector: str
@@ -78,10 +84,12 @@ class Artists(BaseModel):
     main_artist: list[MainArtistItem] = Field(..., alias="MainArtist")
 
 
-class Availability(BaseModel):
+class Award(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    end_date: AwareDatetime = Field(..., alias="endDate")
-    start_date: AwareDatetime = Field(..., alias="startDate")
+    icon_url: str
+    is_current_award: bool
+    is_winner: bool
+    text: str
 
 
 class ExtendedMaturityRating(BaseModel):
@@ -101,7 +109,8 @@ class SeriesMetadata(BaseModel):
     model_config = ConfigDict(extra="forbid")
     audio_locales: list[str]
     availability_notes: str
-    content_descriptors: list[str]
+    awards: list[Award] | None = None
+    content_descriptors: list[str] | None = None
     episode_count: int
     extended_description: str
     extended_maturity_rating: ExtendedMaturityRating
@@ -115,7 +124,21 @@ class SeriesMetadata(BaseModel):
     season_count: int
     series_launch_year: int
     subtitle_locales: list[str]
-    tenant_categories: list[str] | None = None
+    tenant_categories: list[str]
+
+
+class Field1s(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    displayed: str
+    percentage: int
+    unit: str
+
+
+class Field2s(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    displayed: str
+    percentage: int
+    unit: str
 
 
 class Field3s(BaseModel):
@@ -139,20 +162,6 @@ class Field5s(BaseModel):
     unit: str
 
 
-class Field1s(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-    displayed: str
-    percentage: int
-    unit: str
-
-
-class Field2s(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-    displayed: str
-    percentage: int
-    unit: str
-
-
 class Up(BaseModel):
     model_config = ConfigDict(extra="forbid")
     displayed: str
@@ -167,13 +176,13 @@ class Down(BaseModel):
 
 class Rating(BaseModel):
     model_config = ConfigDict(extra="forbid")
+    total: int
+    field_1s: Field1s | None = Field(None, alias="1s")
+    field_2s: Field2s | None = Field(None, alias="2s")
     field_3s: Field3s | None = Field(None, alias="3s")
     field_4s: Field4s | None = Field(None, alias="4s")
     field_5s: Field5s | None = Field(None, alias="5s")
     average: str | None = None
-    total: int
-    field_1s: Field1s | None = Field(None, alias="1s")
-    field_2s: Field2s | None = Field(None, alias="2s")
     up: Up | None = None
     down: Down | None = None
 
@@ -238,82 +247,55 @@ class EpisodeMetadata(BaseModel):
     series_slug_title: str
     series_title: str
     subtitle_locales: list[str]
-    tenant_categories: list[str] | None = None
+    tenant_categories: list[str]
     upload_date: AwareDatetime
     versions: list[Version]
 
 
-class MovieListingMetadata(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-    ad_breaks: list[AdBreak]
-    availability_notes: str
-    availability_status: str
-    available_date: None
-    available_offline: bool
-    content_descriptors: list[str]
-    duration_ms: int
-    extended_description: str
-    extended_maturity_rating: ExtendedMaturityRating
-    first_movie_id: str
-    free_available_date: AwareDatetime
-    is_dubbed: bool
-    is_mature: bool
-    is_premium_only: bool
-    is_subbed: bool
-    mature_blocked: bool
-    maturity_ratings: list[str]
-    movie_release_year: int
-    premium_available_date: AwareDatetime
-    premium_date: None
-    subtitle_locales: list[str]
-    tenant_categories: list[str]
-
-
 class Item(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    created_at: str | None = Field(None, alias="createdAt")
-    duration_ms: int | None = Field(None, alias="durationMs")
-    id: str
-    is_premium_only: bool | None = Field(None, alias="isPremiumOnly")
-    ready_to_publish: bool | None = Field(None, alias="readyToPublish")
-    images: Images
-    original_release: AwareDatetime | None = Field(None, alias="originalRelease")
-    new: bool
-    artist: Artist | None = None
-    anime_ids: list[str] | None = Field(None, alias="animeIds")
-    search_metadata: SearchMetadata
     is_public: bool | None = Field(None, alias="isPublic")
-    mature_blocked: bool | None = Field(None, alias="matureBlocked")
-    streams_link: str | None = None
-    licensor: str | None = None
-    maturity_ratings: dict[str, Any] | None = Field(None, alias="maturityRatings")
-    description: str
-    is_mature: bool | None = Field(None, alias="isMature")
-    genres: list[Genre] | None = None
-    publish_date: AwareDatetime | None = Field(None, alias="publishDate")
     title: str
-    slug: str
-    display_artist_name: str | None = Field(None, alias="displayArtistName")
-    type: str
-    updated_at: str | None = Field(None, alias="updatedAt")
-    sequence_number: int | None = Field(None, alias="sequenceNumber")
-    artists: Artists | None = None
-    availability: Availability | None = None
+    streams_link: str | None = None
     copyright: str | None = None
+    availability: Availability | None = None
+    original_release: AwareDatetime | None = Field(None, alias="originalRelease")
+    duration_ms: int | None = Field(None, alias="durationMs")
+    mature_blocked: bool | None = Field(None, alias="matureBlocked")
+    sequence_number: int | None = Field(None, alias="sequenceNumber")
+    publish_date: AwareDatetime | None = Field(None, alias="publishDate")
+    artist: Artist | None = None
+    is_mature: bool | None = Field(None, alias="isMature")
+    slug: str
+    created_at: str | None = Field(None, alias="createdAt")
+    is_premium_only: bool | None = Field(None, alias="isPremiumOnly")
+    new: bool
     display_artist_name_required: bool | None = Field(
         None, alias="displayArtistNameRequired"
     )
+    id: str
     hash: str | None = None
+    genres: list[Genre] | None = None
+    display_artist_name: str | None = Field(None, alias="displayArtistName")
+    type: str
+    search_metadata: SearchMetadata
+    description: str
+    images: Images
+    licensor: str | None = None
+    maturity_ratings: dict[str, Any] | None = Field(None, alias="maturityRatings")
+    ready_to_publish: bool | None = Field(None, alias="readyToPublish")
+    anime_ids: list[str] | None = Field(None, alias="animeIds")
+    artists: Artists | None = None
+    updated_at: str | None = Field(None, alias="updatedAt")
+    promo_title: str | None = None
+    series_metadata: SeriesMetadata | None = None
+    promo_description: str | None = None
+    external_id: str | None = None
     linked_resource_key: str | None = None
     channel_id: str | None = None
-    series_metadata: SeriesMetadata | None = None
-    external_id: str | None = None
-    promo_title: str | None = None
-    slug_title: str | None = None
     rating: Rating | None = None
-    promo_description: str | None = None
+    slug_title: str | None = None
     episode_metadata: EpisodeMetadata | None = None
-    movie_listing_metadata: MovieListingMetadata | None = None
 
 
 class Datum(BaseModel):

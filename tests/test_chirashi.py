@@ -1,14 +1,23 @@
-"""Tests for chirashi."""
+"""Test for chirashi."""
+
+from __future__ import annotations
 
 import json
 import os
-from datetime import datetime, timedelta
+from datetime import datetime
+from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
 from dotenv import load_dotenv
 
 from chirashi import Chirashi
 from chirashi.exceptions import HTTPError, LoginError
+
+if TYPE_CHECKING:
+    from pydantic import BaseModel
+
+    from chirashi.base_api_endpoint import BaseEndpoint
 
 load_dotenv()
 
@@ -23,9 +32,31 @@ logged_in_client = Chirashi(
     get_around_password=os.environ["GET_AROUND_PASSWORD"],
 )
 
+DOWNLOADS_DRECTORY = (
+    Path(__file__).parent
+    / "downloads"
+    / datetime.now().astimezone().strftime("%Y-%m-%dT%H_%M_%S")
+)
+
+
+def save_response(
+    endpoint: BaseEndpoint[BaseModel],
+    model: BaseModel,
+    name: str = "",
+) -> None:
+    """Save a parsed API response to the timestamped output directory."""
+    class_name = endpoint.__class__.__name__
+    if name:
+        file_path = DOWNLOADS_DRECTORY / f"{class_name}/{name}.json"
+    else:
+        file_path = DOWNLOADS_DRECTORY / f"{class_name}.json"
+    file_path.parent.mkdir(parents=True, exist_ok=True)
+    data = endpoint.dump_response(model)
+    file_path.write_text(json.dumps(data, indent=2))
+
 
 class TestParse:
-    """Tests parsing files."""
+    """Test parsing files."""
 
     def test_parse_browse_series(self) -> None:
         """Test parsing browse series files."""
@@ -54,10 +85,10 @@ class TestParse:
 
 
 class TestExtract:
-    """Tests extracting data."""
+    """Test extracting data."""
 
     class TestBrowseSeries:
-        """Tests extracting browse series data."""
+        """Test extracting browse series data."""
 
         def test_extract_browse_series_entries(self) -> None:
             """Test extracting browse series entries."""
@@ -78,70 +109,139 @@ class TestExtract:
             expected = [datum for model in models for datum in model.data]
             assert entries == expected
 
+    class TestSearch:
+        """Test extracting search data by content type."""
+
+        def test_extract_search_music(self) -> None:
+            """Test extracting music items from search results."""
+            for json_file in client.search.json_files():
+                model = client.search.parse(json.loads(json_file.read_text()))
+                client.search.extract_music(model)
+
+        def test_extract_search_series(self) -> None:
+            """Test extracting series items from search results."""
+            for json_file in client.search.json_files():
+                model = client.search.parse(json.loads(json_file.read_text()))
+                client.search.extract_series(model)
+
+        def test_extract_search_episodes(self) -> None:
+            """Test extracting episode items from search results."""
+            for json_file in client.search.json_files():
+                model = client.search.parse(json.loads(json_file.read_text()))
+                client.search.extract_episodes(model)
+
+        def test_extract_search_top_results(self) -> None:
+            """Test extracting top results items from search results."""
+            for json_file in client.search.json_files():
+                model = client.search.parse(json.loads(json_file.read_text()))
+                client.search.extract_top_results(model)
+
+        def test_extract_search_movie_listings(self) -> None:
+            """Test extracting movie listing items from search results."""
+            for json_file in client.search.json_files():
+                model = client.search.parse(json.loads(json_file.read_text()))
+                client.search.extract_movie_listings(model)
+
 
 class TestGet:
-    """Tests getting data."""
+    """Test get functions."""
 
     class TestValid:
-        """Tests getting data with valid inputs."""
+        """Test getting data with valid inputs."""
 
         def test_get_browse_series(self) -> None:
             """Test getting browse series."""
-            client.browse_series.get()
+            model = client.browse_series.get()
+            save_response(client.browse_series, model)
+            expected_count = 36
+            assert expected_count < model.total
+            assert len(model.data) == expected_count
 
         def test_get_series(self) -> None:
             """Test getting series."""
-            client.series.get("GG5H5XQ0D")
+            model = client.series.get("GG5H5XQX4")
+            save_response(client.series, model, "GG5H5XQX4")
+            expected_count = 1
+            assert len(model.data) == expected_count == model.total
+            assert model.data[0].id == "GG5H5XQX4"
 
         def test_get_seasons(self) -> None:
             """Test getting seasons."""
-            client.seasons.get("GG5H5XQ0D")
+            model = client.seasons.get("GG5H5XQX4")
+            save_response(client.seasons, model, "GG5H5XQX4")
+            expected_count = 2
+            assert len(model.data) == expected_count == model.total
+            for data in model.data:
+                assert data.series_id == "GG5H5XQX4"
 
         def test_get_episodes(self) -> None:
             """Test getting episodes."""
-            client.episodes.get("G619CPMQ1")
+            model = client.episodes.get("GYE5CQMQ5")
+            save_response(client.episodes, model, "GYE5CQMQ5")
+            expected_count = 28
+            assert len(model.data) == expected_count == model.total
+            for data in model.data:
+                assert data.season_id == "GYE5CQMQ5"
 
         def test_get_search(self) -> None:
             """Test getting search results."""
-            client.search.get("shokjo")
+            model = client.search.get("Frieren")
+            save_response(client.search, model, "Frieren")
+            expected_count = 5  # Search results are grouped into 5 categories.
+            assert len(model.data) == expected_count == model.total
+            assert client.search.extract_series(model)[0].id == "GG5H5XQX4"
+
+    class TestPagination:
+        """Test get functions with pagination."""
 
         def test_get_browse_series_since_datetime(self) -> None:
             """Test getting browse series since a datetime."""
             first_page = client.browse_series.get()
-            last_date_on_first_page = first_page.data[-1].last_public
+            end_datetime = first_page.data[-1].last_public
+            response = client.browse_series.get_since_datetime(end_datetime)
+            first_page_count = len(client.browse_series.extract_entries(first_page))
+            paginated_count = len(client.browse_series.extract_entries(response))
 
-            response = client.browse_series.get_since_datetime(
-                end_datetime=last_date_on_first_page - timedelta(days=1),
-            )
-
-            assert len(client.browse_series.extract_entries(response)) >= 36  # noqa: PLR2004
+            assert paginated_count == first_page_count * 2
 
     class TestInvalid:
-        """Tests getting data with invalid inputs."""
+        """Test get functions with invalid inputs."""
+
+        def test_get_browse_invalid(self) -> None:
+            """Test getting an invalid browse."""
+            pytest.skip("This cannot be tested.")
 
         def test_get_series_invalid(self) -> None:
             """Test getting an invalid series."""
             with pytest.raises(HTTPError):
-                client.series.get("zxcvbbnm")
+                client.series.get("GGGGGGGGG")
 
         def test_get_seasons_invalid(self) -> None:
             """Test getting invalid seasons."""
             # This endpoint does not return an HTTP error when no match is found, it
             # instead returns an empty list.
-            data = client.seasons.get("zxcvbbnm")
-            assert data.data == []
+            model = client.seasons.get("GGGGGGGGG")
+            save_response(client.seasons, model, "GGGGGGGGG")
+            assert model.data == []
+            assert model.total == 0
 
         def test_get_episodes_invalid(self) -> None:
             """Test getting invalid episodes."""
-            client.episodes.get("zxcvbbnm")
+            model = client.episodes.get("GGGGGGGGG")
+            save_response(client.seasons, model, "GGGGGGGGG")
+            assert model.data == []
+            assert model.total == 0
 
         def test_get_search_no_results(self) -> None:
             """Test searching for a query with no results."""
-            client.search.get("zxcvbbnm")
+            model = client.search.get("qwertyuiopasdfghjklzxcvbnm")
+            save_response(client.search, model, "qwertyuiopasdfghjklzxcvbnm")
+            expected_count = 0  # When no results are found no categories are returned
+            assert len(model.data) == expected_count == model.total
 
 
 class TestLogin:
-    """Tests logging in with credentials."""
+    """Test logging in with credentials."""
 
     def test_login(self) -> None:
         """Test logging in using environment variables."""
@@ -167,15 +267,15 @@ class TestLogin:
         )
         with pytest.raises(LoginError):
             login_client.login(
-                username="invalid@example.com",
-                password="invalid",  # noqa: S106
+                username="user@example.com",
+                password="password",  # noqa: S106
             )
 
     def test_login_invalid(self) -> None:
         """Test logging in with invalid credentials."""
         invalid_client = Chirashi(
-            username="invalid@example.com",
-            password="invalid",  # noqa: S106
+            username="user@example.com",
+            password="password",  # noqa: S106
             get_around_server=os.environ["GET_AROUND_SERVER"],
             get_around_password=os.environ["GET_AROUND_PASSWORD"],
         )
@@ -196,7 +296,11 @@ class TestLogin:
         login_client.logout()
         assert login_client.anonymous
         # Should still work as anonymous.
-        login_client.browse_series.get()
+        model = login_client.browse_series.get()
+        save_response(client.browse_series, model)
+        expected_count = 36
+        assert expected_count < model.total
+        assert len(model.data) == expected_count
 
     def test_refresh_token(self) -> None:
         """Test that the refresh token is used when the access token expires."""
