@@ -4,11 +4,22 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
+from good_ass_pydantic_integrator import GAPIClient
+from pydantic import BaseModel
+
 from chirashi.base_api_endpoint import BaseEndpoint
+from chirashi.search.episodes import SearchEpisode
 from chirashi.search.models import Search as SearchModel
+from chirashi.search.movie_listings import SearchMovieListing
+from chirashi.search.music import SearchMusic
+from chirashi.search.series import SearchSeries
+from chirashi.search.top_results import SearchTopResults
 
 if TYPE_CHECKING:
-    from chirashi.search.models import Item
+    from chirashi.search.episodes.models import SearchEpisodeItem
+    from chirashi.search.music.models import SearchMusicItem
+    from chirashi.search.series.models import SearchSery
+    from chirashi.search.top_results.models import SearchTopResult
 
 
 class Search(BaseEndpoint[SearchModel]):
@@ -92,39 +103,50 @@ class Search(BaseEndpoint[SearchModel]):
         return self.parse(data)
 
     @staticmethod
-    def _extract_type(
+    def _extract_type[T: BaseModel](
         input_data: SearchModel,
         content_type: str,
-    ) -> list[Item]:
+        client: type[GAPIClient[T]],
+    ) -> T:
         """Extract items matching a content type from search results."""
         for datum in input_data.data:
             if datum.type == content_type:
-                return datum.items
-        # If the search has no results at all data will be an empty array, it will not
-        # even include the categories.
-        return []
+                return client.parse(GAPIClient.dump_response(datum.items))
+        return client.parse([])
 
     @staticmethod
-    def extract_music(input_data: SearchModel) -> list[Item]:
+    def extract_music(input_data: SearchModel) -> list[SearchMusicItem]:
         """Extract music items from search results."""
-        return Search._extract_type(input_data, "music")
+        return Search._extract_type(input_data, "music", SearchMusic).root
 
     @staticmethod
-    def extract_series(input_data: SearchModel) -> list[Item]:
+    def extract_series(input_data: SearchModel) -> list[SearchSery]:
         """Extract series items from search results."""
-        return Search._extract_type(input_data, "series")
+        return Search._extract_type(input_data, "series", SearchSeries).root
 
     @staticmethod
-    def extract_episodes(input_data: SearchModel) -> list[Item]:
+    def extract_episodes(input_data: SearchModel) -> list[SearchEpisodeItem]:
         """Extract episode items from search results."""
-        return Search._extract_type(input_data, "episode")
+        return Search._extract_type(input_data, "episode", SearchEpisode).root
 
     @staticmethod
-    def extract_top_results(input_data: SearchModel) -> list[Item]:
+    def extract_top_results(
+        input_data: SearchModel,
+    ) -> list[SearchTopResult]:
         """Extract top results items from search results."""
-        return Search._extract_type(input_data, "top_results")
+        return Search._extract_type(
+            input_data,
+            "top_results",
+            SearchTopResults,
+        ).root
 
     @staticmethod
-    def extract_movie_listings(input_data: SearchModel) -> list[Item]:
+    def extract_movie_listings(
+        input_data: SearchModel,
+    ) -> list[Any]:
         """Extract movie listing items from search results."""
-        return Search._extract_type(input_data, "movie_listing")
+        return Search._extract_type(
+            input_data,
+            "movie_listing",
+            SearchMovieListing,
+        ).root

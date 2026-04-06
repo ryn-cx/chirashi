@@ -183,13 +183,21 @@ class TestGet:
             for data in model.data:
                 assert data.season_id == "GYE5CQMQ5"
 
-        def test_get_search(self) -> None:
+        def test_get_search_series(self) -> None:
             """Test getting search results."""
             model = client.search.get("Frieren")
             save_response(client.search, model, "Frieren")
             expected_count = 5  # Search results are grouped into 5 categories.
             assert len(model.data) == expected_count == model.total
             assert client.search.extract_series(model)[0].id == "GG5H5XQX4"
+
+        def test_get_search_movie(self) -> None:
+            """Test getting search results."""
+            model = client.search.get("Carcaptor")
+            save_response(client.search, model, "Carcaptor")
+            expected_count = 5  # Search results are grouped into 5 categories.
+            assert len(model.data) == expected_count == model.total
+            assert client.search.extract_movie_listings(model)[0].id == "GRWE20Z3R"
 
     class TestPagination:
         """Test get functions with pagination."""

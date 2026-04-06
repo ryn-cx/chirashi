@@ -1,6 +1,4 @@
-# ruff: noqa: COM812, D100, D101
-from __future__ import annotations
-
+# ruff: noqa: D100, D101
 from typing import Any
 
 from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
@@ -94,9 +92,9 @@ class Award(BaseModel):
 
 class ExtendedMaturityRating(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    level: str
-    rating: str
-    system: str
+    level: str | None = None
+    rating: str | None = None
+    system: str | None = None
 
 
 class LanguagePresentation(BaseModel):
@@ -193,6 +191,13 @@ class AdBreak(BaseModel):
     type: str
 
 
+class ExtendedMaturityRating1(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    level: str
+    rating: str
+    system: str
+
+
 class Version(BaseModel):
     model_config = ConfigDict(extra="forbid")
     audio_locale: str
@@ -221,8 +226,8 @@ class EpisodeMetadata(BaseModel):
     eligible_region: str
     episode: str
     episode_air_date: AwareDatetime
-    episode_number: int
-    extended_maturity_rating: ExtendedMaturityRating
+    episode_number: int | None
+    extended_maturity_rating: ExtendedMaturityRating1
     free_available_date: AwareDatetime
     identifier: str
     is_clip: bool
@@ -247,9 +252,35 @@ class EpisodeMetadata(BaseModel):
     series_slug_title: str
     series_title: str
     subtitle_locales: list[str]
-    tenant_categories: list[str]
+    tenant_categories: list[str] | None = None
     upload_date: AwareDatetime
     versions: list[Version]
+
+
+class MovieListingMetadata(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    ad_breaks: list[AdBreak]
+    availability_notes: str
+    availability_status: str
+    available_date: None
+    available_offline: bool
+    content_descriptors: list[str]
+    duration_ms: int
+    extended_description: str
+    extended_maturity_rating: ExtendedMaturityRating1
+    first_movie_id: str
+    free_available_date: AwareDatetime
+    is_dubbed: bool
+    is_mature: bool
+    is_premium_only: bool
+    is_subbed: bool
+    mature_blocked: bool
+    maturity_ratings: list[str]
+    movie_release_year: int
+    premium_available_date: AwareDatetime
+    premium_date: None
+    subtitle_locales: list[None]
+    tenant_categories: list[str]
 
 
 class Item(BaseModel):
@@ -271,7 +302,8 @@ class Item(BaseModel):
     is_premium_only: bool | None = Field(None, alias="isPremiumOnly")
     new: bool
     display_artist_name_required: bool | None = Field(
-        None, alias="displayArtistNameRequired"
+        None,
+        alias="displayArtistNameRequired",
     )
     id: str
     hash: str | None = None
@@ -296,6 +328,7 @@ class Item(BaseModel):
     rating: Rating | None = None
     slug_title: str | None = None
     episode_metadata: EpisodeMetadata | None = None
+    movie_listing_metadata: MovieListingMetadata | None = None
 
 
 class Datum(BaseModel):
