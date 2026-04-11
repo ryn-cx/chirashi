@@ -122,7 +122,7 @@ class BrowseSeries(BaseEndpoint[BrowseSeriesModel]):
 
             all_data.append(result)
 
-            if result.data[-1].last_public < end_datetime or len(result.data) < n:
+            if result.data[-1].last_public < end_datetime or len(result.data) == 0:
                 return all_data
 
             start += n

@@ -212,6 +212,19 @@ class TestGet:
 
             assert paginated_count == first_page_count * 2
 
+        def test_get_browse_series_past_last_page(self) -> None:
+            """Test that paginating past the last page returns no entries.
+
+            Fetches a normal page to discover the total result count, then
+            requests a page starting at that total. Since indices are 0-based,
+            ``start=total`` is one past the final item and should return an
+            empty list.
+            """
+            first_page = client.browse_series.get()
+            past_end = client.browse_series.get(start=first_page.total)
+            save_response(client.browse_series, past_end, "past_last_page")
+            assert len(past_end.data) == 0
+
     class TestInvalid:
         """Test get functions with invalid inputs."""
 
