@@ -77,9 +77,23 @@ class MainArtistItem(BaseModel):
     slug: str
 
 
+class FeaturedArtistItem(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    connector: str
+    id: str
+    name: str
+    roles: list[str]
+    sequence_number: int = Field(..., alias="sequenceNumber")
+    slug: str
+
+
 class Artists(BaseModel):
     model_config = ConfigDict(extra="forbid")
     main_artist: list[MainArtistItem] = Field(..., alias="MainArtist")
+    featured_artist: list[FeaturedArtistItem] | None = Field(
+        None,
+        alias="FeaturedArtist",
+    )
 
 
 class Award(BaseModel):
@@ -92,9 +106,9 @@ class Award(BaseModel):
 
 class ExtendedMaturityRating(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    level: str | None = None
-    rating: str | None = None
-    system: str | None = None
+    level: str
+    rating: str
+    system: str
 
 
 class LanguagePresentation(BaseModel):
@@ -191,13 +205,6 @@ class AdBreak(BaseModel):
     type: str
 
 
-class ExtendedMaturityRating1(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-    level: str
-    rating: str
-    system: str
-
-
 class Version(BaseModel):
     model_config = ConfigDict(extra="forbid")
     audio_locale: str
@@ -227,7 +234,7 @@ class EpisodeMetadata(BaseModel):
     episode: str
     episode_air_date: AwareDatetime
     episode_number: int | None
-    extended_maturity_rating: ExtendedMaturityRating1
+    extended_maturity_rating: ExtendedMaturityRating
     free_available_date: AwareDatetime
     identifier: str
     is_clip: bool
@@ -267,7 +274,7 @@ class MovieListingMetadata(BaseModel):
     content_descriptors: list[str]
     duration_ms: int
     extended_description: str
-    extended_maturity_rating: ExtendedMaturityRating1
+    extended_maturity_rating: ExtendedMaturityRating
     first_movie_id: str
     free_available_date: AwareDatetime
     is_dubbed: bool

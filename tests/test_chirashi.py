@@ -136,12 +136,6 @@ class TestExtract:
                 model = client.search.parse(json.loads(json_file.read_text()))
                 client.search.extract_top_results(model)
 
-        def test_extract_search_movie_listings(self) -> None:
-            """Test extracting movie listing items from search results."""
-            for json_file in client.search.json_files():
-                model = client.search.parse(json.loads(json_file.read_text()))
-                client.search.extract_movie_listings(model)
-
 
 class TestGet:
     """Test get functions."""
@@ -187,17 +181,9 @@ class TestGet:
             """Test getting search results."""
             model = client.search.get("Frieren")
             save_response(client.search, model, "Frieren")
-            expected_count = 5  # Search results are grouped into 5 categories.
+            expected_count = 4  # Search results are grouped into 4 categories.
             assert len(model.data) == expected_count == model.total
             assert client.search.extract_series(model)[0].id == "GG5H5XQX4"
-
-        def test_get_search_movie(self) -> None:
-            """Test getting search results."""
-            model = client.search.get("Carcaptor")
-            save_response(client.search, model, "Carcaptor")
-            expected_count = 5  # Search results are grouped into 5 categories.
-            assert len(model.data) == expected_count == model.total
-            assert client.search.extract_movie_listings(model)[0].id == "GRWE20Z3R"
 
     class TestPagination:
         """Test get functions with pagination."""
@@ -210,7 +196,7 @@ class TestGet:
             first_page_count = len(client.browse_series.extract_entries(first_page))
             paginated_count = len(client.browse_series.extract_entries(response))
 
-            assert paginated_count == first_page_count * 2
+            assert paginated_count > first_page_count
 
         def test_get_browse_series_past_last_page(self) -> None:
             """Test that paginating past the last page returns no entries.

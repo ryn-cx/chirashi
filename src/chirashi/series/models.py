@@ -1,6 +1,4 @@
 # ruff: noqa: D100, D101
-from __future__ import annotations
-
 from typing import Any
 
 from pydantic import AwareDatetime, BaseModel, ConfigDict

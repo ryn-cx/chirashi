@@ -10,7 +10,6 @@ from pydantic import BaseModel
 from chirashi.base_api_endpoint import BaseEndpoint
 from chirashi.search.episodes import SearchEpisode
 from chirashi.search.models import Search as SearchModel
-from chirashi.search.movie_listings import SearchMovieListing
 from chirashi.search.music import SearchMusic
 from chirashi.search.series import SearchSeries
 from chirashi.search.top_results import SearchTopResults
@@ -32,7 +31,7 @@ class Search(BaseEndpoint[SearchModel]):
         query: str,
         *,
         n: int = 6,
-        type: str = "music,series,episode,top_results,movie_listing",  # noqa: A002
+        type: str = "music,series,episode,top_results",  # noqa: A002
         ratings: str = "true",
         preferred_audio_language: str = "ja-JP",
         locale: str = "en-US",
@@ -72,7 +71,7 @@ class Search(BaseEndpoint[SearchModel]):
         query: str,
         *,
         n: int = 6,
-        type: str = "music,series,episode,top_results,movie_listing",  # noqa: A002
+        type: str = "music,series,episode,top_results",  # noqa: A002
         ratings: str = "true",
         preferred_audio_language: str = "ja-JP",
         locale: str = "en-US",
@@ -138,15 +137,4 @@ class Search(BaseEndpoint[SearchModel]):
             input_data,
             "top_results",
             SearchTopResults,
-        ).root
-
-    @staticmethod
-    def extract_movie_listings(
-        input_data: SearchModel,
-    ) -> list[Any]:
-        """Extract movie listing items from search results."""
-        return Search._extract_type(
-            input_data,
-            "movie_listing",
-            SearchMovieListing,
         ).root

@@ -1,6 +1,4 @@
 # ruff: noqa: D100, D101
-from __future__ import annotations
-
 from typing import Any
 
 from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
@@ -8,9 +6,9 @@ from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
 
 class ExtendedMaturityRating(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    level: str | None = None
-    rating: str | None = None
-    system: str | None = None
+    level: str
+    rating: str
+    system: str
 
 
 class LanguagePresentation(BaseModel):

@@ -1,6 +1,4 @@
 # ruff: noqa: D100, D101
-from __future__ import annotations
-
 from typing import Any
 
 from pydantic import AwareDatetime, BaseModel, ConfigDict, Field, RootModel
@@ -53,9 +51,23 @@ class MainArtistItem(BaseModel):
     slug: str
 
 
+class FeaturedArtistItem(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    connector: str
+    id: str
+    name: str
+    roles: list[str]
+    sequence_number: int = Field(..., alias="sequenceNumber")
+    slug: str
+
+
 class Artists(BaseModel):
     model_config = ConfigDict(extra="forbid")
     main_artist: list[MainArtistItem] = Field(..., alias="MainArtist")
+    featured_artist: list[FeaturedArtistItem] | None = Field(
+        None,
+        alias="FeaturedArtist",
+    )
 
 
 class SearchMusicItem(BaseModel):

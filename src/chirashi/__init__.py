@@ -1,10 +1,7 @@
 """Chirashi is a client for downloading and parsing data from Crunchyroll."""
 
-import base64
-import re
 import uuid
 from datetime import UTC, datetime, timedelta
-from functools import cached_property
 from logging import NullHandler, getLogger
 from typing import Any
 
@@ -29,6 +26,7 @@ class Chirashi:
 
     def __init__(  # noqa: PLR0913
         self,
+        # TODO: Login is currently broken after API changes.
         username: str | None = None,
         password: str | None = None,
         # These values were chosen to match the CrunchyRoll app on Windows.
@@ -62,29 +60,8 @@ class Chirashi:
 
         super().__init__()
 
-    @cached_property
-    def _public_token(self) -> str:
-        """Get a public token from Crunchyroll.
-
-        When accessing Crunchyroll through the web browser the token is obtained from
-        https://www.crunchyroll.com/auth/v1/token but this endpoint has extra
-        protection on it that makes it annoying to use. This endpoint is used by
-        the Windows Crunchyroll app and doesn't have the same protections, so it is
-        much easier to use.
-        """
-        url = "https://static.crunchyroll.com/vilos-v2/web/vilos/js/bundle.js"
-        logger.info("Downloading public token: %s", url)
-        response = self.get_around_client.get(url, timeout=self.timeout)
-        response_text = response.text
-
-        if not (match := re.search(r'prod="([\w-]+:[\w-]+)"', response_text)):
-            msg = "Failed to extract token from bundle.js"
-            raise ValueError(msg)
-
-        encoded_public_token = match.group(1)
-        return base64.b64encode(
-            encoded_public_token.encode("iso-8859-1"),
-        ).decode()
+    # TODO: How long is this valid for?
+    PUBLIC_TOKEN = "bm9haWhkZXZtXzZpeWcwYThsMHE6"
 
     @property
     def _access_token(self) -> str:
@@ -101,7 +78,7 @@ class Chirashi:
 
     def _download_access_token(self) -> None:
         url = f"https://{self.domain}/auth/v1/token"
-        headers = {"Authorization": f"Basic {self._public_token}"}
+        headers = {"Authorization": f"Basic {self.PUBLIC_TOKEN}"}
 
         data: dict[str, Any] = {
             "device_id": self.device_id,
