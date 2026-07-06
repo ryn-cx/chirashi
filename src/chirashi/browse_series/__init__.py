@@ -5,7 +5,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
-from good_ass_pydantic_integrator import ReplacementType
+from good_ass_pydantic_integrator import CustomSerializer, ReplacementType
 
 from chirashi.base_api_endpoint import BaseEndpoint
 from chirashi.browse_series.models import BrowseSeries as BrowseSeriesModel
@@ -20,14 +20,22 @@ class BrowseSeries(BaseEndpoint[BrowseSeriesModel]):
     _response_model = BrowseSeriesModel
 
     @classmethod
-    def _replacement_types(cls) -> list[ReplacementType]:
+    def _custom_serializers(cls) -> list[CustomSerializer]:
         return [
-            ReplacementType(
-                class_name="Datum",
+            CustomSerializer(
                 field_name="last_public",
-                new_type="str",
+                serializer_code=(
+                    'return value.isoformat(timespec="milliseconds")'
+                    '.replace("+00:00", "Z")'
+                ),
+                output_type="str",
+                class_name="Datum",
             ),
         ]
+
+    @classmethod
+    def _additional_imports(cls) -> list[str]:
+        return ["from pydantic import AwareDatetime"]
 
     def download(
         self,
@@ -102,7 +110,7 @@ class BrowseSeries(BaseEndpoint[BrowseSeriesModel]):
 
     def get_since_datetime(
         self,
-        end_datetime: datetime | str | None = None,
+        end_datetime: datetime | None = None,
         *,
         n: int = 36,
         locale: str = "en-US",
@@ -116,8 +124,7 @@ class BrowseSeries(BaseEndpoint[BrowseSeriesModel]):
             locale: The locale for the request.
             sort_by: The sort order.
             ratings: Whether to include ratings.
-            end_datetime: Stop when reaching this datetime. Accepts a ``datetime``
-                or an ISO timestamp string (such as an entry's ``last_public``).
+            end_datetime: Stop when reaching this datetime.
 
         Returns:
             List of BrowseSeries pages.
@@ -125,8 +132,6 @@ class BrowseSeries(BaseEndpoint[BrowseSeriesModel]):
         start = 0
         all_data: list[BrowseSeriesModel] = []
         end_datetime = end_datetime or datetime.now().astimezone()
-        if isinstance(end_datetime, str):
-            end_datetime = datetime.fromisoformat(end_datetime)
 
         while True:
             result = self.get(
@@ -139,11 +144,7 @@ class BrowseSeries(BaseEndpoint[BrowseSeriesModel]):
 
             all_data.append(result)
 
-            if len(result.data) == 0:
-                return all_data
-
-            last_public = datetime.fromisoformat(result.data[-1].last_public)
-            if last_public < end_datetime:
+            if result.data[-1].last_public < end_datetime or len(result.data) == 0:
                 return all_data
 
             start += n

@@ -34,5 +34,5 @@ convention = "google"
 "tests/**/*.py" = ["S101"]  # Asserts should be allowed in tests.
 
 [tool.uv.sources]
-good-ass-pydantic-integrator = { git = "https://github.com/ryn-cx/good-ass-pydantic-integrator" }
 get-around = { git = "https://github.com/ryn-cx/get-around" }
+good-ass-pydantic-integrator = { git = "https://github.com/ryn-cx/good-ass-pydantic-integrator" }

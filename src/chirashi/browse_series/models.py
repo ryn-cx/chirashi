@@ -1,7 +1,7 @@
-# ruff: noqa: D100, D101
+# ruff: noqa: D100, D101, D102
 from typing import Any
 
-from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
+from pydantic import AwareDatetime, BaseModel, ConfigDict, Field, field_serializer
 
 
 class ExtendedMaturityRating(BaseModel):
@@ -151,9 +151,13 @@ class Datum(BaseModel):
     images: Images
     promo_title: str
     id: str
-    last_public: str
+    last_public: AwareDatetime
     linked_resource_key: str
     language_presentation: LanguagePresentation | None = None
+
+    @field_serializer("last_public")
+    def serialize_last_public(self, value: AwareDatetime) -> str:
+        return value.isoformat(timespec="milliseconds").replace("+00:00", "Z")
 
 
 class Params(BaseModel):
