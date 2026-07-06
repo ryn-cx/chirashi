@@ -8,7 +8,42 @@ from typing import TYPE_CHECKING, Any
 from good_ass_pydantic_integrator import CustomSerializer, ReplacementType
 
 from chirashi.base_api_endpoint import BaseEndpoint
-from chirashi.browse_series.models import BrowseSeries as BrowseSeriesModel
+
+
+class _RawDatetime(datetime):
+    """A datetime that remembers its exact source string.
+
+    The API encodes the same instant inconsistently (``...:33Z`` in some
+    responses, ``...:33.000Z`` in others). A plain datetime loses that
+    distinction, so dumps can't be byte-exact. Stashing the original string lets
+    the serializer reproduce it while the value still behaves as a datetime.
+    """
+
+    raw: str
+
+
+def _parse_last_public(value: object) -> object:
+    """Parse ``last_public`` into a datetime that retains its source string."""
+    if isinstance(value, _RawDatetime) or not isinstance(value, str):
+        return value
+    parsed = datetime.fromisoformat(value)
+    result = _RawDatetime(
+        parsed.year,
+        parsed.month,
+        parsed.day,
+        parsed.hour,
+        parsed.minute,
+        parsed.second,
+        parsed.microsecond,
+        parsed.tzinfo,
+    )
+    result.raw = value
+    return result
+
+
+from chirashi.browse_series.models import (
+    BrowseSeries as BrowseSeriesModel,
+)
 
 if TYPE_CHECKING:
     from chirashi.browse_series.models import Datum
@@ -20,14 +55,21 @@ class BrowseSeries(BaseEndpoint[BrowseSeriesModel]):
     _response_model = BrowseSeriesModel
 
     @classmethod
+    def _replacement_types(cls) -> list[ReplacementType]:
+        return [
+            ReplacementType(
+                class_name="Datum",
+                field_name="last_public",
+                new_type="Annotated[AwareDatetime, PlainValidator(_parse_last_public)]",
+            ),
+        ]
+
+    @classmethod
     def _custom_serializers(cls) -> list[CustomSerializer]:
         return [
             CustomSerializer(
                 field_name="last_public",
-                serializer_code=(
-                    'return value.isoformat(timespec="milliseconds")'
-                    '.replace("+00:00", "Z")'
-                ),
+                serializer_code="return value.raw",
                 output_type="str",
                 class_name="Datum",
             ),
@@ -35,7 +77,11 @@ class BrowseSeries(BaseEndpoint[BrowseSeriesModel]):
 
     @classmethod
     def _additional_imports(cls) -> list[str]:
-        return ["from pydantic import AwareDatetime"]
+        return [
+            "from typing import Annotated",
+            "from pydantic import AwareDatetime, PlainValidator",
+            "from chirashi.browse_series import _parse_last_public",
+        ]
 
     def download(
         self,
