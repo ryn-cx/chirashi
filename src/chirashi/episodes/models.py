@@ -2,18 +2,36 @@
 from pydantic import AwareDatetime, BaseModel, ConfigDict
 
 
-class LanguagePresentation(BaseModel):
+class ExtendedMaturityRating(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    audio_notation: str
-    text_notation: str
+    system: str
+    rating: str
+    level: str
+
+
+class Version(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    audio_locale: str
+    guid: str
+    original: bool
+    variant: str
+    season_guid: str
+    media_guid: str
+    is_premium_only: bool
+    roles: list[str]
+
+
+class ContentDescriptorsWithSymbolItem(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    label: str
 
 
 class ThumbnailItem(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    height: int
-    source: str
-    type: str
     width: int
+    height: int
+    type: str
+    source: str
 
 
 class Images(BaseModel):
@@ -21,93 +39,81 @@ class Images(BaseModel):
     thumbnail: list[list[ThumbnailItem]]
 
 
-class ExtendedMaturityRating(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-    level: str
-    rating: str
-    system: str
-
-
-class Version(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-    audio_locale: str
-    guid: str
-    is_premium_only: bool
-    media_guid: str
-    original: bool
-    roles: list[str]
-    season_guid: str
-    variant: str
-
-
 class AdBreak(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    offset_ms: int
     type: str
+    offset_ms: int
+
+
+class LanguagePresentation(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    audio_notation: str
+    text_notation: str
 
 
 class Datum(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    season_title: str
-    is_clip: bool
-    availability_notes: str
-    closed_captions_available: bool
-    language_presentation: LanguagePresentation
-    availability_starts: AwareDatetime
-    seo_title: str
-    is_subbed: bool
-    recent_audio_locale: str
-    upload_date: AwareDatetime
-    slug: str
-    description: str
-    is_mature: bool
-    season_slug_title: str
-    images: Images
-    production_episode_id: str
-    extended_maturity_rating: ExtendedMaturityRating
+    id: str
     channel_id: str
-    roles: list[str]
-    free_available_date: AwareDatetime
-    mature_blocked: bool
-    subtitle_locales: list[str]
-    title: str
-    duration_ms: int
-    audio_locale: str
-    media_type: str
-    season_id: str
-    availability_status: str
-    identifier: str
-    season_sequence_number: int
-    premium_date: None
-    listing_id: str
-    sequence_number: int
     series_id: str
+    series_title: str
+    series_slug_title: str
+    season_id: str
+    season_title: str
+    season_slug_title: str
+    season_number: int
+    episode: str
+    episode_number: int
+    sequence_number: int
+    season_display_number: str
+    season_sequence_number: int
+    production_episode_id: str
+    title: str
+    slug_title: str
+    description: str
+    next_episode_id: str
+    next_episode_title: str | None = None
+    hd_flag: bool
+    maturity_ratings: list[str]
+    extended_maturity_rating: ExtendedMaturityRating
+    is_mature: bool
+    mature_blocked: bool
+    episode_air_date: AwareDatetime
+    upload_date: AwareDatetime
+    availability_starts: AwareDatetime
     availability_ends: AwareDatetime
-    next_episode_title: str
     eligible_region: str
     available_date: None
-    series_slug_title: str
-    episode_number: int
-    hd_flag: bool
-    series_title: str
-    content_descriptors: list[str]
-    versions: list[Version]
-    recent_variant: str
-    seo_description: str
-    season_display_number: str
-    maturity_ratings: list[str]
-    season_tags: list[str]
-    season_number: int
-    is_premium_only: bool
+    free_available_date: AwareDatetime
+    premium_date: None
     premium_available_date: AwareDatetime
+    is_subbed: bool
     is_dubbed: bool
-    slug_title: str
-    ad_breaks: list[AdBreak]
-    episode: str
-    id: str
-    next_episode_id: str
-    episode_air_date: AwareDatetime
+    is_clip: bool
+    seo_title: str
+    seo_description: str
+    season_tags: list[None]
     available_offline: bool
+    subtitle_locales: list[str]
+    availability_notes: str
+    audio_locale: str
+    versions: list[Version]
+    closed_captions_available: bool
+    identifier: str
+    content_descriptors: list[str]
+    content_descriptors_with_symbol: list[ContentDescriptorsWithSymbolItem]
+    media_type: str
+    slug: str
+    images: Images
+    duration_ms: int
+    ad_breaks: list[AdBreak]
+    is_premium_only: bool
+    listing_id: str
+    recent_audio_locale: str
+    recent_variant: str
+    availability_status: str
+    language_presentation: LanguagePresentation
+    roles: list[str]
 
 
 class Meta(BaseModel):
@@ -135,7 +141,7 @@ class Chirashi(BaseModel):
 
 class Episodes(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    total: int
     data: list[Datum]
+    total: int
     meta: Meta
     chirashi: Chirashi

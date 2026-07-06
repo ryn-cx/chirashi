@@ -1,14 +1,49 @@
-# ruff: noqa: D100, D101
-from typing import Any
+# ruff: noqa: D100, D101, D102
+from pydantic import AwareDatetime, BaseModel, ConfigDict, Field, field_serializer
 
-from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
+
+class PosterTallItem(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    width: int
+    height: int
+    type: str
+    source: str
+
+
+class PosterWideItem(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    width: int
+    height: int
+    type: str
+    source: str
+
+
+class PromoImageItem(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    width: int
+    height: int
+    type: str
+    source: str
+
+
+class Images(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    poster_tall: list[list[PosterTallItem]]
+    poster_wide: list[list[PosterWideItem]]
+    promo_image: list[list[PromoImageItem]]
 
 
 class ExtendedMaturityRating(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    level: str
-    rating: str
-    system: str
+    system: str | None = None
+    rating: str | None = None
+    level: str | None = None
+    advisories: list[None] | None = None
+
+
+class ContentDescriptorsWithSymbolItem(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    label: str
 
 
 class LanguagePresentation(BaseModel):
@@ -19,139 +54,108 @@ class LanguagePresentation(BaseModel):
 
 class Award(BaseModel):
     model_config = ConfigDict(extra="forbid")
+    text: str
     icon_url: str
     is_current_award: bool
     is_winner: bool
-    text: str
-
-
-class PosterTallItem(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-    height: int
-    source: str
-    type: str
-    width: int
-
-
-class PosterWideItem(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-    height: int
-    source: str
-    type: str
-    width: int
-
-
-class Images(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-    poster_tall: list[list[PosterTallItem]]
-    poster_wide: list[list[PosterWideItem]]
-
-
-class Livestream(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-    countdown_visibility: int
-    end_date: AwareDatetime
-    episode_end_date: AwareDatetime
-    episode_id: str
-    episode_start_date: AwareDatetime
-    images: Images
-    start_date: AwareDatetime
 
 
 class SeriesMetadata(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    audio_locales: list[str]
-    availability_notes: str
-    content_descriptors: list[str] | None = None
-    episode_count: int
+    availability_status: str
     extended_description: str
-    extended_maturity_rating: ExtendedMaturityRating
-    is_dubbed: bool
-    is_mature: bool
-    is_simulcast: bool
-    is_subbed: bool
-    language_presentation: LanguagePresentation
-    mature_blocked: bool
-    maturity_ratings: list[str]
+    episode_count: int
     season_count: int
-    series_launch_year: int
+    extended_maturity_rating: ExtendedMaturityRating
+    maturity_ratings: list[str]
+    content_descriptors: list[str] | None = None
+    content_descriptors_with_symbol: list[ContentDescriptorsWithSymbolItem] | None = (
+        None
+    )
+    is_mature: bool
+    mature_blocked: bool
+    is_subbed: bool
+    is_dubbed: bool
+    is_simulcast: bool
+    linked_guid: str
+    availability_notes: str
+    audio_locales: list[str]
     subtitle_locales: list[str]
-    tenant_categories: list[str] | None = None
+    series_launch_year: int
+    tenant_categories: list[str]
+    language_presentation: LanguagePresentation
     awards: list[Award] | None = None
-    livestream: Livestream | None = None
-
-
-class Field3s(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-    displayed: str
-    percentage: int
-    unit: str
-
-
-class Field4s(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-    displayed: str
-    percentage: int
-    unit: str
-
-
-class Field5s(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-    displayed: str
-    percentage: int
-    unit: str
 
 
 class Field1s(BaseModel):
     model_config = ConfigDict(extra="forbid")
     displayed: str
-    percentage: int
     unit: str
+    percentage: int
 
 
 class Field2s(BaseModel):
     model_config = ConfigDict(extra="forbid")
     displayed: str
-    percentage: int
     unit: str
+    percentage: int
+
+
+class Field3s(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    displayed: str
+    unit: str
+    percentage: int
+
+
+class Field4s(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    displayed: str
+    unit: str
+    percentage: int
+
+
+class Field5s(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    displayed: str
+    unit: str
+    percentage: int
 
 
 class Rating(BaseModel):
     model_config = ConfigDict(extra="forbid")
+    field_1s: Field1s = Field(..., alias="1s")
+    field_2s: Field2s = Field(..., alias="2s")
     field_3s: Field3s = Field(..., alias="3s")
     field_4s: Field4s = Field(..., alias="4s")
     field_5s: Field5s = Field(..., alias="5s")
     average: str
     total: int
-    field_1s: Field1s = Field(..., alias="1s")
-    field_2s: Field2s = Field(..., alias="2s")
-    rating: str | None = None
-
-
-class Images1(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-    poster_tall: list[list[PosterTallItem]]
-    poster_wide: list[list[PosterWideItem]]
 
 
 class Datum(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    channel_id: str
-    title: str
-    series_metadata: SeriesMetadata
-    new: bool
-    description: str
+    id: str
     external_id: str
+    channel_id: str
+    linked_resource_key: str
+    new: bool
+    title: str
+    description: str
+    promo_title: str
     promo_description: str
     type: str
     slug: str
-    rating: Rating
     slug_title: str
-    images: Images1
-    promo_title: str
-    id: str
     last_public: AwareDatetime
-    linked_resource_key: str
+    images: Images
+    series_metadata: SeriesMetadata
+    language_presentation: LanguagePresentation
+    rating: Rating
+
+    @field_serializer("last_public")
+    def serialize_last_public(self, value: AwareDatetime) -> str:
+        return value.isoformat(timespec="milliseconds").replace("+00:00", "Z")
 
 
 class Params(BaseModel):
@@ -178,7 +182,6 @@ class Chirashi(BaseModel):
 
 class BrowseSeries(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    total: int
     data: list[Datum]
-    meta: dict[str, Any]
+    total: int
     chirashi: Chirashi

@@ -13,6 +13,10 @@ from dotenv import load_dotenv
 
 from chirashi import Chirashi
 from chirashi.exceptions import HTTPError, LoginError
+from chirashi.search.episodes import SearchEpisode
+from chirashi.search.music import SearchMusic
+from chirashi.search.series import SearchSeries
+from chirashi.search.top_results import SearchTopResults
 
 if TYPE_CHECKING:
     from pydantic import BaseModel
@@ -82,6 +86,26 @@ class TestParse:
         """Test parsing search files."""
         for json_file in client.search.json_files():
             client.search.parse(json.loads(json_file.read_text()))
+
+    def test_parse_search_music(self) -> None:
+        """Test parsing search music files."""
+        for json_file in SearchMusic.json_files():
+            SearchMusic.parse(json.loads(json_file.read_text()))
+
+    def test_parse_search_series(self) -> None:
+        """Test parsing search series files."""
+        for json_file in SearchSeries.json_files():
+            SearchSeries.parse(json.loads(json_file.read_text()))
+
+    def test_parse_search_episodes(self) -> None:
+        """Test parsing search episode files."""
+        for json_file in SearchEpisode.json_files():
+            SearchEpisode.parse(json.loads(json_file.read_text()))
+
+    def test_parse_search_top_results(self) -> None:
+        """Test parsing search top results files."""
+        for json_file in SearchTopResults.json_files():
+            SearchTopResults.parse(json.loads(json_file.read_text()))
 
 
 class TestExtract:
@@ -184,6 +208,27 @@ class TestGet:
             expected_count = 4  # Search results are grouped into 4 categories.
             assert len(model.data) == expected_count == model.total
             assert client.search.extract_series(model)[0].id == "GG5H5XQX4"
+
+        def test_get_search_music(self) -> None:
+            """Test extracting music items from a live search."""
+            model = client.search.get("Frieren")
+            save_response(client.search, model, "Frieren")
+            client.search.extract_music(model)
+            assert any(datum.type == "music" for datum in model.data)
+
+        def test_get_search_episodes(self) -> None:
+            """Test extracting episode items from a live search."""
+            model = client.search.get("Frieren")
+            save_response(client.search, model, "Frieren")
+            client.search.extract_episodes(model)
+            assert any(datum.type == "episode" for datum in model.data)
+
+        def test_get_search_top_results(self) -> None:
+            """Test extracting top results items from a live search."""
+            model = client.search.get("Frieren")
+            save_response(client.search, model, "Frieren")
+            client.search.extract_top_results(model)
+            assert any(datum.type == "top_results" for datum in model.data)
 
     class TestPagination:
         """Test get functions with pagination."""

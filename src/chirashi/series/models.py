@@ -41,6 +41,11 @@ class Award(BaseModel):
     is_winner: bool
 
 
+class ContentDescriptorsWithSymbolItem(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    label: str
+
+
 class LanguagePresentation(BaseModel):
     model_config = ConfigDict(extra="forbid")
     audio_notation: str
@@ -79,6 +84,7 @@ class Datum(BaseModel):
     series_launch_year: int
     awards: list[Award]
     content_descriptors: list[str]
+    content_descriptors_with_symbol: list[ContentDescriptorsWithSymbolItem]
     language_presentation: LanguagePresentation
 
 

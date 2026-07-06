@@ -1,43 +1,52 @@
 #!/usr/bin/env bash
 #
-# Sync the public mirror from this (private) repo.
+# Sync the public mirror from this (private) repo, PRESERVING full commit
+# history while removing every `_files/` directory from all commits.
 #
-# The public tree is rebuilt from the private repo's committed HEAD, with every
-# path marked `export-ignore` in .gitattributes (the `_files/` directories)
-# filtered out by `git archive`. Deletions are handled because the public tree
-# is wiped and re-extracted each run.
+# How it works: a fresh throwaway clone of the private repo is rewritten with
+# git-filter-repo (run via `uvx`, so nothing needs to be installed) to strip
+# `_files/` out of every commit, then force-pushed to the public remote.
+# Because history is rewritten, this is a force-push and the public commit SHAs
+# will differ from the private ones. Commits that only ever touched `_files/`
+# become empty and are pruned from the public history.
 #
 # Workflow: commit your work on the private repo, then run this script.
-# `git archive` uses HEAD, so uncommitted changes are NOT synced.
 #
-# Usage: ./sync-public.sh [path-to-public-clone]   (default: ../chirashi-public)
+# Usage:   ./sync-public.sh
+# Config:  BRANCH         (default: master)
+#          PUBLIC_URL     (default: https://github.com/ryn-cx/chirashi.git)
+#          EXCLUDE_REGEX  (default: (?:^|/)_files/  -- paths stripped from public)
+#          PUSH_TAGS      (set to 1 to also force-push tags)
 
 set -euo pipefail
 
-PUBLIC_DIR="${1:-../chirashi-public}"
+BRANCH="${BRANCH:-master}"
+PUBLIC_URL="${PUBLIC_URL:-https://github.com/ryn-cx/chirashi.git}"
+EXCLUDE_REGEX="${EXCLUDE_REGEX:-(?:^|/)_files/}"
+PUSH_TAGS="${PUSH_TAGS:-0}"
 
-if [ ! -d "$PUBLIC_DIR/.git" ]; then
-  echo "error: no git repo at '$PUBLIC_DIR'." >&2
-  echo "Clone the public repo first, e.g.:" >&2
-  echo "  git clone https://github.com/ryn-cx/chirashi.git '$PUBLIC_DIR'" >&2
-  exit 1
+PRIVATE_ROOT="$(git rev-parse --show-toplevel)"
+
+TMP="$(mktemp -d)"
+cleanup() { rm -rf "$TMP"; }
+trap cleanup EXIT
+
+echo "Cloning '$BRANCH' into a scratch workspace..."
+# --no-local forces a real (non-hardlinked) clone so filter-repo has a clean repo.
+git clone --no-local --single-branch --branch "$BRANCH" "$PRIVATE_ROOT" "$TMP/work"
+
+echo "Rewriting history to remove paths matching /$EXCLUDE_REGEX/ ..."
+# The default regex '(?:^|/)_files/' matches any path with an exact `_files`
+# directory segment, at any depth; --invert-paths removes those paths from every
+# commit. (Use a non-capturing group: filter-repo does not honor '(^|/)'.)
+( cd "$TMP/work" && uvx git-filter-repo --force --invert-paths --path-regex "$EXCLUDE_REGEX" )
+
+echo "Force-pushing rewritten '$BRANCH' to public ($PUBLIC_URL) ..."
+git -C "$TMP/work" push --force "$PUBLIC_URL" "HEAD:refs/heads/$BRANCH"
+
+if [ "$PUSH_TAGS" = "1" ]; then
+  echo "Force-pushing tags ..."
+  git -C "$TMP/work" push --force --tags "$PUBLIC_URL"
 fi
 
-REV="$(git rev-parse --short HEAD)"
-
-# Replace the public working tree with the filtered snapshot of private HEAD.
-git -C "$PUBLIC_DIR" rm -rq --ignore-unmatch . >/dev/null 2>&1 || true
-git archive HEAD | tar -x -C "$PUBLIC_DIR"
-
-# `git archive` can leave behind empty `_files/` directory entries; drop them.
-find "$PUBLIC_DIR" -type d -name _files -empty -delete 2>/dev/null || true
-
-git -C "$PUBLIC_DIR" add -A
-if git -C "$PUBLIC_DIR" diff --cached --quiet; then
-  echo "Public repo already up to date (private @ $REV)."
-  exit 0
-fi
-
-git -C "$PUBLIC_DIR" commit -q -m "Sync from private ($REV)"
-git -C "$PUBLIC_DIR" push
-echo "Public repo synced to private @ $REV and pushed."
+echo "Done: public '$BRANCH' now mirrors private history without _files."

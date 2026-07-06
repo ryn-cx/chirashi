@@ -11,6 +11,11 @@ class ExtendedMaturityRating(BaseModel):
     level: str
 
 
+class ContentDescriptorsWithSymbolItem(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    label: str
+
+
 class Version(BaseModel):
     model_config = ConfigDict(extra="forbid")
     audio_locale: str
@@ -37,6 +42,7 @@ class Datum(BaseModel):
     extended_maturity_rating: ExtendedMaturityRating
     maturity_ratings: list[str]
     content_descriptors: list[str]
+    content_descriptors_with_symbol: list[ContentDescriptorsWithSymbolItem]
     is_mature: bool
     mature_blocked: bool
     is_subbed: bool
