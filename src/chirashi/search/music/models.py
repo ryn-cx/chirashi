@@ -1,10 +1,11 @@
 # ruff: noqa: D100, D101
 from typing import Any
 
-from pydantic import AwareDatetime, BaseModel, ConfigDict, Field, RootModel
+from good_ass_pydantic_integrator import GAPIBaseModel
+from pydantic import AwareDatetime, ConfigDict, Field, RootModel
 
 
-class ThumbnailItem(BaseModel):
+class ThumbnailItem(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     width: int
     height: int
@@ -12,17 +13,17 @@ class ThumbnailItem(BaseModel):
     source: str
 
 
-class Images(BaseModel):
+class Images(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     thumbnail: list[ThumbnailItem]
 
 
-class SearchMetadata(BaseModel):
+class SearchMetadata(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     score: float
 
 
-class MainArtistItem(BaseModel):
+class MainArtistItem(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     connector: str
     id: str
@@ -32,31 +33,45 @@ class MainArtistItem(BaseModel):
     slug: str
 
 
-class Artists(BaseModel):
+class FeaturedArtistItem(GAPIBaseModel):
+    model_config = ConfigDict(extra="forbid")
+    connector: str
+    id: str
+    name: str
+    roles: list[str]
+    sequence_number: int = Field(..., alias="sequenceNumber")
+    slug: str
+
+
+class Artists(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     main_artist: list[MainArtistItem] = Field(..., alias="MainArtist")
+    featured_artist: list[FeaturedArtistItem] | None = Field(
+        None,
+        alias="FeaturedArtist",
+    )
 
 
-class Genre(BaseModel):
+class Genre(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     display_value: str = Field(..., alias="displayValue")
     id: str
 
 
-class Availability(BaseModel):
+class Availability(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     end_date: AwareDatetime = Field(..., alias="endDate")
     start_date: AwareDatetime = Field(..., alias="startDate")
 
 
-class Artist(BaseModel):
+class Artist(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     id: str
     name: str
     slug: str
 
 
-class SearchMusicItem(BaseModel):
+class SearchMusicItem(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     id: str
     new: bool

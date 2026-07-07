@@ -1,3 +1,4 @@
+# TODO: Validate
 """Search API endpoint."""
 
 from __future__ import annotations
@@ -110,7 +111,7 @@ class Search(BaseEndpoint[SearchModel]):
         """Extract items matching a content type from search results."""
         for datum in input_data.data:
             if datum.type == content_type:
-                return client.parse(GAPIClient.dump_response(datum.items))
+                return client.parse(GAPIClient.dump(datum.items))
         return client.parse([])
 
     @staticmethod

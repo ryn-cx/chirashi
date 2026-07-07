@@ -1,19 +1,11 @@
-# ruff: noqa: D100, D101, D102
-from typing import Annotated, Any
+# ruff: noqa: D100, D101
+from typing import Any
 
-from pydantic import (
-    AwareDatetime,
-    BaseModel,
-    ConfigDict,
-    Field,
-    PlainValidator,
-    field_serializer,
-)
-
-from chirashi.browse_series import _parse_last_public
+from good_ass_pydantic_integrator import GAPIBaseModel
+from pydantic import AwareDatetime, ConfigDict, Field
 
 
-class PosterTallItem(BaseModel):
+class PosterTallItem(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     width: int
     height: int
@@ -21,7 +13,7 @@ class PosterTallItem(BaseModel):
     source: str
 
 
-class PosterWideItem(BaseModel):
+class PosterWideItem(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     width: int
     height: int
@@ -29,7 +21,7 @@ class PosterWideItem(BaseModel):
     source: str
 
 
-class PromoImageItem(BaseModel):
+class PromoImageItem(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     width: int
     height: int
@@ -37,14 +29,14 @@ class PromoImageItem(BaseModel):
     source: str
 
 
-class Images(BaseModel):
+class Images(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     poster_tall: list[list[PosterTallItem]]
     poster_wide: list[list[PosterWideItem]]
     promo_image: list[list[PromoImageItem]] | None = None
 
 
-class ExtendedMaturityRating(BaseModel):
+class ExtendedMaturityRating(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     system: str | None = None
     rating: str | None = None
@@ -52,18 +44,18 @@ class ExtendedMaturityRating(BaseModel):
     advisories: list[None] | None = None
 
 
-class ContentDescriptorsWithSymbolItem(BaseModel):
+class ContentDescriptorsWithSymbolItem(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     label: str
 
 
-class LanguagePresentation(BaseModel):
+class LanguagePresentation(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     audio_notation: str
     text_notation: str
 
 
-class Award(BaseModel):
+class Award(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     text: str
     icon_url: str
@@ -71,7 +63,7 @@ class Award(BaseModel):
     is_winner: bool
 
 
-class SeriesMetadata(BaseModel):
+class SeriesMetadata(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     availability_status: str | None = None
     extended_description: str
@@ -98,42 +90,42 @@ class SeriesMetadata(BaseModel):
     awards: list[Award] | None = None
 
 
-class Field1s(BaseModel):
+class Field1s(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     displayed: str
     unit: str
     percentage: int
 
 
-class Field2s(BaseModel):
+class Field2s(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     displayed: str
     unit: str
     percentage: int
 
 
-class Field3s(BaseModel):
+class Field3s(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     displayed: str
     unit: str
     percentage: int
 
 
-class Field4s(BaseModel):
+class Field4s(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     displayed: str
     unit: str
     percentage: int
 
 
-class Field5s(BaseModel):
+class Field5s(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     displayed: str
     unit: str
     percentage: int
 
 
-class Rating(BaseModel):
+class Rating(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     field_1s: Field1s = Field(..., alias="1s")
     field_2s: Field2s = Field(..., alias="2s")
@@ -144,7 +136,7 @@ class Rating(BaseModel):
     total: int
 
 
-class Datum(BaseModel):
+class Datum(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     id: str
     external_id: str
@@ -158,21 +150,14 @@ class Datum(BaseModel):
     type: str
     slug: str
     slug_title: str
-    last_public: Annotated[AwareDatetime, PlainValidator(_parse_last_public)]
+    last_public: AwareDatetime
     images: Images
     series_metadata: SeriesMetadata
     language_presentation: LanguagePresentation | None = None
     rating: Rating
 
-    @field_serializer("last_public")
-    def serialize_last_public(
-        self,
-        value: Annotated[AwareDatetime, PlainValidator(_parse_last_public)],
-    ) -> str:
-        return value.raw
 
-
-class Params(BaseModel):
+class Params(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     n: int
     sort_by: str
@@ -181,12 +166,12 @@ class Params(BaseModel):
     start: int | None = None
 
 
-class Headers(BaseModel):
+class Headers(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     referer: str
 
 
-class Chirashi(BaseModel):
+class Chirashi(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     params: Params
     headers: Headers
@@ -194,7 +179,7 @@ class Chirashi(BaseModel):
     timestamp: AwareDatetime
 
 
-class BrowseSeries(BaseModel):
+class BrowseSeries(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     data: list[Datum]
     total: int

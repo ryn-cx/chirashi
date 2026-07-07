@@ -1,3 +1,4 @@
+# TODO: Validate
 """Chirashi is a client for downloading and parsing data from Crunchyroll."""
 
 import uuid

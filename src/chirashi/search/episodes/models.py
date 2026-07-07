@@ -1,8 +1,9 @@
 # ruff: noqa: D100, D101
-from pydantic import BaseModel, ConfigDict, RootModel
+from good_ass_pydantic_integrator import GAPIBaseModel
+from pydantic import AwareDatetime, ConfigDict, RootModel
 
 
-class ThumbnailItem(BaseModel):
+class ThumbnailItem(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     width: int
     height: int
@@ -10,50 +11,50 @@ class ThumbnailItem(BaseModel):
     source: str
 
 
-class Images(BaseModel):
+class Images(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     thumbnail: list[list[ThumbnailItem]]
 
 
-class SearchMetadata(BaseModel):
+class SearchMetadata(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     score: float
     rank: int
     popularity_score: int
 
 
-class LanguagePresentation(BaseModel):
+class LanguagePresentation(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     audio_notation: str
     text_notation: str
 
 
-class Up(BaseModel):
+class Up(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     displayed: str
     unit: str
 
 
-class Down(BaseModel):
+class Down(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     displayed: str
     unit: str
 
 
-class Rating(BaseModel):
+class Rating(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     total: int
     up: Up
     down: Down
 
 
-class AdBreak(BaseModel):
+class AdBreak(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     type: str
     offset_ms: int
 
 
-class ExtendedMaturityRating(BaseModel):
+class ExtendedMaturityRating(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     system: str
     rating: str
@@ -61,12 +62,12 @@ class ExtendedMaturityRating(BaseModel):
     advisories: list[None]
 
 
-class ContentDescriptorsWithSymbolItem(BaseModel):
+class ContentDescriptorsWithSymbolItem(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     label: str
 
 
-class Version(BaseModel):
+class Version(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     audio_locale: str
     guid: str
@@ -78,7 +79,7 @@ class Version(BaseModel):
     roles: list[str]
 
 
-class EpisodeMetadata(BaseModel):
+class EpisodeMetadata(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     series_id: str
     series_title: str
@@ -94,10 +95,10 @@ class EpisodeMetadata(BaseModel):
     season_sequence_number: int
     duration_ms: int
     ad_breaks: list[AdBreak]
-    episode_air_date: str
-    upload_date: str
-    availability_starts: str
-    availability_ends: str
+    episode_air_date: AwareDatetime
+    upload_date: AwareDatetime
+    availability_starts: AwareDatetime
+    availability_ends: AwareDatetime
     eligible_region: str
     is_premium_only: bool
     extended_maturity_rating: ExtendedMaturityRating
@@ -107,9 +108,9 @@ class EpisodeMetadata(BaseModel):
     is_mature: bool
     mature_blocked: bool
     available_date: None
-    free_available_date: str
+    free_available_date: AwareDatetime
     premium_date: None
-    premium_available_date: str
+    premium_available_date: AwareDatetime
     is_subbed: bool
     is_dubbed: bool
     is_clip: bool
@@ -127,7 +128,7 @@ class EpisodeMetadata(BaseModel):
     language_presentation: LanguagePresentation
 
 
-class SearchEpisodeItem(BaseModel):
+class SearchEpisodeItem(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     id: str
     external_id: str

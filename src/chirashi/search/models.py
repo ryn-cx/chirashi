@@ -1,10 +1,11 @@
 # ruff: noqa: D100, D101
 from typing import Any
 
-from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
+from good_ass_pydantic_integrator import GAPIBaseModel
+from pydantic import AwareDatetime, ConfigDict, Field
 
 
-class PosterTallItem(BaseModel):
+class PosterTallItem(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     width: int
     height: int
@@ -12,7 +13,7 @@ class PosterTallItem(BaseModel):
     source: str
 
 
-class PosterWideItem(BaseModel):
+class PosterWideItem(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     width: int
     height: int
@@ -20,7 +21,7 @@ class PosterWideItem(BaseModel):
     source: str
 
 
-class PromoImageItem(BaseModel):
+class PromoImageItem(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     width: int
     height: int
@@ -28,7 +29,7 @@ class PromoImageItem(BaseModel):
     source: str
 
 
-class ThumbnailItem(BaseModel):
+class ThumbnailItem(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     width: int
     height: int
@@ -36,7 +37,7 @@ class ThumbnailItem(BaseModel):
     source: str
 
 
-class Thumbnail(BaseModel):
+class Thumbnail(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     width: int
     height: int
@@ -44,7 +45,7 @@ class Thumbnail(BaseModel):
     source: str
 
 
-class Images(BaseModel):
+class Images(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     poster_tall: list[list[PosterTallItem]] | None = None
     poster_wide: list[list[PosterWideItem]] | None = None
@@ -52,7 +53,7 @@ class Images(BaseModel):
     thumbnail: list[list[ThumbnailItem] | Thumbnail] | None = None
 
 
-class ExtendedMaturityRating(BaseModel):
+class ExtendedMaturityRating(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     system: str
     rating: str
@@ -60,12 +61,12 @@ class ExtendedMaturityRating(BaseModel):
     advisories: list[None]
 
 
-class ContentDescriptorsWithSymbolItem(BaseModel):
+class ContentDescriptorsWithSymbolItem(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     label: str
 
 
-class Award(BaseModel):
+class Award(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     text: str
     icon_url: str
@@ -73,13 +74,13 @@ class Award(BaseModel):
     is_winner: bool
 
 
-class LanguagePresentation(BaseModel):
+class LanguagePresentation(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     audio_notation: str
     text_notation: str
 
 
-class SeriesMetadata(BaseModel):
+class SeriesMetadata(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     availability_status: str
     extended_description: str
@@ -106,61 +107,61 @@ class SeriesMetadata(BaseModel):
     language_presentation: LanguagePresentation
 
 
-class SearchMetadata(BaseModel):
+class SearchMetadata(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     score: float
     rank: int | None = None
     popularity_score: int | float | None = None
 
 
-class Field1s(BaseModel):
+class Field1s(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     displayed: str
     unit: str
     percentage: int
 
 
-class Field2s(BaseModel):
+class Field2s(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     displayed: str
     unit: str
     percentage: int
 
 
-class Field3s(BaseModel):
+class Field3s(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     displayed: str
     unit: str
     percentage: int
 
 
-class Field4s(BaseModel):
+class Field4s(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     displayed: str
     unit: str
     percentage: int
 
 
-class Field5s(BaseModel):
+class Field5s(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     displayed: str
     unit: str
     percentage: int
 
 
-class Up(BaseModel):
+class Up(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     displayed: str
     unit: str
 
 
-class Down(BaseModel):
+class Down(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     displayed: str
     unit: str
 
 
-class Rating(BaseModel):
+class Rating(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     field_1s: Field1s | None = Field(None, alias="1s")
     field_2s: Field2s | None = Field(None, alias="2s")
@@ -173,13 +174,13 @@ class Rating(BaseModel):
     down: Down | None = None
 
 
-class AdBreak(BaseModel):
+class AdBreak(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     type: str
     offset_ms: int
 
 
-class Version(BaseModel):
+class Version(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     audio_locale: str
     guid: str
@@ -191,7 +192,7 @@ class Version(BaseModel):
     roles: list[str]
 
 
-class EpisodeMetadata(BaseModel):
+class EpisodeMetadata(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     series_id: str
     series_title: str
@@ -207,10 +208,10 @@ class EpisodeMetadata(BaseModel):
     season_sequence_number: int
     duration_ms: int
     ad_breaks: list[AdBreak]
-    episode_air_date: str
-    upload_date: str
-    availability_starts: str
-    availability_ends: str
+    episode_air_date: AwareDatetime
+    upload_date: AwareDatetime
+    availability_starts: AwareDatetime
+    availability_ends: AwareDatetime
     eligible_region: str
     is_premium_only: bool
     extended_maturity_rating: ExtendedMaturityRating
@@ -220,9 +221,9 @@ class EpisodeMetadata(BaseModel):
     is_mature: bool
     mature_blocked: bool
     available_date: None
-    free_available_date: str
+    free_available_date: AwareDatetime
     premium_date: None
-    premium_available_date: str
+    premium_available_date: AwareDatetime
     is_subbed: bool
     is_dubbed: bool
     is_clip: bool
@@ -240,7 +241,7 @@ class EpisodeMetadata(BaseModel):
     language_presentation: LanguagePresentation
 
 
-class MainArtistItem(BaseModel):
+class MainArtistItem(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     connector: str
     id: str
@@ -250,31 +251,45 @@ class MainArtistItem(BaseModel):
     slug: str
 
 
-class Artists(BaseModel):
+class FeaturedArtistItem(GAPIBaseModel):
+    model_config = ConfigDict(extra="forbid")
+    connector: str
+    id: str
+    name: str
+    roles: list[str]
+    sequence_number: int = Field(..., alias="sequenceNumber")
+    slug: str
+
+
+class Artists(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     main_artist: list[MainArtistItem] = Field(..., alias="MainArtist")
+    featured_artist: list[FeaturedArtistItem] | None = Field(
+        None,
+        alias="FeaturedArtist",
+    )
 
 
-class Genre(BaseModel):
+class Genre(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     display_value: str = Field(..., alias="displayValue")
     id: str
 
 
-class Availability(BaseModel):
+class Availability(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     end_date: AwareDatetime = Field(..., alias="endDate")
     start_date: AwareDatetime = Field(..., alias="startDate")
 
 
-class Artist(BaseModel):
+class Artist(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     id: str
     name: str
     slug: str
 
 
-class Item(BaseModel):
+class Item(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     id: str
     external_id: str | None = None
@@ -288,7 +303,7 @@ class Item(BaseModel):
     type: str
     slug: str
     slug_title: str | None = None
-    last_public: str | None = None
+    last_public: AwareDatetime | None = None
     images: Images
     series_metadata: SeriesMetadata | None = None
     search_metadata: SearchMetadata
@@ -323,14 +338,14 @@ class Item(BaseModel):
     copyright: str | None = None
 
 
-class Datum(BaseModel):
+class Datum(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     type: str
     items: list[Item]
     count: int
 
 
-class Params(BaseModel):
+class Params(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     q: str
     n: int
@@ -340,12 +355,12 @@ class Params(BaseModel):
     locale: str
 
 
-class Headers(BaseModel):
+class Headers(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     referer: str
 
 
-class Chirashi(BaseModel):
+class Chirashi(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     params: Params
     headers: Headers
@@ -353,7 +368,7 @@ class Chirashi(BaseModel):
     timestamp: AwareDatetime
 
 
-class Search(BaseModel):
+class Search(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     data: list[Datum]
     total: int

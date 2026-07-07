@@ -1,3 +1,4 @@
+# TODO: Validate
 """Seasons API endpoint."""
 
 from __future__ import annotations

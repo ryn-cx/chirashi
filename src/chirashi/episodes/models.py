@@ -1,15 +1,16 @@
 # ruff: noqa: D100, D101
-from pydantic import AwareDatetime, BaseModel, ConfigDict
+from good_ass_pydantic_integrator import GAPIBaseModel
+from pydantic import AwareDatetime, ConfigDict
 
 
-class ExtendedMaturityRating(BaseModel):
+class ExtendedMaturityRating(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     system: str
     rating: str
     level: str
 
 
-class Version(BaseModel):
+class Version(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     audio_locale: str
     guid: str
@@ -21,12 +22,12 @@ class Version(BaseModel):
     roles: list[str]
 
 
-class ContentDescriptorsWithSymbolItem(BaseModel):
+class ContentDescriptorsWithSymbolItem(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     label: str
 
 
-class ThumbnailItem(BaseModel):
+class ThumbnailItem(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     width: int
     height: int
@@ -34,24 +35,24 @@ class ThumbnailItem(BaseModel):
     source: str
 
 
-class Images(BaseModel):
+class Images(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     thumbnail: list[list[ThumbnailItem]]
 
 
-class AdBreak(BaseModel):
+class AdBreak(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     type: str
     offset_ms: int
 
 
-class LanguagePresentation(BaseModel):
+class LanguagePresentation(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     audio_notation: str
     text_notation: str
 
 
-class Datum(BaseModel):
+class Datum(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     id: str
     channel_id: str
@@ -116,22 +117,22 @@ class Datum(BaseModel):
     roles: list[str]
 
 
-class Meta(BaseModel):
+class Meta(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     versions_considered: bool | None = None
 
 
-class Params(BaseModel):
+class Params(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     locale: str
 
 
-class Headers(BaseModel):
+class Headers(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     referer: str
 
 
-class Chirashi(BaseModel):
+class Chirashi(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     params: Params
     headers: Headers
@@ -139,7 +140,7 @@ class Chirashi(BaseModel):
     timestamp: AwareDatetime
 
 
-class Episodes(BaseModel):
+class Episodes(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     data: list[Datum]
     total: int
