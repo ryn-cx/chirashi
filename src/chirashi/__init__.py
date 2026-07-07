@@ -21,7 +21,6 @@ if TYPE_CHECKING:
     import httpx
 
 DEVICE_ID = uuid.uuid4().hex
-DEFAULT_TIMEOUT = 30
 
 logger = getLogger(__name__)
 logger.addHandler(NullHandler())
@@ -65,15 +64,6 @@ class Chirashi:
         self.episodes = Episodes(self)
         self.search = Search(self)
 
-        super().__init__()
-
-    USER_AGENT = (
-        "Mozilla/5.0 (X11; Linux x86_64; rv:147.0) Gecko/20100101 Firefox/147.0"
-    )
-
-    # TODO: How long is this valid for?
-    PUBLIC_TOKEN = "Basic bm9haWhkZXZtXzZpeWcwYThsMHE6"
-
     @property
     def _access_token(self) -> str:
         if not self._access_token_value or self._token_expires_at < datetime.now(
@@ -102,11 +92,15 @@ class Chirashi:
 
     def _login(self) -> str:
         base = "https://sso.crunchyroll.com"
+        # A browser-like User-Agent is required for the SSO login flow.
+        user_agent = (
+            "Mozilla/5.0 (X11; Linux x86_64; rv:147.0) Gecko/20100101 Firefox/147.0"
+        )
         # The login endpoint only sets etp_rt when the Cloudflare __cf_bm cookie
         # from an initial page load is present, so warm up first to obtain it.
         warmup = self.get_around_client.get(
             f"{base}/login",
-            headers={"User-Agent": self.USER_AGENT},
+            headers={"User-Agent": user_agent},
             timeout=self.timeout,
         )
         cf_bm = self._cookies(warmup).get("__cf_bm", "")
@@ -119,7 +113,7 @@ class Chirashi:
                 "eventSettings": {},
             },
             headers={
-                "User-Agent": self.USER_AGENT,
+                "User-Agent": user_agent,
                 "Origin": base,
                 "Referer": f"{base}/login",
             },
@@ -137,39 +131,22 @@ class Chirashi:
         return etp_rt
 
     def _download_access_token(self) -> None:
-        if not self.anonymous:
-            # Logged in: exchange an etp_rt cookie for a token. Crunchyroll no
-            # longer supports the password or refresh_token grants, so an expired
-            # token is renewed by re-exchanging the cached etp_rt (or logging in
-            # again if it is missing or has expired).
+        if self.anonymous:
+            self._store_access_token(self._request_token("client_id"))
+        else:
             self._download_logged_in_access_token()
-            return
-
-        url = f"https://{self.domain}/auth/v1/token"
-        logger.info("Downloading anonymous access token: %s", url)
-        response = self.get_around_client.post(
-            url,
-            data={
-                "device_id": self.device_id,
-                "device_type": self.device_type,
-                "grant_type": "client_id",
-            },
-            headers={"Authorization": self.PUBLIC_TOKEN},
-            timeout=self.timeout,
-        )
-        self._store_access_token(response.json())
 
     def _download_logged_in_access_token(self) -> None:
         # Prefer the cached etp_rt; only log in when one isn't already available.
-        logged_in_this_call = False
+        logged_in = False
         if not self._etp_rt:
             self._etp_rt = self._login()
-            logged_in_this_call = True
+            logged_in = True
 
         parsed_response = self._request_etp_rt_token()
 
         # A cached etp_rt may have expired; fall back to a fresh login and retry.
-        if "access_token" not in parsed_response and not logged_in_this_call:
+        if "access_token" not in parsed_response and not logged_in:
             logger.info("Cached etp_rt rejected; logging in again.")
             self._etp_rt = self._login()
             parsed_response = self._request_etp_rt_token()
@@ -177,17 +154,28 @@ class Chirashi:
         self._store_access_token(parsed_response)
 
     def _request_etp_rt_token(self) -> dict[str, Any]:
+        return self._request_token(
+            "etp_rt_cookie",
+            cookies={"device_id": self.device_id, "etp_rt": self._etp_rt},
+        )
+
+    def _request_token(
+        self,
+        grant_type: str,
+        cookies: dict[str, str] | None = None,
+    ) -> dict[str, Any]:
         url = f"https://{self.domain}/auth/v1/token"
-        logger.info("Downloading logged in access token: %s", url)
+        logger.info("Downloading access token (%s): %s", grant_type, url)
         response = self.get_around_client.post(
             url,
             data={
                 "device_id": self.device_id,
                 "device_type": self.device_type,
-                "grant_type": "etp_rt_cookie",
+                "grant_type": grant_type,
             },
-            headers={"Authorization": self.PUBLIC_TOKEN},
-            cookies={"device_id": self.device_id, "etp_rt": self._etp_rt},
+            # TODO: How long is this token valid for?
+            headers={"Authorization": "Basic bm9haWhkZXZtXzZpeWcwYThsMHE6"},
+            cookies=cookies or {},
             timeout=self.timeout,
         )
         return response.json()
