@@ -14,9 +14,9 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+  "keyring>=25.7.0",
   "prek>=0.3.2",
   "pytest>=8.4.2",
-  "python-dotenv>=1.2.1",
   "ruff>=0.13.3",
 ]
 

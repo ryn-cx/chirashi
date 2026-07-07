@@ -1,10 +1,12 @@
 # TODO: Validate
 """Chirashi is a client for downloading and parsing data from Crunchyroll."""
 
+from __future__ import annotations
+
 import uuid
 from datetime import UTC, datetime, timedelta
 from logging import NullHandler, getLogger
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from get_around import GetAround
 
@@ -14,6 +16,9 @@ from chirashi.exceptions import HTTPError, LoginError
 from chirashi.search import Search
 from chirashi.seasons import Seasons
 from chirashi.series import Series
+
+if TYPE_CHECKING:
+    import httpx
 
 DEVICE_ID = uuid.uuid4().hex
 DEFAULT_TIMEOUT = 30
@@ -27,7 +32,6 @@ class Chirashi:
 
     def __init__(  # noqa: PLR0913
         self,
-        # TODO: Login is currently broken after API changes.
         username: str | None = None,
         password: str | None = None,
         # These values were chosen to match the CrunchyRoll app on Windows.
@@ -36,6 +40,8 @@ class Chirashi:
         timeout: int = 30,
         get_around_server: str | None = None,
         get_around_password: str | None = None,
+        # A previously obtained etp_rt cookie to reuse instead of logging in.
+        etp_rt: str | None = None,
     ) -> None:
         """Initialize the Chirashi client."""
         self.get_around_client = GetAround(
@@ -43,14 +49,14 @@ class Chirashi:
             password=get_around_password,
         )
         self.timeout = timeout
-        self.anonymous = not (username and password)
+        self.anonymous = not (username and password) and not etp_rt
         self.username = username
         self.password = password
         self._token_expires_at = datetime.now(tz=UTC)
         self.device_id = device_id
         self.device_type = device_type
         self._access_token_value = ""
-        self._refresh_token = ""
+        self._etp_rt = etp_rt or ""
         self.domain = "beta-api.crunchyroll.com"
 
         self.browse_series = BrowseSeries(self)
@@ -61,8 +67,12 @@ class Chirashi:
 
         super().__init__()
 
+    USER_AGENT = (
+        "Mozilla/5.0 (X11; Linux x86_64; rv:147.0) Gecko/20100101 Firefox/147.0"
+    )
+
     # TODO: How long is this valid for?
-    PUBLIC_TOKEN = "bm9haWhkZXZtXzZpeWcwYThsMHE6"
+    PUBLIC_TOKEN = "Basic bm9haWhkZXZtXzZpeWcwYThsMHE6"
 
     @property
     def _access_token(self) -> str:
@@ -77,37 +87,112 @@ class Chirashi:
     def _access_token(self, value: str) -> None:
         self._access_token_value = value
 
-    def _download_access_token(self) -> None:
-        url = f"https://{self.domain}/auth/v1/token"
-        headers = {"Authorization": f"Basic {self.PUBLIC_TOKEN}"}
+    @property
+    def etp_rt(self) -> str:
+        """The etp_rt cookie."""
+        return self._etp_rt
 
-        data: dict[str, Any] = {
-            "device_id": self.device_id,
-            "device_type": self.device_type,
-        }
+    @staticmethod
+    def _cookies(response: httpx.Response) -> dict[str, str]:
+        cookies: dict[str, str] = {}
+        for raw in response.headers.get_list("set-cookie"):
+            name, _, rest = raw.partition("=")
+            cookies[name.strip()] = rest.split(";", 1)[0]
+        return cookies
 
-        if self._refresh_token:
-            logger.info("Refreshing access token: %s", url)
-            data["grant_type"] = "refresh_token"
-            data["refresh_token"] = self._refresh_token
-        elif self.anonymous:
-            logger.info("Downloading anonymous access token: %s", url)
-            data["grant_type"] = "client_id"
-        else:
-            logger.info("Downloading logged in access token: %s", url)
-            data["grant_type"] = "password"
-            data["scope"] = "offline_access"
-            data["username"] = self.username
-            data["password"] = self.password
-
-        response = self.get_around_client.post(
-            url,
-            data=data,
-            headers=headers,
+    def _login(self) -> str:
+        base = "https://sso.crunchyroll.com"
+        # The login endpoint only sets etp_rt when the Cloudflare __cf_bm cookie
+        # from an initial page load is present, so warm up first to obtain it.
+        warmup = self.get_around_client.get(
+            f"{base}/login",
+            headers={"User-Agent": self.USER_AGENT},
             timeout=self.timeout,
         )
-        parsed_response = response.json()
+        cf_bm = self._cookies(warmup).get("__cf_bm", "")
 
+        response = self.get_around_client.post(
+            f"{base}/api/login",
+            json={
+                "email": self.username,
+                "password": self.password,
+                "eventSettings": {},
+            },
+            headers={
+                "User-Agent": self.USER_AGENT,
+                "Origin": base,
+                "Referer": f"{base}/login",
+            },
+            cookies={"__cf_bm": cf_bm, "device_id": self.device_id},
+            timeout=self.timeout,
+        )
+
+        etp_rt = self._cookies(response).get("etp_rt")
+        if not etp_rt:
+            try:
+                error = response.json().get("error", "Login failed")
+            except ValueError, AttributeError:
+                error = "Login failed"
+            raise LoginError(error)
+        return etp_rt
+
+    def _download_access_token(self) -> None:
+        if not self.anonymous:
+            # Logged in: exchange an etp_rt cookie for a token. Crunchyroll no
+            # longer supports the password or refresh_token grants, so an expired
+            # token is renewed by re-exchanging the cached etp_rt (or logging in
+            # again if it is missing or has expired).
+            self._download_logged_in_access_token()
+            return
+
+        url = f"https://{self.domain}/auth/v1/token"
+        logger.info("Downloading anonymous access token: %s", url)
+        response = self.get_around_client.post(
+            url,
+            data={
+                "device_id": self.device_id,
+                "device_type": self.device_type,
+                "grant_type": "client_id",
+            },
+            headers={"Authorization": self.PUBLIC_TOKEN},
+            timeout=self.timeout,
+        )
+        self._store_access_token(response.json())
+
+    def _download_logged_in_access_token(self) -> None:
+        # Prefer the cached etp_rt; only log in when one isn't already available.
+        logged_in_this_call = False
+        if not self._etp_rt:
+            self._etp_rt = self._login()
+            logged_in_this_call = True
+
+        parsed_response = self._request_etp_rt_token()
+
+        # A cached etp_rt may have expired; fall back to a fresh login and retry.
+        if "access_token" not in parsed_response and not logged_in_this_call:
+            logger.info("Cached etp_rt rejected; logging in again.")
+            self._etp_rt = self._login()
+            parsed_response = self._request_etp_rt_token()
+
+        self._store_access_token(parsed_response)
+
+    def _request_etp_rt_token(self) -> dict[str, Any]:
+        url = f"https://{self.domain}/auth/v1/token"
+        logger.info("Downloading logged in access token: %s", url)
+        response = self.get_around_client.post(
+            url,
+            data={
+                "device_id": self.device_id,
+                "device_type": self.device_type,
+                "grant_type": "etp_rt_cookie",
+            },
+            headers={"Authorization": self.PUBLIC_TOKEN},
+            cookies={"device_id": self.device_id, "etp_rt": self._etp_rt},
+            timeout=self.timeout,
+        )
+        return response.json()
+
+    def _store_access_token(self, parsed_response: dict[str, Any]) -> None:
         if "access_token" not in parsed_response:
             raise LoginError(parsed_response.get("error", "Login failed"))
 
@@ -115,10 +200,6 @@ class Chirashi:
         self._token_expires_at = datetime.now(tz=UTC) + timedelta(
             seconds=parsed_response["expires_in"],
         )
-
-        # Refresh token are only available when the user is logged into an account.
-        if "refresh_token" in parsed_response:
-            self._refresh_token = parsed_response["refresh_token"]
 
     def login(self, username: str, password: str) -> None:
         """Log in with the given credentials.
@@ -134,7 +215,7 @@ class Chirashi:
         self.password = password
         self.anonymous = False
         self._access_token_value = ""
-        self._refresh_token = ""
+        self._etp_rt = ""
         self._download_access_token()
 
     def logout(self) -> None:
@@ -143,7 +224,7 @@ class Chirashi:
         self.password = None
         self.anonymous = True
         self._access_token_value = ""
-        self._refresh_token = ""
+        self._etp_rt = ""
 
     def download(
         self,
