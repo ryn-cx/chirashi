@@ -1,16 +1,8 @@
-# ruff: noqa: D100, D101
+# ruff: noqa: D100, D101, D102, TC001, TC002, TC003
 from typing import Any
 
 from good_ass_pydantic_integrator import GAPIBaseModel
 from pydantic import AwareDatetime, ConfigDict
-
-
-class PosterTallItem(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
-    width: int
-    height: int
-    type: str
-    source: str
 
 
 class PosterWideItem(GAPIBaseModel):
@@ -21,10 +13,18 @@ class PosterWideItem(GAPIBaseModel):
     source: str
 
 
+class PosterTallItem(GAPIBaseModel):
+    model_config = ConfigDict(extra="forbid")
+    width: int
+    height: int
+    type: str
+    source: str
+
+
 class Images(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
-    poster_tall: list[list[PosterTallItem]]
     poster_wide: list[list[PosterWideItem]]
+    poster_tall: list[list[PosterTallItem]]
 
 
 class ExtendedMaturityRating(GAPIBaseModel):

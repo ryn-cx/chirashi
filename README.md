@@ -34,8 +34,8 @@ browse = client.browse_series.get(n=36, sort_by="newly_added")
 
 # Search across music, series, episodes, and top results.
 results = client.search.get("naruto")
-series_hits = client.search.extract_series(results)
-episode_hits = client.search.extract_episodes(results)
-music_hits = client.search.extract_music(results)
-top_hits = client.search.extract_top_results(results)
+series_hits = results.series
+episode_hits = results.episode
+music_hits = results.music
+top_hits = results.top_results
 ```

@@ -1,11 +1,9 @@
-# ruff: noqa: D100, D101
-from typing import Any
-
+# ruff: noqa: D100, D101, D102, TC001, TC002, TC003
 from good_ass_pydantic_integrator import GAPIBaseModel
 from pydantic import AwareDatetime, ConfigDict, Field
 
 
-class PosterTallItem(GAPIBaseModel):
+class PosterWideItem(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     width: int
     height: int
@@ -13,7 +11,7 @@ class PosterTallItem(GAPIBaseModel):
     source: str
 
 
-class PosterWideItem(GAPIBaseModel):
+class PosterTallItem(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     width: int
     height: int
@@ -31,9 +29,9 @@ class PromoImageItem(GAPIBaseModel):
 
 class Images(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
-    poster_tall: list[list[PosterTallItem]]
     poster_wide: list[list[PosterWideItem]]
-    promo_image: list[list[PromoImageItem]] | None = None
+    poster_tall: list[list[PosterTallItem]]
+    promo_image: list[list[PromoImageItem]]
 
 
 class ExtendedMaturityRating(GAPIBaseModel):
@@ -65,7 +63,7 @@ class Award(GAPIBaseModel):
 
 class SeriesMetadata(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
-    availability_status: str | None = None
+    availability_status: str
     extended_description: str
     episode_count: int
     season_count: int
@@ -80,12 +78,12 @@ class SeriesMetadata(GAPIBaseModel):
     is_subbed: bool
     is_dubbed: bool
     is_simulcast: bool
-    linked_guid: str | None = None
+    linked_guid: str
     availability_notes: str
     audio_locales: list[str]
     subtitle_locales: list[str]
     series_launch_year: int
-    tenant_categories: list[str] | None = None
+    tenant_categories: list[str]
     language_presentation: LanguagePresentation
     awards: list[Award] | None = None
 
@@ -153,7 +151,7 @@ class Datum(GAPIBaseModel):
     last_public: AwareDatetime
     images: Images
     series_metadata: SeriesMetadata
-    language_presentation: LanguagePresentation | None = None
+    language_presentation: LanguagePresentation
     rating: Rating
 
 
@@ -184,4 +182,3 @@ class BrowseSeries(GAPIBaseModel):
     data: list[Datum]
     total: int
     chirashi: Chirashi
-    meta: dict[str, Any] | None = None

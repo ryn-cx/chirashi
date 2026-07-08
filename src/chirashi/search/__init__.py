@@ -3,23 +3,14 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
-
-from good_ass_pydantic_integrator import GAPIClient
-from pydantic import BaseModel
+from collections.abc import Mapping
+from typing import TYPE_CHECKING, Any, cast
 
 from chirashi.base_api_endpoint import BaseEndpoint
-from chirashi.search.episodes import SearchEpisode
 from chirashi.search.models import Search as SearchModel
-from chirashi.search.music import SearchMusic
-from chirashi.search.series import SearchSeries
-from chirashi.search.top_results import SearchTopResults
 
 if TYPE_CHECKING:
-    from chirashi.search.episodes.models import SearchEpisodeItem
-    from chirashi.search.music.models import SearchMusicItem
-    from chirashi.search.series.models import SearchSery
-    from chirashi.search.top_results.models import SearchTopResult
+    from good_ass_pydantic_integrator.constants import INPUT_TYPE
 
 
 class Search(BaseEndpoint[SearchModel]):
@@ -102,40 +93,36 @@ class Search(BaseEndpoint[SearchModel]):
         )
         return self.parse(data)
 
-    @staticmethod
-    def _extract_type[T: BaseModel](
-        input_data: SearchModel,
-        content_type: str,
-        client: type[GAPIClient[T]],
-    ) -> T:
-        """Extract items matching a content type from search results."""
-        for datum in input_data.data:
-            if datum.type == content_type:
-                return client.parse(GAPIClient.dump(datum.items))
-        return client.parse([])
+    @classmethod
+    def clean_data(cls, data: INPUT_TYPE) -> INPUT_TYPE:
+        """Denormalize the grouped ``data`` list into one list per category.
 
-    @staticmethod
-    def extract_music(input_data: SearchModel) -> list[SearchMusicItem]:
-        """Extract music items from search results."""
-        return Search._extract_type(input_data, "music", SearchMusic).root
+        Crunchyroll returns search results as ``data: [{type, items, count},
+        ...]``. This reshapes them into a top-level list per category so the
+        single generated model exposes each type directly (``.music``,
+        ``.series``, ``.episode``, ``.top_results``) instead of needing a
+        separate class per category. Every category is always present, defaulting
+        to an empty list so a no-result search still validates. The saved JSON
+        corpus keeps the original grouped shape; this only runs on the way into
+        parsing and model generation.
 
-    @staticmethod
-    def extract_series(input_data: SearchModel) -> list[SearchSery]:
-        """Extract series items from search results."""
-        return Search._extract_type(input_data, "series", SearchSeries).root
+        Args:
+            data: The raw JSON data, as downloaded/saved.
 
-    @staticmethod
-    def extract_episodes(input_data: SearchModel) -> list[SearchEpisodeItem]:
-        """Extract episode items from search results."""
-        return Search._extract_type(input_data, "episode", SearchEpisode).root
+        Returns:
+            The reshaped data with one list field per search category.
+        """
+        if not isinstance(data, Mapping) or "data" not in data:
+            return data
 
-    @staticmethod
-    def extract_top_results(
-        input_data: SearchModel,
-    ) -> list[SearchTopResult]:
-        """Extract top results items from search results."""
-        return Search._extract_type(
-            input_data,
-            "top_results",
-            SearchTopResults,
-        ).root
+        categories = ("top_results", "series", "episode", "music")
+        grouped: dict[str, Any] = {category: [] for category in categories}
+        for datum in cast("list[dict[str, Any]]", data["data"]):
+            grouped[datum["type"]] = datum["items"]
+
+        return {
+            **grouped,
+            "total": data["total"],
+            "meta": data["meta"],
+            "chirashi": data["chirashi"],
+        }

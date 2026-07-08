@@ -12,10 +12,6 @@ import pytest
 
 from chirashi import Chirashi
 from chirashi.exceptions import HTTPError, LoginError
-from chirashi.search.episodes import SearchEpisode
-from chirashi.search.music import SearchMusic
-from chirashi.search.series import SearchSeries
-from chirashi.search.top_results import SearchTopResults
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
@@ -118,33 +114,28 @@ class TestGet:
             assert data.season_id == "GYE5CQMQ5"
 
     def test_get_search_series(self) -> None:
-        """Test getting search results."""
+        """Test getting series items from a live search."""
         model = client.search.get("Frieren")
         client.search.save_new_json_file(client.search.dump(model))
-        expected_count = 4  # Search results are grouped into 4 categories.
-        assert len(model.data) == expected_count == model.total
-        assert client.search.extract_series(model)[0].id == "GG5H5XQX4"
+        assert model.series[0].id == "GG5H5XQX4"
 
     def test_get_search_music(self) -> None:
-        """Test extracting music items from a live search."""
+        """Test getting music items from a live search."""
         model = client.search.get("Frieren")
         client.search.save_new_json_file(client.search.dump(model))
-        client.search.extract_music(model)
-        assert any(datum.type == "music" for datum in model.data)
+        assert model.music
 
     def test_get_search_episodes(self) -> None:
-        """Test extracting episode items from a live search."""
+        """Test getting episode items from a live search."""
         model = client.search.get("Frieren")
         client.search.save_new_json_file(client.search.dump(model))
-        client.search.extract_episodes(model)
-        assert any(datum.type == "episode" for datum in model.data)
+        assert model.episode
 
     def test_get_search_top_results(self) -> None:
-        """Test extracting top results items from a live search."""
+        """Test getting top results items from a live search."""
         model = client.search.get("Frieren")
         client.search.save_new_json_file(client.search.dump(model))
-        client.search.extract_top_results(model)
-        assert any(datum.type == "top_results" for datum in model.data)
+        assert model.top_results
 
     @requires_login
     def test_login_method(self) -> None:
@@ -214,8 +205,7 @@ class TestInvalidGet:
         """Test searching for a query with no results."""
         model = client.search.get("qwertyuiopasdfghjklzxcvbnm")
         client.search.save_new_json_file(client.search.dump(model))
-        expected_count = 0  # When no results are found no categories are returned
-        assert len(model.data) == expected_count == model.total
+        assert model.music == model.series == model.episode == model.top_results == []
 
     @requires_login
     def test_login_method_invalid(self) -> None:
@@ -271,26 +261,6 @@ class TestParse:
         for json_file in client.search.json_files():
             client.search.parse(json.loads(json_file.read_text()))
 
-    def test_parse_search_music(self) -> None:
-        """Test parsing every saved file."""
-        for json_file in SearchMusic.json_files():
-            SearchMusic.parse(json.loads(json_file.read_text()))
-
-    def test_parse_search_series(self) -> None:
-        """Test parsing every saved file."""
-        for json_file in SearchSeries.json_files():
-            SearchSeries.parse(json.loads(json_file.read_text()))
-
-    def test_parse_search_episode(self) -> None:
-        """Test parsing every saved file."""
-        for json_file in SearchEpisode.json_files():
-            SearchEpisode.parse(json.loads(json_file.read_text()))
-
-    def test_parse_search_top_results(self) -> None:
-        """Test parsing every saved file."""
-        for json_file in SearchTopResults.json_files():
-            SearchTopResults.parse(json.loads(json_file.read_text()))
-
 
 class TestExtract:
     """Test extracting typed entries from saved responses."""
@@ -317,22 +287,22 @@ class TestExtract:
         """Test extracting music items from search results."""
         for json_file in client.search.json_files():
             model = client.search.parse(json.loads(json_file.read_text()))
-            client.search.extract_music(model)
+            assert isinstance(model.music, list)
 
     def test_extract_search_series(self) -> None:
         """Test extracting series items from search results."""
         for json_file in client.search.json_files():
             model = client.search.parse(json.loads(json_file.read_text()))
-            client.search.extract_series(model)
+            assert isinstance(model.series, list)
 
     def test_extract_search_episodes(self) -> None:
         """Test extracting episode items from search results."""
         for json_file in client.search.json_files():
             model = client.search.parse(json.loads(json_file.read_text()))
-            client.search.extract_episodes(model)
+            assert isinstance(model.episode, list)
 
     def test_extract_search_top_results(self) -> None:
         """Test extracting top results items from search results."""
         for json_file in client.search.json_files():
             model = client.search.parse(json.loads(json_file.read_text()))
-            client.search.extract_top_results(model)
+            assert isinstance(model.top_results, list)

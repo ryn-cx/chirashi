@@ -1,4 +1,4 @@
-# ruff: noqa: D100, D101
+# ruff: noqa: D100, D101, D102, TC001, TC002, TC003
 from good_ass_pydantic_integrator import GAPIBaseModel
 from pydantic import AwareDatetime, ConfigDict
 
@@ -119,7 +119,7 @@ class Datum(GAPIBaseModel):
 
 class Meta(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
-    versions_considered: bool | None = None
+    versions_considered: bool
 
 
 class Params(GAPIBaseModel):
