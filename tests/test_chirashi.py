@@ -63,7 +63,7 @@ class TestGet:
     def test_get_browse_series(self) -> None:
         """Test getting browse series."""
         model = client.browse_series.get()
-        client.browse_series.save_new_json_file(client.browse_series.dump(model))
+        client.browse_series.save_new_json_file(client.browse_series.original_input(model))
         expected_count = DEFAULT_ENTRIES_PER_PAGE
         assert expected_count < model.total
         assert len(model.data) == expected_count
@@ -84,13 +84,13 @@ class TestGet:
         past_end = client.browse_series.get(
             start=first_page.total - DEFAULT_ENTRIES_PER_PAGE,
         )
-        client.browse_series.save_new_json_file(client.browse_series.dump(past_end))
+        client.browse_series.save_new_json_file(client.browse_series.original_input(past_end))
         assert len(past_end.data) == DEFAULT_ENTRIES_PER_PAGE
 
     def test_get_series(self) -> None:
         """Test getting series."""
         model = client.series.get("GG5H5XQX4")
-        client.series.save_new_json_file(client.series.dump(model))
+        client.series.save_new_json_file(client.series.original_input(model))
         expected_count = 1
         assert len(model.data) == expected_count == model.total
         assert model.data[0].id == "GG5H5XQX4"
@@ -98,7 +98,7 @@ class TestGet:
     def test_get_seasons(self) -> None:
         """Test getting seasons."""
         model = client.seasons.get("GG5H5XQX4")
-        client.seasons.save_new_json_file(client.seasons.dump(model))
+        client.seasons.save_new_json_file(client.seasons.original_input(model))
         expected_count = 2
         assert len(model.data) == expected_count == model.total
         for data in model.data:
@@ -107,7 +107,7 @@ class TestGet:
     def test_get_episodes(self) -> None:
         """Test getting episodes."""
         model = client.episodes.get("GYE5CQMQ5")
-        client.episodes.save_new_json_file(client.episodes.dump(model))
+        client.episodes.save_new_json_file(client.episodes.original_input(model))
         expected_count = 28
         assert len(model.data) == expected_count == model.total
         for data in model.data:
@@ -116,25 +116,25 @@ class TestGet:
     def test_get_search_series(self) -> None:
         """Test getting series items from a live search."""
         model = client.search.get("Frieren")
-        client.search.save_new_json_file(client.search.dump(model))
+        client.search.save_new_json_file(client.search.original_input(model))
         assert model.series[0].id == "GG5H5XQX4"
 
     def test_get_search_music(self) -> None:
         """Test getting music items from a live search."""
         model = client.search.get("Frieren")
-        client.search.save_new_json_file(client.search.dump(model))
+        client.search.save_new_json_file(client.search.original_input(model))
         assert model.music
 
     def test_get_search_episodes(self) -> None:
         """Test getting episode items from a live search."""
         model = client.search.get("Frieren")
-        client.search.save_new_json_file(client.search.dump(model))
+        client.search.save_new_json_file(client.search.original_input(model))
         assert model.episode
 
     def test_get_search_top_results(self) -> None:
         """Test getting top results items from a live search."""
         model = client.search.get("Frieren")
-        client.search.save_new_json_file(client.search.dump(model))
+        client.search.save_new_json_file(client.search.original_input(model))
         assert model.top_results
 
     @requires_login
@@ -190,21 +190,21 @@ class TestInvalidGet:
         # This endpoint does not return an HTTP error when no match is found, it
         # instead returns an empty list.
         model = client.seasons.get("GGGGGGGGG")
-        client.seasons.save_new_json_file(client.seasons.dump(model))
+        client.seasons.save_new_json_file(client.seasons.original_input(model))
         assert model.data == []
         assert model.total == 0
 
     def test_invalid_get_episodes(self) -> None:
         """Test getting invalid episodes."""
         model = client.episodes.get("GGGGGGGGG")
-        client.episodes.save_new_json_file(client.episodes.dump(model))
+        client.episodes.save_new_json_file(client.episodes.original_input(model))
         assert model.data == []
         assert model.total == 0
 
     def test_invalid_get_search(self) -> None:
         """Test searching for a query with no results."""
         model = client.search.get("qwertyuiopasdfghjklzxcvbnm")
-        client.search.save_new_json_file(client.search.dump(model))
+        client.search.save_new_json_file(client.search.original_input(model))
         assert model.music == model.series == model.episode == model.top_results == []
 
     @requires_login
