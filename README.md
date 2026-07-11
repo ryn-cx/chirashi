@@ -1,3 +1,4 @@
+<!-- TODO: Validate -->
 # chirashi
 
 Unofficial Crunchyroll API for Python.

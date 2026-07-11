@@ -1,3 +1,4 @@
+# TODO: Validate
 """Crunchyroll API wrapper."""
 
 import time
