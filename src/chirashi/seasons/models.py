@@ -2,7 +2,7 @@
 from typing import Any
 
 from good_ass_pydantic_integrator import GAPIBaseModel
-from pydantic import AwareDatetime, ConfigDict
+from pydantic import ConfigDict
 
 
 class ExtendedMaturityRating(GAPIBaseModel):
@@ -65,28 +65,8 @@ class Meta(GAPIBaseModel):
     versions_considered: bool
 
 
-class Params(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
-    locale: str
-    force_locale: None
-
-
-class Headers(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
-    referer: str
-
-
-class Chirashi(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
-    params: Params
-    headers: Headers
-    url: str
-    timestamp: AwareDatetime
-
-
 class Seasons(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     data: list[Datum]
     meta: Meta
     total: int
-    chirashi: Chirashi

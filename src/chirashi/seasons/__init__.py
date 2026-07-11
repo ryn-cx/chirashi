@@ -3,7 +3,7 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, override
 
 from chirashi.base_api_endpoint import BaseEndpoint
 from chirashi.seasons.models import Seasons as SeasonsModel
@@ -20,7 +20,7 @@ class Seasons(BaseEndpoint[SeasonsModel]):
         *,
         locale: str = "en-US",
     ) -> dict[str, Any]:
-        """Downloads seasons data for a given series ID.
+        """Downloads the seasons data for a given series ID.
 
         Args:
             series_id: The ID of the series to get seasons for.
@@ -38,12 +38,16 @@ class Seasons(BaseEndpoint[SeasonsModel]):
             endpoint=endpoint,
             params=params,
             headers=headers,
+            log_id=series_id,
         )
 
-    def get(self, series_id: str, *, locale: str = "en-US") -> SeasonsModel:
-        """Downloads and parses seasons data for a given series ID.
+    @staticmethod
+    @override
+    def has_content(response: dict[str, Any]) -> bool:
+        return bool(response["data"])
 
-        Convenience method that calls ``download()`` then ``parse()``.
+    def get(self, series_id: str, *, locale: str = "en-US") -> SeasonsModel:
+        """Downloads and parses the seasons data for a given series ID.
 
         Args:
             series_id: The ID of the series to get seasons for.
@@ -51,6 +55,10 @@ class Seasons(BaseEndpoint[SeasonsModel]):
 
         Returns:
             A Seasons model containing the parsed data.
+
+        Raises:
+            NoContentError: If the response has no meaningful content. The raw
+                response is available on the exception's `response` attribute.
         """
         data = self.download(series_id, locale=locale)
-        return self.parse(data)
+        return self._parse_or_raise(data, has_content=self.has_content(data))

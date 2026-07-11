@@ -369,12 +369,6 @@ class SearchMetadata3(GAPIBaseModel):
     score: float
 
 
-class Genre(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
-    display_value: str = Field(..., alias="displayValue")
-    id: str
-
-
 class MainArtistItem(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     connector: str
@@ -390,17 +384,23 @@ class Artists(GAPIBaseModel):
     main_artist: list[MainArtistItem] = Field(..., alias="MainArtist")
 
 
-class Availability(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
-    end_date: AwareDatetime = Field(..., alias="endDate")
-    start_date: AwareDatetime = Field(..., alias="startDate")
-
-
 class Artist(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     id: str
     name: str
     slug: str
+
+
+class Genre(GAPIBaseModel):
+    model_config = ConfigDict(extra="forbid")
+    display_value: str = Field(..., alias="displayValue")
+    id: str
+
+
+class Availability(GAPIBaseModel):
+    model_config = ConfigDict(extra="forbid")
+    end_date: AwareDatetime = Field(..., alias="endDate")
+    start_date: AwareDatetime = Field(..., alias="startDate")
 
 
 class MusicItem(GAPIBaseModel):
@@ -412,53 +412,30 @@ class MusicItem(GAPIBaseModel):
     slug: str
     images: Images3
     search_metadata: SearchMetadata3
-    genres: list[Genre]
-    mature_blocked: bool = Field(..., alias="matureBlocked")
-    created_at: str = Field(..., alias="createdAt")
-    artists: Artists
-    updated_at: str = Field(..., alias="updatedAt")
-    original_release: AwareDatetime = Field(..., alias="originalRelease")
-    sequence_number: int = Field(..., alias="sequenceNumber")
-    publish_date: AwareDatetime = Field(..., alias="publishDate")
-    is_mature: bool = Field(..., alias="isMature")
-    copyright: str
     is_premium_only: bool = Field(..., alias="isPremiumOnly")
-    display_artist_name: str = Field(..., alias="displayArtistName")
-    duration_ms: int = Field(..., alias="durationMs")
-    is_public: bool = Field(..., alias="isPublic")
-    availability: Availability
+    artists: Artists
     maturity_ratings: dict[str, Any] = Field(..., alias="maturityRatings")
-    licensor: str
-    streams_link: str
-    hash: str
-    display_artist_name_required: bool = Field(..., alias="displayArtistNameRequired")
     artist: Artist
-    ready_to_publish: bool = Field(..., alias="readyToPublish")
+    publish_date: AwareDatetime = Field(..., alias="publishDate")
+    display_artist_name_required: bool = Field(..., alias="displayArtistNameRequired")
+    is_public: bool = Field(..., alias="isPublic")
+    created_at: str = Field(..., alias="createdAt")
+    hash: str
     anime_ids: list[str] = Field(..., alias="animeIds")
+    sequence_number: int = Field(..., alias="sequenceNumber")
+    streams_link: str
+    display_artist_name: str = Field(..., alias="displayArtistName")
     new: bool
-
-
-class Params(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
-    q: str
-    n: int
-    type: str
-    ratings: str
-    preferred_audio_language: str
-    locale: str
-
-
-class Headers(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
-    referer: str
-
-
-class Chirashi(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
-    params: Params
-    headers: Headers
-    url: str
-    timestamp: AwareDatetime
+    genres: list[Genre]
+    original_release: AwareDatetime = Field(..., alias="originalRelease")
+    availability: Availability
+    updated_at: str = Field(..., alias="updatedAt")
+    mature_blocked: bool = Field(..., alias="matureBlocked")
+    copyright: str
+    licensor: str
+    ready_to_publish: bool = Field(..., alias="readyToPublish")
+    duration_ms: int = Field(..., alias="durationMs")
+    is_mature: bool = Field(..., alias="isMature")
 
 
 class Search(GAPIBaseModel):
@@ -469,4 +446,3 @@ class Search(GAPIBaseModel):
     music: list[MusicItem]
     total: int
     meta: dict[str, Any]
-    chirashi: Chirashi

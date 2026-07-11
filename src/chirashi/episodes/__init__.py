@@ -3,7 +3,7 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, override
 
 from chirashi.base_api_endpoint import BaseEndpoint
 from chirashi.episodes.models import Episodes as EpisodesModel
@@ -20,7 +20,7 @@ class Episodes(BaseEndpoint[EpisodesModel]):
         *,
         locale: str = "en-US",
     ) -> dict[str, Any]:
-        """Downloads episodes data for a given season ID.
+        """Downloads the episodes data for a given season ID.
 
         Args:
             series_id: The season ID to get episodes for.
@@ -40,10 +40,13 @@ class Episodes(BaseEndpoint[EpisodesModel]):
             headers=headers,
         )
 
-    def get(self, series_id: str, *, locale: str = "en-US") -> EpisodesModel:
-        """Downloads and parses episodes data for a given season ID.
+    @staticmethod
+    @override
+    def has_content(response: dict[str, Any]) -> bool:
+        return bool(response["data"])
 
-        Convenience method that calls ``download()`` then ``parse()``.
+    def get(self, series_id: str, *, locale: str = "en-US") -> EpisodesModel:
+        """Downloads and parses the episodes data for a given season ID.
 
         Args:
             series_id: The season ID to get episodes for.
@@ -51,6 +54,10 @@ class Episodes(BaseEndpoint[EpisodesModel]):
 
         Returns:
             An Episodes model containing the parsed data.
+
+        Raises:
+            NoContentError: If the response has no meaningful content. The raw
+                response is available on the exception's `response` attribute.
         """
         data = self.download(series_id, locale=locale)
-        return self.parse(data)
+        return self._parse_or_raise(data, has_content=self.has_content(data))

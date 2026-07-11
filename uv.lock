@@ -113,6 +113,7 @@ dependencies = [
 
 [package.dev-dependencies]
 dev = [
+    { name = "get-around", extra = ["testing"] },
     { name = "keyring" },
     { name = "prek" },
     { name = "pytest" },
@@ -127,6 +128,7 @@ requires-dist = [
 
 [package.metadata.requires-dev]
 dev = [
+    { name = "get-around", extras = ["testing"], git = "https://github.com/ryn-cx/get-around" },
     { name = "keyring", specifier = ">=25.7.0" },
     { name = "prek", specifier = ">=0.3.2" },
     { name = "pytest", specifier = ">=8.4.2" },
@@ -235,9 +237,14 @@ wheels = [
 [[package]]
 name = "get-around"
 version = "0.1.0"
-source = { git = "https://github.com/ryn-cx/get-around#1f007cc2bd016943f52506cb03f2653ccb156835" }
+source = { git = "https://github.com/ryn-cx/get-around#1c6b200a14766672e2de02488d1eda96f516de52" }
 dependencies = [
     { name = "httpx" },
+]
+
+[package.optional-dependencies]
+testing = [
+    { name = "keyring" },
 ]
 
 [[package]]

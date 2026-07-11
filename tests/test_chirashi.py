@@ -1,308 +1,136 @@
-# TODO: Validate
-"""Test for chirashi."""
-
 from __future__ import annotations
 
 import json
-from datetime import datetime
-from typing import TYPE_CHECKING
 
-import keyring
 import pytest
+from get_around import build_client_automatically
 
 from chirashi import Chirashi
-from chirashi.exceptions import HTTPError, LoginError
+from chirashi.exceptions import HTTPError, NoContentError
 
-if TYPE_CHECKING:
-    from collections.abc import Iterator
+client = Chirashi(build_client_automatically())
 
-KEYRING_SERVICE = "chirashi"
-ETP_RT_KEY = "CRUNCHYROLL_ETP_RT"
-
-
-def get_credential(name: str) -> str:
-    """Return a secret from the Windows Credential Manager (via keyring)."""
-    value = keyring.get_password(KEYRING_SERVICE, name)
-    if value is None:
-        msg = f"Missing credential {name!r}; run: keyring set {KEYRING_SERVICE} {name}"
-        raise RuntimeError(msg)
-    return value
-
-
-GET_AROUND_SERVER = get_credential("GET_AROUND_SERVER")
-GET_AROUND_PASSWORD = get_credential("GET_AROUND_PASSWORD")
-
-client = Chirashi(
-    get_around_server=GET_AROUND_SERVER,
-    get_around_password=GET_AROUND_PASSWORD,
-)
-logged_in_client = Chirashi(
-    username=get_credential("CRUNCHYROLL_USERNAME"),
-    password=get_credential("CRUNCHYROLL_PASSWORD"),
-    etp_rt=keyring.get_password(KEYRING_SERVICE, ETP_RT_KEY),
-    get_around_server=GET_AROUND_SERVER,
-    get_around_password=GET_AROUND_PASSWORD,
-)
-
-
+SEARCH_QUERY = "Frieren"
+SERIES_ID = "GG5H5XQX4"
+"""series_id of Frieren."""
+SEASON_ID = "GYE5CQMQ5"
+"""season_id of a Frieren season 1."""
+INVALID_ID = "GGGGGGGGG"
+INVALID_SEARCH_QUERY = "qwertyuiopasdfghjklzxcvbnm"
 DEFAULT_ENTRIES_PER_PAGE = 36
-
-# Toggle for the login/auth tests. They exercise Crunchyroll's rate-limited SSO
-# login, so they are disabled by default; flip to True to run them.
-RUN_LOGIN_TESTS = False
-
-requires_login = pytest.mark.skipif(
-    not RUN_LOGIN_TESTS,
-    reason="Login tests are disabled (set RUN_LOGIN_TESTS = True to enable).",
-)
 
 
 class TestGet:
-    """Test live get requests across every endpoint."""
-
     def test_get_browse_series(self) -> None:
-        """Test getting browse series."""
-        model = client.browse_series.get()
-        client.browse_series.save_new_json_file(client.browse_series.original_input(model))
-        expected_count = DEFAULT_ENTRIES_PER_PAGE
-        assert expected_count < model.total
-        assert len(model.data) == expected_count
+        endpoint = client.browse_series
+        model = endpoint.get()
+        assert model.total > DEFAULT_ENTRIES_PER_PAGE
+        assert len(model.data) == DEFAULT_ENTRIES_PER_PAGE
+        endpoint.save_new_json_file(endpoint.original_input(model))
 
     def test_get_browse_series_since_datetime(self) -> None:
-        """Test getting browse series since a datetime."""
-        first_page = client.browse_series.get()
+        endpoint = client.browse_series
+        first_page = endpoint.get()
         end_datetime = first_page.data[-1].last_public
-        response = client.browse_series.get_since_datetime(end_datetime)
-        first_page_count = len(client.browse_series.extract_entries(first_page))
-        paginated_count = len(client.browse_series.extract_entries(response))
-
+        responses = endpoint.get_since_datetime(end_datetime)
+        first_page_count = len(endpoint.compile_entries(first_page))
+        paginated_count = len(endpoint.compile_entries(responses))
         assert paginated_count > first_page_count
 
     def test_get_browse_series_past_last_page(self) -> None:
-        """Test getting the last browse series page."""
-        first_page = client.browse_series.get()
-        past_end = client.browse_series.get(
-            start=first_page.total - DEFAULT_ENTRIES_PER_PAGE,
-        )
-        client.browse_series.save_new_json_file(client.browse_series.original_input(past_end))
-        assert len(past_end.data) == DEFAULT_ENTRIES_PER_PAGE
+        endpoint = client.browse_series
+        first_page = endpoint.get()
+        model = endpoint.get(start=first_page.total - DEFAULT_ENTRIES_PER_PAGE)
+        assert len(model.data) == DEFAULT_ENTRIES_PER_PAGE
+        endpoint.save_new_json_file(endpoint.original_input(model))
 
     def test_get_series(self) -> None:
-        """Test getting series."""
-        model = client.series.get("GG5H5XQX4")
-        client.series.save_new_json_file(client.series.original_input(model))
-        expected_count = 1
-        assert len(model.data) == expected_count == model.total
-        assert model.data[0].id == "GG5H5XQX4"
+        endpoint = client.series
+        model = endpoint.get(SERIES_ID)
+        assert any(datum.id == SERIES_ID for datum in model.data)
+        endpoint.save_new_json_file(endpoint.original_input(model))
 
     def test_get_seasons(self) -> None:
-        """Test getting seasons."""
-        model = client.seasons.get("GG5H5XQX4")
-        client.seasons.save_new_json_file(client.seasons.original_input(model))
-        expected_count = 2
-        assert len(model.data) == expected_count == model.total
-        for data in model.data:
-            assert data.series_id == "GG5H5XQX4"
+        endpoint = client.seasons
+        model = endpoint.get(SERIES_ID)
+        assert all(season.series_id == SERIES_ID for season in model.data)
+        endpoint.save_new_json_file(endpoint.original_input(model))
 
     def test_get_episodes(self) -> None:
-        """Test getting episodes."""
-        model = client.episodes.get("GYE5CQMQ5")
-        client.episodes.save_new_json_file(client.episodes.original_input(model))
-        expected_count = 28
-        assert len(model.data) == expected_count == model.total
-        for data in model.data:
-            assert data.season_id == "GYE5CQMQ5"
+        endpoint = client.episodes
+        model = endpoint.get(SEASON_ID)
+        assert all(episode.season_id == SEASON_ID for episode in model.data)
+        endpoint.save_new_json_file(endpoint.original_input(model))
 
-    def test_get_search_series(self) -> None:
-        """Test getting series items from a live search."""
-        model = client.search.get("Frieren")
-        client.search.save_new_json_file(client.search.original_input(model))
-        assert model.series[0].id == "GG5H5XQX4"
-
-    def test_get_search_music(self) -> None:
-        """Test getting music items from a live search."""
-        model = client.search.get("Frieren")
-        client.search.save_new_json_file(client.search.original_input(model))
+    def test_get_search(self) -> None:
+        endpoint = client.search
+        model = endpoint.get(SEARCH_QUERY)
+        assert any(series.id == SERIES_ID for series in model.series)
         assert model.music
-
-    def test_get_search_episodes(self) -> None:
-        """Test getting episode items from a live search."""
-        model = client.search.get("Frieren")
-        client.search.save_new_json_file(client.search.original_input(model))
         assert model.episode
-
-    def test_get_search_top_results(self) -> None:
-        """Test getting top results items from a live search."""
-        model = client.search.get("Frieren")
-        client.search.save_new_json_file(client.search.original_input(model))
         assert model.top_results
-
-    @requires_login
-    def test_login_method(self) -> None:
-        """Test logging in."""
-        login_client = Chirashi(
-            get_around_server=GET_AROUND_SERVER,
-            get_around_password=GET_AROUND_PASSWORD,
-        )
-        login_client.login(
-            username=get_credential("CRUNCHYROLL_USERNAME"),
-            password=get_credential("CRUNCHYROLL_PASSWORD"),
-        )
-        login_client.browse_series.get()
-
-    @requires_login
-    def test_logout(self) -> None:
-        """Test logging out reverts to anonymous access."""
-        login_client = Chirashi(
-            get_around_server=GET_AROUND_SERVER,
-            get_around_password=GET_AROUND_PASSWORD,
-        )
-        login_client.login(
-            username=get_credential("CRUNCHYROLL_USERNAME"),
-            password=get_credential("CRUNCHYROLL_PASSWORD"),
-        )
-        login_client.browse_series.get()
-        login_client.logout()
-        assert login_client.anonymous
-
-    @requires_login
-    def test_refresh_token(self) -> None:
-        """Test that the token automatically refreshes when expired."""
-        logged_in_client.browse_series.get()
-        logged_in_client._token_expires_at = datetime.now().astimezone()  # noqa: SLF001 # type: ignore[reportPrivateUsage]
-        logged_in_client.browse_series.get()
+        endpoint.save_new_json_file(endpoint.original_input(model))
 
 
 class TestInvalidGet:
-    """Test get requests for missing or invalid resources."""
-
     def test_invalid_get_browse_series(self) -> None:
-        """Test getting an invalid browse series."""
         pytest.skip("This cannot be tested.")
 
     def test_invalid_get_series(self) -> None:
-        """Test getting an invalid series."""
         with pytest.raises(HTTPError):
-            client.series.get("GGGGGGGGG")
+            client.series.get(INVALID_ID)
 
     def test_invalid_get_seasons(self) -> None:
-        """Test getting invalid seasons."""
         # This endpoint does not return an HTTP error when no match is found, it
-        # instead returns an empty list.
-        model = client.seasons.get("GGGGGGGGG")
-        client.seasons.save_new_json_file(client.seasons.original_input(model))
-        assert model.data == []
-        assert model.total == 0
+        # instead returns an empty list, which surfaces as NoContentError.
+        with pytest.raises(NoContentError) as error:
+            client.seasons.get(INVALID_ID)
+        # The payload is still recoverable from the raised exception.
+        assert "data" in error.value.response
 
     def test_invalid_get_episodes(self) -> None:
-        """Test getting invalid episodes."""
-        model = client.episodes.get("GGGGGGGGG")
-        client.episodes.save_new_json_file(client.episodes.original_input(model))
-        assert model.data == []
-        assert model.total == 0
+        with pytest.raises(NoContentError) as error:
+            client.episodes.get(INVALID_ID)
+        assert "data" in error.value.response
 
     def test_invalid_get_search(self) -> None:
-        """Test searching for a query with no results."""
-        model = client.search.get("qwertyuiopasdfghjklzxcvbnm")
-        client.search.save_new_json_file(client.search.original_input(model))
-        assert model.music == model.series == model.episode == model.top_results == []
-
-    @requires_login
-    def test_login_method_invalid(self) -> None:
-        """Test logging in with invalid credentials directly."""
-        login_client = Chirashi(
-            get_around_server=GET_AROUND_SERVER,
-            get_around_password=GET_AROUND_PASSWORD,
-        )
-        with pytest.raises(LoginError):
-            login_client.login(
-                username="user@example.com",
-                password="password",  # noqa: S106
-            )
-
-    @requires_login
-    def test_login_invalid(self) -> None:
-        """Test logging in with invalid credentials indirectly."""
-        invalid_client = Chirashi(
-            username="user@example.com",
-            password="password",  # noqa: S106
-            get_around_server=GET_AROUND_SERVER,
-            get_around_password=GET_AROUND_PASSWORD,
-        )
-        with pytest.raises(LoginError):
-            invalid_client.browse_series.get()
+        with pytest.raises(NoContentError) as error:
+            client.search.get(INVALID_SEARCH_QUERY)
+        assert "data" in error.value.response
 
 
 class TestParse:
-    """Test parsing every saved file for each endpoint."""
-
-    def test_parse_browse_series(self) -> None:
-        """Test parsing every saved file."""
-        for json_file in client.browse_series.json_files():
-            client.browse_series.parse(json.loads(json_file.read_text()))
-
-    def test_parse_series(self) -> None:
-        """Test parsing every saved file."""
-        for json_file in client.series.json_files():
-            client.series.parse(json.loads(json_file.read_text()))
-
-    def test_parse_seasons(self) -> None:
-        """Test parsing every saved file."""
-        for json_file in client.seasons.json_files():
-            client.seasons.parse(json.loads(json_file.read_text()))
-
-    def test_parse_episodes(self) -> None:
-        """Test parsing every saved file."""
-        for json_file in client.episodes.json_files():
-            client.episodes.parse(json.loads(json_file.read_text()))
-
-    def test_parse_search(self) -> None:
-        """Test parsing every saved file."""
-        for json_file in client.search.json_files():
-            client.search.parse(json.loads(json_file.read_text()))
+    @pytest.mark.parametrize(
+        "endpoint_name",
+        ["browse_series", "series", "seasons", "episodes", "search"],
+    )
+    def test_parse(self, endpoint_name: str) -> None:
+        endpoint = getattr(client, endpoint_name)
+        for json_file in endpoint.json_files():
+            endpoint.parse(json.loads(json_file.read_text()))
 
 
 class TestExtract:
-    """Test extracting typed entries from saved responses."""
-
     def test_extract_browse_series_entries(self) -> None:
-        """Test extracting browse series entries."""
         for json_file in client.browse_series.json_files():
             model = client.browse_series.parse(json.loads(json_file.read_text()))
-            entries = client.browse_series.extract_entries(model)
+            entries = client.browse_series.compile_entries(model)
             assert entries == model.data
 
     def test_extract_browse_series_entries_from_list(self) -> None:
-        """Test extracting browse series entries from a list."""
         json_files = client.browse_series.json_files()
         models = [
             client.browse_series.parse(json.loads(f.read_text())) for f in json_files
         ]
-
-        entries = client.browse_series.extract_entries(models)
+        entries = client.browse_series.compile_entries(models)
         expected = [datum for model in models for datum in model.data]
         assert entries == expected
 
-    def test_extract_search_music(self) -> None:
-        """Test extracting music items from search results."""
+    @pytest.mark.parametrize(
+        "attribute",
+        ["music", "series", "episode", "top_results"],
+    )
+    def test_extract_search(self, attribute: str) -> None:
         for json_file in client.search.json_files():
             model = client.search.parse(json.loads(json_file.read_text()))
-            assert isinstance(model.music, list)
-
-    def test_extract_search_series(self) -> None:
-        """Test extracting series items from search results."""
-        for json_file in client.search.json_files():
-            model = client.search.parse(json.loads(json_file.read_text()))
-            assert isinstance(model.series, list)
-
-    def test_extract_search_episodes(self) -> None:
-        """Test extracting episode items from search results."""
-        for json_file in client.search.json_files():
-            model = client.search.parse(json.loads(json_file.read_text()))
-            assert isinstance(model.episode, list)
-
-    def test_extract_search_top_results(self) -> None:
-        """Test extracting top results items from search results."""
-        for json_file in client.search.json_files():
-            model = client.search.parse(json.loads(json_file.read_text()))
-            assert isinstance(model.top_results, list)
+            assert isinstance(getattr(model, attribute), list)

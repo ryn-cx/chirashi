@@ -122,27 +122,8 @@ class Meta(GAPIBaseModel):
     versions_considered: bool
 
 
-class Params(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
-    locale: str
-
-
-class Headers(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
-    referer: str
-
-
-class Chirashi(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
-    params: Params
-    headers: Headers
-    url: str
-    timestamp: AwareDatetime
-
-
 class Episodes(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     data: list[Datum]
     total: int
     meta: Meta
-    chirashi: Chirashi

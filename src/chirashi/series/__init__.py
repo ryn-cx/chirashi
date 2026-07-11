@@ -3,7 +3,7 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, override
 
 from chirashi.base_api_endpoint import BaseEndpoint
 from chirashi.series.models import Series as SeriesModel
@@ -20,7 +20,7 @@ class Series(BaseEndpoint[SeriesModel]):
         *,
         locale: str = "en-US",
     ) -> dict[str, Any]:
-        """Downloads series data for a given series ID.
+        """Downloads the series data for a given series ID.
 
         Args:
             series_id: The ID of the series to download.
@@ -39,12 +39,16 @@ class Series(BaseEndpoint[SeriesModel]):
             endpoint="content/v2/cms/series/" + series_id,
             params=params,
             headers=headers,
+            log_id=series_id,
         )
 
-    def get(self, series_id: str, *, locale: str = "en-US") -> SeriesModel:
-        """Downloads and parses series data for a given series ID.
+    @staticmethod
+    @override
+    def has_content(response: dict[str, Any]) -> bool:
+        return bool(response["data"])
 
-        Convenience method that calls ``download()`` then ``parse()``.
+    def get(self, series_id: str, *, locale: str = "en-US") -> SeriesModel:
+        """Downloads and parses the series data for a given series ID.
 
         Args:
             series_id: The ID of the series to get.
@@ -52,6 +56,10 @@ class Series(BaseEndpoint[SeriesModel]):
 
         Returns:
             A Series model containing the parsed data.
+
+        Raises:
+            NoContentError: If the response has no meaningful content. The raw
+                response is available on the exception's `response` attribute.
         """
         data = self.download(series_id, locale=locale)
-        return self.parse(data)
+        return self._parse_or_raise(data, has_content=self.has_content(data))

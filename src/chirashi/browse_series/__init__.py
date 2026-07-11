@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, override
 
 from good_ass_pydantic_integrator import CustomSerializer, ReplacementType
 
@@ -33,7 +33,7 @@ class BrowseSeries(BaseEndpoint[BrowseSeriesModel]):
         ratings: str = "true",
         locale: str = "en-US",
     ) -> dict[str, Any]:
-        """Downloads browse series data.
+        """Downloads the browse series data.
 
         Args:
             start: The starting index for pagination.
@@ -61,7 +61,13 @@ class BrowseSeries(BaseEndpoint[BrowseSeriesModel]):
             "content/v2/discover/browse",
             params,
             headers,
+            log_id=start,
         )
+
+    @staticmethod
+    @override
+    def has_content(response: dict[str, Any]) -> bool:
+        return bool(response["data"])
 
     def get(
         self,
@@ -72,9 +78,7 @@ class BrowseSeries(BaseEndpoint[BrowseSeriesModel]):
         ratings: str = "true",
         locale: str = "en-US",
     ) -> BrowseSeriesModel:
-        """Downloads and parses browse series data.
-
-        Convenience method that calls ``download()`` then ``parse()``.
+        """Downloads and parses the browse series data.
 
         Args:
             start: The starting index for pagination.
@@ -85,6 +89,10 @@ class BrowseSeries(BaseEndpoint[BrowseSeriesModel]):
 
         Returns:
             A BrowseSeries model containing the parsed data.
+
+        Raises:
+            NoContentError: If the response has no meaningful content. The raw
+                response is available on the exception's `response` attribute.
         """
         data = self.download(
             n=n,
@@ -93,7 +101,7 @@ class BrowseSeries(BaseEndpoint[BrowseSeriesModel]):
             start=start,
             ratings=ratings,
         )
-        return self.parse(data)
+        return self._parse_or_raise(data, has_content=self.has_content(data))
 
     def get_since_datetime(
         self,
@@ -104,17 +112,17 @@ class BrowseSeries(BaseEndpoint[BrowseSeriesModel]):
         sort_by: str = "newly_added",
         ratings: str = "true",
     ) -> list[BrowseSeriesModel]:
-        """Gets all browse pages until end_date is reached (inclusive).
+        """Downloads all browse pages until end_datetime is reached (inclusive).
 
         Args:
+            end_datetime: Stop when reaching this datetime.
             n: The number of results per page.
             locale: The locale for the request.
             sort_by: The sort order.
             ratings: Whether to include ratings.
-            end_datetime: Stop when reaching this datetime.
 
         Returns:
-            List of BrowseSeries pages.
+            A list of BrowseSeries models containing the parsed data.
         """
         start = 0
         all_data: list[BrowseSeriesModel] = []
@@ -136,7 +144,7 @@ class BrowseSeries(BaseEndpoint[BrowseSeriesModel]):
 
             start += n
 
-    def extract_entries(
+    def compile_entries(
         self,
         input_data: BrowseSeriesModel | list[BrowseSeriesModel],
     ) -> list[Datum]:
@@ -144,7 +152,7 @@ class BrowseSeries(BaseEndpoint[BrowseSeriesModel]):
         if isinstance(input_data, list):
             result: list[Datum] = []
             for response in input_data:
-                result.extend(self.extract_entries(response))
+                result.extend(self.compile_entries(response))
             return result
 
         return input_data.data

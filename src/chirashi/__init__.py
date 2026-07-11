@@ -1,62 +1,44 @@
-# TODO: Validate
-"""Chirashi is a client for downloading and parsing data from Crunchyroll."""
+"""Crunchyroll API wrapper."""
 
-from __future__ import annotations
-
+import time
 import uuid
 from datetime import UTC, datetime, timedelta
+from http import HTTPStatus
 from logging import NullHandler, getLogger
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from get_around import GetAround
 
 from chirashi.browse_series import BrowseSeries
 from chirashi.episodes import Episodes
-from chirashi.exceptions import HTTPError, LoginError
+from chirashi.exceptions import HTTPError
 from chirashi.search import Search
 from chirashi.seasons import Seasons
 from chirashi.series import Series
 
-if TYPE_CHECKING:
-    import httpx
-
-DEVICE_ID = uuid.uuid4().hex
-
 logger = getLogger(__name__)
 logger.addHandler(NullHandler())
 
+DOMAIN = "beta-api.crunchyroll.com"
+# These values were chosen to match the Crunchyroll app on Windows.
+DEVICE_ID = uuid.uuid4().hex
+DEVICE_TYPE = "Microsoft Edge on Windows"
+
 
 class Chirashi:
-    """Interface for downloading and parsing data from Crunchyroll."""
+    """Crunchyroll API wrapper."""
 
-    def __init__(  # noqa: PLR0913
-        self,
-        username: str | None = None,
-        password: str | None = None,
-        # These values were chosen to match the CrunchyRoll app on Windows.
-        device_id: str = DEVICE_ID,
-        device_type: str = "Microsoft Edge on Windows",
-        timeout: int = 30,
-        get_around_server: str | None = None,
-        get_around_password: str | None = None,
-        # A previously obtained etp_rt cookie to reuse instead of logging in.
-        etp_rt: str | None = None,
-    ) -> None:
-        """Initialize the Chirashi client."""
-        self.get_around_client = GetAround(
-            server=get_around_server,
-            password=get_around_password,
-        )
-        self.timeout = timeout
-        self.anonymous = not (username and password) and not etp_rt
-        self.username = username
-        self.password = password
-        self._token_expires_at = datetime.now(tz=UTC)
-        self.device_id = device_id
-        self.device_type = device_type
+    def __init__(self, get_around_client: GetAround | None = None) -> None:
+        """Initialize the Chirashi client.
+
+        Args:
+            get_around_client: The HTTP client used for every request.
+        """
+        self.get_around_client = get_around_client or GetAround()
+        self.device_id = DEVICE_ID
+        self.device_type = DEVICE_TYPE
         self._access_token_value = ""
-        self._etp_rt = etp_rt or ""
-        self.domain = "beta-api.crunchyroll.com"
+        self._token_expires_at = datetime.now(tz=UTC)
 
         self.browse_series = BrowseSeries(self)
         self.series = Series(self)
@@ -66,186 +48,75 @@ class Chirashi:
 
     @property
     def _access_token(self) -> str:
+        # Crunchyroll requires a bearer token even for anonymous access; fetch a
+        # fresh anonymous token whenever the cached one is missing or expired.
         if not self._access_token_value or self._token_expires_at < datetime.now(
             tz=UTC,
         ):
             self._download_access_token()
-
         return self._access_token_value
 
-    @_access_token.setter
-    def _access_token(self, value: str) -> None:
-        self._access_token_value = value
-
-    @property
-    def etp_rt(self) -> str:
-        """The etp_rt cookie."""
-        return self._etp_rt
-
-    @staticmethod
-    def _cookies(response: httpx.Response) -> dict[str, str]:
-        cookies: dict[str, str] = {}
-        for raw in response.headers.get_list("set-cookie"):
-            name, _, rest = raw.partition("=")
-            cookies[name.strip()] = rest.split(";", 1)[0]
-        return cookies
-
-    def _login(self) -> str:
-        base = "https://sso.crunchyroll.com"
-        # A browser-like User-Agent is required for the SSO login flow.
-        user_agent = (
-            "Mozilla/5.0 (X11; Linux x86_64; rv:147.0) Gecko/20100101 Firefox/147.0"
-        )
-        # The login endpoint only sets etp_rt when the Cloudflare __cf_bm cookie
-        # from an initial page load is present, so warm up first to obtain it.
-        warmup = self.get_around_client.get(
-            f"{base}/login",
-            headers={"User-Agent": user_agent},
-            timeout=self.timeout,
-        )
-        cf_bm = self._cookies(warmup).get("__cf_bm", "")
-
-        response = self.get_around_client.post(
-            f"{base}/api/login",
-            json={
-                "email": self.username,
-                "password": self.password,
-                "eventSettings": {},
-            },
-            headers={
-                "User-Agent": user_agent,
-                "Origin": base,
-                "Referer": f"{base}/login",
-            },
-            cookies={"__cf_bm": cf_bm, "device_id": self.device_id},
-            timeout=self.timeout,
-        )
-
-        etp_rt = self._cookies(response).get("etp_rt")
-        if not etp_rt:
-            try:
-                error = response.json().get("error", "Login failed")
-            except ValueError, AttributeError:
-                error = "Login failed"
-            raise LoginError(error)
-        return etp_rt
-
     def _download_access_token(self) -> None:
-        if self.anonymous:
-            self._store_access_token(self._request_token("client_id"))
-        else:
-            self._download_logged_in_access_token()
-
-    def _download_logged_in_access_token(self) -> None:
-        # Prefer the cached etp_rt; only log in when one isn't already available.
-        logged_in = False
-        if not self._etp_rt:
-            self._etp_rt = self._login()
-            logged_in = True
-
-        parsed_response = self._request_etp_rt_token()
-
-        # A cached etp_rt may have expired; fall back to a fresh login and retry.
-        if "access_token" not in parsed_response and not logged_in:
-            logger.info("Cached etp_rt rejected; logging in again.")
-            self._etp_rt = self._login()
-            parsed_response = self._request_etp_rt_token()
-
-        self._store_access_token(parsed_response)
-
-    def _request_etp_rt_token(self) -> dict[str, Any]:
-        return self._request_token(
-            "etp_rt_cookie",
-            cookies={"device_id": self.device_id, "etp_rt": self._etp_rt},
-        )
-
-    def _request_token(
-        self,
-        grant_type: str,
-        cookies: dict[str, str] | None = None,
-    ) -> dict[str, Any]:
-        url = f"https://{self.domain}/auth/v1/token"
-        logger.info("Downloading access token (%s): %s", grant_type, url)
+        url = f"https://{DOMAIN}/auth/v1/token"
+        logger.debug("Downloading token:")
+        start = time.monotonic()
         response = self.get_around_client.post(
             url,
             data={
                 "device_id": self.device_id,
                 "device_type": self.device_type,
-                "grant_type": grant_type,
+                "grant_type": "client_id",
             },
-            # TODO: How long is this token valid for?
             headers={"Authorization": "Basic bm9haWhkZXZtXzZpeWcwYThsMHE6"},
-            cookies=cookies or {},
-            timeout=self.timeout,
         )
-        return response.json()
+        if response.status_code != HTTPStatus.OK:
+            msg = f"Unexpected response status code: {response.status_code}"
+            raise HTTPError(msg)
 
-    def _store_access_token(self, parsed_response: dict[str, Any]) -> None:
-        if "access_token" not in parsed_response:
-            raise LoginError(parsed_response.get("error", "Login failed"))
+        logger.debug("Downloaded token (%.4f s)", time.monotonic() - start)
 
-        self._access_token = parsed_response["access_token"]
+        parsed = response.json()
+        self._access_token_value = parsed["access_token"]
         self._token_expires_at = datetime.now(tz=UTC) + timedelta(
-            seconds=parsed_response["expires_in"],
+            seconds=parsed["expires_in"],
         )
-
-    def login(self, username: str, password: str) -> None:
-        """Log in with the given credentials.
-
-        Args:
-            username: The Crunchyroll username.
-            password: The Crunchyroll password.
-
-        Raises:
-            LoginError: If the credentials are invalid.
-        """
-        self.username = username
-        self.password = password
-        self.anonymous = False
-        self._access_token_value = ""
-        self._etp_rt = ""
-        self._download_access_token()
-
-    def logout(self) -> None:
-        """Log out and revert to anonymous access."""
-        self.username = None
-        self.password = None
-        self.anonymous = True
-        self._access_token_value = ""
-        self._etp_rt = ""
 
     def download(
         self,
         endpoint: str,
         params: dict[str, Any],
         headers: dict[str, str] | None = None,
+        log_id: object = None,
     ) -> dict[str, Any]:
-        """Make a request to the Crunchyroll API with the given endpoint."""
+        """Make a request to the Crunchyroll API with the given endpoint.
+
+        Args:
+            endpoint: The API path to request, relative to the Crunchyroll host.
+            params: The query parameters for the request.
+            headers: Optional request headers.
+            log_id: An identifier for the request (e.g. the series or season ID)
+                included in log messages to distinguish requests.
+
+        Returns:
+            The raw JSON response, suitable for passing to ``parse()``.
+
+        Raises:
+            HTTPError: If the response status code is not 200.
+        """
         if headers is None:
             headers = {}
         headers["authorization"] = f"Bearer {self._access_token}"
 
-        url = f"https://{self.domain}/{endpoint}"
-        logger.info("Downloading API data: %s", url)
-        response = self.get_around_client.get(
-            url,
-            params=params,
-            headers=headers,
-            timeout=self.timeout,
-        )
+        operation = f"{endpoint} ({log_id})"
+        logger.debug("Downloading: %s", operation)
+        url = f"https://{DOMAIN}/{endpoint}"
+        start = time.monotonic()
+        response = self.get_around_client.get(url, params=params, headers=headers)
 
-        if response.status_code != 200:  # noqa: PLR2004
+        if response.status_code != HTTPStatus.OK:
             msg = f"Unexpected response status code: {response.status_code}"
             raise HTTPError(msg)
 
-        output = response.json()
-        output["chirashi"] = {}
-        output["chirashi"]["params"] = params
-        headers.pop("authorization")
-        output["chirashi"]["headers"] = headers
-        output["chirashi"]["url"] = url
-        output["chirashi"]["timestamp"] = (
-            datetime.now().astimezone().isoformat().replace("+00:00", "Z")
-        )
+        logger.debug("Downloaded %s (%.4f s)", operation, time.monotonic() - start)
 
-        return output
+        return response.json()

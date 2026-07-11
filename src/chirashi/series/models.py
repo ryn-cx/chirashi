@@ -2,7 +2,7 @@
 from typing import Any
 
 from good_ass_pydantic_integrator import GAPIBaseModel
-from pydantic import AwareDatetime, ConfigDict
+from pydantic import ConfigDict
 
 
 class PosterWideItem(GAPIBaseModel):
@@ -89,27 +89,8 @@ class Datum(GAPIBaseModel):
     language_presentation: LanguagePresentation
 
 
-class Params(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
-    locale: str
-
-
-class Headers(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
-    referer: str
-
-
-class Chirashi(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
-    params: Params
-    headers: Headers
-    url: str
-    timestamp: AwareDatetime
-
-
 class Series(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     total: int
     data: list[Datum]
     meta: dict[str, Any]
-    chirashi: Chirashi

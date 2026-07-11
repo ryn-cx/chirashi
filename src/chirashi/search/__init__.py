@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
-from typing import TYPE_CHECKING, Any, cast
+from typing import TYPE_CHECKING, Any, cast, override
 
 from chirashi.base_api_endpoint import BaseEndpoint
 from chirashi.search.models import Search as SearchModel
@@ -28,7 +28,7 @@ class Search(BaseEndpoint[SearchModel]):
         preferred_audio_language: str = "ja-JP",
         locale: str = "en-US",
     ) -> dict[str, Any]:
-        """Downloads search data for a given query.
+        """Downloads the search data for a given query.
 
         Args:
             query: The search query string.
@@ -56,7 +56,15 @@ class Search(BaseEndpoint[SearchModel]):
             "content/v2/discover/search",
             params,
             headers,
+            log_id=query,
         )
+
+    @staticmethod
+    @override
+    def has_content(response: dict[str, Any]) -> bool:
+        # A no-result search still returns 200 with every category empty, so
+        # check for at least one item across the grouped ``data`` categories.
+        return any(datum["items"] for datum in response.get("data", []))
 
     def get(  # noqa: PLR0913
         self,
@@ -68,9 +76,7 @@ class Search(BaseEndpoint[SearchModel]):
         preferred_audio_language: str = "ja-JP",
         locale: str = "en-US",
     ) -> SearchModel:
-        """Downloads and parses search data for a given query.
-
-        Convenience method that calls ``download()`` then ``parse()``.
+        """Downloads and parses the search data for a given query.
 
         Args:
             query: The search query string.
@@ -82,6 +88,10 @@ class Search(BaseEndpoint[SearchModel]):
 
         Returns:
             A Search model containing the parsed data.
+
+        Raises:
+            NoContentError: If the response has no meaningful content. The raw
+                response is available on the exception's `response` attribute.
         """
         data = self.download(
             query,
@@ -91,7 +101,7 @@ class Search(BaseEndpoint[SearchModel]):
             preferred_audio_language=preferred_audio_language,
             locale=locale,
         )
-        return self.parse(data)
+        return self._parse_or_raise(data, has_content=self.has_content(data))
 
     @classmethod
     def clean_data(cls, data: INPUT_TYPE) -> INPUT_TYPE:
@@ -124,5 +134,4 @@ class Search(BaseEndpoint[SearchModel]):
             **grouped,
             "total": data["total"],
             "meta": data["meta"],
-            "chirashi": data["chirashi"],
         }
