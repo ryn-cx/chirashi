@@ -1,20 +1,18 @@
-# TODO: Validate
-"""Search API endpoint."""
+"""Contains the Search class."""
 
 from __future__ import annotations
 
-from collections.abc import Mapping
-from typing import TYPE_CHECKING, Any, cast, override
+from typing import Any, override
+
+from good_ass_pydantic_integrator import GAPIBaseModel
 
 from chirashi.base_api_endpoint import BaseEndpoint
+from chirashi.search.models import EpisodeItem, MusicItem, Series, TopResult
 from chirashi.search.models import Search as SearchModel
-
-if TYPE_CHECKING:
-    from good_ass_pydantic_integrator.constants import INPUT_TYPE
 
 
 class Search(BaseEndpoint[SearchModel]):
-    """Provides methods to download, parse, and retrieve search data."""
+    """Manage the search file."""
 
     _response_model = SearchModel
 
@@ -26,44 +24,43 @@ class Search(BaseEndpoint[SearchModel]):
         type: str = "music,series,episode,top_results",  # noqa: A002
         ratings: str = "true",
         preferred_audio_language: str = "ja-JP",
-        locale: str = "en-US",
+        locale: str | None = None,
     ) -> dict[str, Any]:
-        """Downloads the search data for a given query.
+        """Downloads the search file.
 
-        Args:
-            query: The search query string.
-            n: The number of results to return.
-            type: Comma-separated content types to search.
-            ratings: Whether to include ratings.
-            preferred_audio_language: The preferred audio language.
-            locale: The locale for the request.
-
-        Returns:
-            The raw JSON response as a dict, suitable for passing to ``parse()``.
+        Example request: https://www.crunchyroll.com/search?q=%23COMPASS2.0%20ANIMATION%20PROJECT
+            GET /content/v2/discover/search?q=%23COMPASS2.0+ANIMATION+PROJECT&n=6&type=music,series,episode,top_results,movie_listing&ratings=true&locale=en-US HTTP/2
+            Host: www.crunchyroll.com
+            User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:152.0) Gecko/20100101 Firefox/152.0
+            Accept: application/json, text/plain, */*
+            Accept-Language: en-US,en;q=0.9
+            Accept-Encoding: gzip, deflate, br, zstd
+            Authorization: Bearer __REDACTED__
+            Connection: keep-alive
+            Referer: https://www.crunchyroll.com/search?q=%23COMPASS2.0%20ANIMATION%20PROJECT
+            Cookie: __REDACTED__
+            Sec-Fetch-Dest: empty
+            Sec-Fetch-Mode: cors
+            Sec-Fetch-Site: same-origin
+            TE: trailers
         """
-        params: dict[str, str | int] = {
-            "q": query,
-            "n": n,
-            "type": type,
-            "ratings": ratings,
-            "preferred_audio_language": preferred_audio_language,
-            "locale": locale,
-        }
-
-        headers = {"referer": "https://www.crunchyroll.com/search"}
-
         return self._client.download(
             "content/v2/discover/search",
-            params,
-            headers,
-            log_id=query,
+            params={
+                "q": query,
+                "n": n,
+                "type": type,
+                "ratings": ratings,
+                "preferred_audio_language": preferred_audio_language,
+                "locale": locale or self._client.locale,
+            },
+            headers={"referer": "https://www.crunchyroll.com/search"},
+            log_id=f"{self.__class__.__name__} {query}",
         )
 
     @staticmethod
     @override
     def has_content(response: dict[str, Any]) -> bool:
-        # A no-result search still returns 200 with every category empty, so
-        # check for at least one item across the grouped ``data`` categories.
         return any(datum["items"] for datum in response.get("data", []))
 
     def get(  # noqa: PLR0913
@@ -74,25 +71,9 @@ class Search(BaseEndpoint[SearchModel]):
         type: str = "music,series,episode,top_results",  # noqa: A002
         ratings: str = "true",
         preferred_audio_language: str = "ja-JP",
-        locale: str = "en-US",
+        locale: str | None = None,
     ) -> SearchModel:
-        """Downloads and parses the search data for a given query.
-
-        Args:
-            query: The search query string.
-            n: The number of results to return.
-            type: Comma-separated content types to search.
-            ratings: Whether to include ratings.
-            preferred_audio_language: The preferred audio language.
-            locale: The locale for the request.
-
-        Returns:
-            A Search model containing the parsed data.
-
-        Raises:
-            NoContentError: If the response has no meaningful content. The raw
-                response is available on the exception's `response` attribute.
-        """
+        """Downloads and parses the search file."""
         data = self.download(
             query,
             n=n,
@@ -101,37 +82,34 @@ class Search(BaseEndpoint[SearchModel]):
             preferred_audio_language=preferred_audio_language,
             locale=locale,
         )
-        return self._parse_or_raise(data, has_content=self.has_content(data))
+        return self._parse_or_raise(data, f"{self.__class__.__name__} {query}")
 
-    @classmethod
-    def clean_data(cls, data: INPUT_TYPE) -> INPUT_TYPE:
-        """Denormalize the grouped ``data`` list into one list per category.
+    def _extract_category[U: GAPIBaseModel](
+        self,
+        data: SearchModel,
+        field_type: str,
+        model: type[U],
+    ) -> list[U]:
+        for datum in data.data or []:
+            if datum.type == field_type:
+                return [
+                    model.model_validate(item)
+                    for item in self.original_input(datum.items)
+                ]
+        return []
 
-        Crunchyroll returns search results as ``data: [{type, items, count},
-        ...]``. This reshapes them into a top-level list per category so the
-        single generated model exposes each type directly (``.music``,
-        ``.series``, ``.episode``, ``.top_results``) instead of needing a
-        separate class per category. Every category is always present, defaulting
-        to an empty list so a no-result search still validates. The saved JSON
-        corpus keeps the original grouped shape; this only runs on the way into
-        parsing and model generation.
+    def extract_top_results(self, data: SearchModel) -> list[TopResult]:
+        """Extract the top results from Search."""
+        return self._extract_category(data, "top_results", TopResult)
 
-        Args:
-            data: The raw JSON data, as downloaded/saved.
+    def extract_series(self, data: SearchModel) -> list[Series]:
+        """Extract the series from Search."""
+        return self._extract_category(data, "series", Series)
 
-        Returns:
-            The reshaped data with one list field per search category.
-        """
-        if not isinstance(data, Mapping) or "data" not in data:
-            return data
+    def extract_episode(self, data: SearchModel) -> list[EpisodeItem]:
+        """Extract the episodes from Search."""
+        return self._extract_category(data, "episode", EpisodeItem)
 
-        categories = ("top_results", "series", "episode", "music")
-        grouped: dict[str, Any] = {category: [] for category in categories}
-        for datum in cast("list[dict[str, Any]]", data["data"]):
-            grouped[datum["type"]] = datum["items"]
-
-        return {
-            **grouped,
-            "total": data["total"],
-            "meta": data["meta"],
-        }
+    def extract_music(self, data: SearchModel) -> list[MusicItem]:
+        """Extract the music from Search."""
+        return self._extract_category(data, "music", MusicItem)

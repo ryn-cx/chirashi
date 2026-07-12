@@ -1,5 +1,5 @@
 # TODO: Validate
-"""Browse series API endpoint."""
+"""Contains the Browse class."""
 
 from __future__ import annotations
 
@@ -9,20 +9,18 @@ from typing import TYPE_CHECKING, Any, override
 from good_ass_pydantic_integrator import CustomSerializer, ReplacementType
 
 from chirashi.base_api_endpoint import BaseEndpoint
-
-
 from chirashi.browse_series.models import (
-    BrowseSeries as BrowseSeriesModel,
+    BrowseSeries as BrowseModel,
 )
 
 if TYPE_CHECKING:
     from chirashi.browse_series.models import Datum
 
 
-class BrowseSeries(BaseEndpoint[BrowseSeriesModel]):
-    """Provides methods to download, parse, and retrieve browse series data."""
+class Browse(BaseEndpoint[BrowseModel]):
+    """Manage the browse file."""
 
-    _response_model = BrowseSeriesModel
+    _response_model = BrowseModel
 
     def download(
         self,
@@ -31,37 +29,44 @@ class BrowseSeries(BaseEndpoint[BrowseSeriesModel]):
         n: int = 36,
         sort_by: str = "newly_added",
         ratings: str = "true",
-        locale: str = "en-US",
+        locale: str | None = None,
     ) -> dict[str, Any]:
-        """Downloads the browse series data.
+        """Downloads the browse file.
 
-        Args:
-            start: The starting index for pagination.
-            n: The number of results per page.
-            sort_by: The sort order.
-            ratings: Whether to include ratings.
-            locale: The locale for the request.
-
-        Returns:
-            The raw JSON response as a dict, suitable for passing to ``parse()``.
+        Example request:
+            GET /content/v2/discover/browse?n=36&sort_by=newly_added&ratings=true&locale=en-US HTTP/2
+            Host: www.crunchyroll.com
+            User-Agent: __REDACTED__
+            Accept: application/json, text/plain, */*
+            Accept-Language: en-US,en;q=0.9
+            Accept-Encoding: gzip, deflate, br, zstd
+            Authorization: Bearer __REDACTED__
+            Sec-GPC: 1
+            Connection: keep-alive
+            Referer: https://www.crunchyroll.com/videos/new
+            Cookie: __REDACTED__
+            Sec-Fetch-Dest: empty
+            Sec-Fetch-Mode: cors
+            Sec-Fetch-Site: same-origin
+            TE: trailers
         """
         params: dict[str, str | int] = {
             "n": n,
             "sort_by": sort_by,
             "ratings": ratings,
-            "locale": locale,
+            "locale": locale or self._client.locale,
         }
 
-        if start is not None:
+        if start:
             params["start"] = start
 
         headers = {"referer": "https://www.crunchyroll.com/videos/new"}
 
         return self._client.download(
             "content/v2/discover/browse",
-            params,
-            headers,
-            log_id=start,
+            params=params,
+            headers=headers,
+            log_id=f"{self.__class__.__name__} {start}",
         )
 
     @staticmethod
@@ -76,24 +81,9 @@ class BrowseSeries(BaseEndpoint[BrowseSeriesModel]):
         n: int = 36,
         sort_by: str = "newly_added",
         ratings: str = "true",
-        locale: str = "en-US",
-    ) -> BrowseSeriesModel:
-        """Downloads and parses the browse series data.
-
-        Args:
-            start: The starting index for pagination.
-            n: The number of results per page.
-            sort_by: The sort order.
-            ratings: Whether to include ratings.
-            locale: The locale for the request.
-
-        Returns:
-            A BrowseSeries model containing the parsed data.
-
-        Raises:
-            NoContentError: If the response has no meaningful content. The raw
-                response is available on the exception's `response` attribute.
-        """
+        locale: str | None = None,
+    ) -> BrowseModel:
+        """Downloads and parses the browse file."""
         data = self.download(
             n=n,
             sort_by=sort_by,
@@ -101,31 +91,20 @@ class BrowseSeries(BaseEndpoint[BrowseSeriesModel]):
             start=start,
             ratings=ratings,
         )
-        return self._parse_or_raise(data, has_content=self.has_content(data))
+        return self._parse_or_raise(data, f"{self.__class__.__name__} {start}")
 
     def get_since_datetime(
         self,
         end_datetime: datetime | None = None,
         *,
         n: int = 36,
-        locale: str = "en-US",
+        locale: str | None = None,
         sort_by: str = "newly_added",
         ratings: str = "true",
-    ) -> list[BrowseSeriesModel]:
-        """Downloads all browse pages until end_datetime is reached (inclusive).
-
-        Args:
-            end_datetime: Stop when reaching this datetime.
-            n: The number of results per page.
-            locale: The locale for the request.
-            sort_by: The sort order.
-            ratings: Whether to include ratings.
-
-        Returns:
-            A list of BrowseSeries models containing the parsed data.
-        """
+    ) -> list[BrowseModel]:
+        """Downloads all browse pages until end_datetime is reached (inclusive)."""
         start = 0
-        all_data: list[BrowseSeriesModel] = []
+        all_data: list[BrowseModel] = []
         end_datetime = end_datetime or datetime.now().astimezone()
 
         while True:
@@ -138,17 +117,16 @@ class BrowseSeries(BaseEndpoint[BrowseSeriesModel]):
             )
 
             all_data.append(result)
-
-            if result.data[-1].last_public < end_datetime or len(result.data) == 0:
-                return all_data
-
             start += n
+
+            if result.data[-1].last_public < end_datetime or start >= result.total:
+                return all_data
 
     def compile_entries(
         self,
-        input_data: BrowseSeriesModel | list[BrowseSeriesModel],
+        input_data: BrowseModel | list[BrowseModel],
     ) -> list[Datum]:
-        """Returns all of the episodes from one or more BrowseSeries entries."""
+        """Compile all of the Browse entries into a single list of Datums."""
         if isinstance(input_data, list):
             result: list[Datum] = []
             for response in input_data:

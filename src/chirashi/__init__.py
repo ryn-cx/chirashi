@@ -1,5 +1,5 @@
 # TODO: Validate
-"""Crunchyroll API wrapper."""
+"""Contains the Chirashi class."""
 
 import time
 import uuid
@@ -10,10 +10,10 @@ from typing import Any
 
 from get_around import GetAround
 
-from chirashi.browse_series import BrowseSeries
-from chirashi.episodes import Episodes
+from chirashi.browse_series import Browse
 from chirashi.exceptions import HTTPError
 from chirashi.search import Search
+from chirashi.season_episodes import SeasonEpisodes
 from chirashi.seasons import Seasons
 from chirashi.series import Series
 
@@ -21,39 +21,34 @@ logger = getLogger(__name__)
 logger.addHandler(NullHandler())
 
 DOMAIN = "beta-api.crunchyroll.com"
-# These values were chosen to match the Crunchyroll app on Windows.
-DEVICE_ID = uuid.uuid4().hex
-DEVICE_TYPE = "Microsoft Edge on Windows"
 
 
 class Chirashi:
     """Crunchyroll API wrapper."""
 
-    def __init__(self, get_around_client: GetAround | None = None) -> None:
-        """Initialize the Chirashi client.
-
-        Args:
-            get_around_client: The HTTP client used for every request.
-        """
+    def __init__(
+        self,
+        get_around_client: GetAround | None = None,
+        locale: str = "en-US",
+    ) -> None:
+        """Initialize the Chirashi client."""
+        self.locale = locale
         self.get_around_client = get_around_client or GetAround()
-        self.device_id = DEVICE_ID
-        self.device_type = DEVICE_TYPE
+        self.device_id = uuid.uuid4().hex
+        # Chosen to match the (now deprecated?) Crunchyroll app on Windows.
+        self.device_type = "Microsoft Edge on Windows"
         self._access_token_value = ""
         self._token_expires_at = datetime.now(tz=UTC)
 
-        self.browse_series = BrowseSeries(self)
+        self.browse_series = Browse(self)
         self.series = Series(self)
         self.seasons = Seasons(self)
-        self.episodes = Episodes(self)
+        self.season_episodes = SeasonEpisodes(self)
         self.search = Search(self)
 
     @property
     def _access_token(self) -> str:
-        # Crunchyroll requires a bearer token even for anonymous access; fetch a
-        # fresh anonymous token whenever the cached one is missing or expired.
-        if not self._access_token_value or self._token_expires_at < datetime.now(
-            tz=UTC,
-        ):
+        if not self._access_token_value or self._token_expires_at < datetime.now(UTC):
             self._download_access_token()
         return self._access_token_value
 
@@ -86,38 +81,20 @@ class Chirashi:
         self,
         endpoint: str,
         params: dict[str, Any],
-        headers: dict[str, str] | None = None,
-        log_id: object = None,
+        headers: dict[str, str],
+        log_id: str,
     ) -> dict[str, Any]:
-        """Make a request to the Crunchyroll API with the given endpoint.
-
-        Args:
-            endpoint: The API path to request, relative to the Crunchyroll host.
-            params: The query parameters for the request.
-            headers: Optional request headers.
-            log_id: An identifier for the request (e.g. the series or season ID)
-                included in log messages to distinguish requests.
-
-        Returns:
-            The raw JSON response, suitable for passing to ``parse()``.
-
-        Raises:
-            HTTPError: If the response status code is not 200.
-        """
-        if headers is None:
-            headers = {}
+        """Downloads from the API."""
         headers["authorization"] = f"Bearer {self._access_token}"
 
-        operation = f"{endpoint} ({log_id})"
-        logger.debug("Downloading: %s", operation)
+        logger.debug("Downloading: %s", log_id)
         url = f"https://{DOMAIN}/{endpoint}"
         start = time.monotonic()
         response = self.get_around_client.get(url, params=params, headers=headers)
 
-        if response.status_code != HTTPStatus.OK:
+        if not response.is_success:
             msg = f"Unexpected response status code: {response.status_code}"
             raise HTTPError(msg)
 
-        logger.debug("Downloaded %s (%.4f s)", operation, time.monotonic() - start)
-
+        logger.debug("Downloaded %s (%.4f s)", log_id, time.monotonic() - start)
         return response.json()
