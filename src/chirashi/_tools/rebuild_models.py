@@ -1,5 +1,4 @@
-# TODO: Validate
-"""Rebuild Chirashi Pydantic models."""
+"""Rebuild Chirashi models."""
 
 import logging
 

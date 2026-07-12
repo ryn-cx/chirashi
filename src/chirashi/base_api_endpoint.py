@@ -1,4 +1,5 @@
-# TODO: Validate
+"""COntains BaseEndpoint."""
+
 from __future__ import annotations
 
 from abc import abstractmethod
@@ -16,7 +17,7 @@ class BaseEndpoint[T: GAPIBaseModel](GAPIClient[T]):
     """Base class for API endpoints."""
 
     def __init__(self, client: Chirashi) -> None:
-        """Initialize the endpoint with the Chirashi client."""
+        """Initialize the endpoint."""
         self._client = client
 
     @staticmethod

@@ -1,12 +1,9 @@
-# TODO: Validate
 """Contains the Browse class."""
 
 from __future__ import annotations
 
 from datetime import datetime
 from typing import TYPE_CHECKING, Any, override
-
-from good_ass_pydantic_integrator import CustomSerializer, ReplacementType
 
 from chirashi.base_api_endpoint import BaseEndpoint
 from chirashi.browse_series.models import (

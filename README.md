@@ -1,9 +1,8 @@
-<!-- TODO: Validate -->
-# chirashi
+# Chirashi
 
-Unofficial Crunchyroll API for Python.
-
-`chirashi` wraps the Crunchyroll API and parses its raw JSON into typed [Pydantic](https://docs.pydantic.dev/) models, giving you a small, structured API for reading data about series, seasons, episodes, and search results.
+[Crunchyroll](https://www.crunchyroll.com) API wrapper built using [Good Ass
+Pydantic Integrator](https://github.com/ryn-cx/good-ass-pydantic-integrator) and
+[Get Around](https://github.com/ryn-cx/get-around).
 
 ## Installation
 
@@ -13,30 +12,16 @@ uv add git+https://github.com/ryn-cx/chirashi
 
 ## Usage
 
-Create a client, then call `get(...)` on an endpoint to download from Crunchyroll and
-get back a parsed, typed model.
+Every endpoint has `get()` (parsed, typed model) and `download()` (raw JSON).
 
 ```python
 from chirashi import Chirashi
 
 client = Chirashi()
 
-# A series, by series ID.
-series = client.series.get("GY8VEQ95Y")
-
-# The seasons of a series, by series ID.
-seasons = client.seasons.get("GY8VEQ95Y")
-
-# The episodes of a season, by season ID.
-episodes = client.episodes.get("GR3VWXP96")
-
-# Browse series, sorted and paginated.
-browse = client.browse_series.get(n=36, sort_by="newly_added")
-
-# Search across music, series, episodes, and top results.
-results = client.search.get("naruto")
-series_hits = results.series
-episode_hits = results.episode
-music_hits = results.music
-top_hits = results.top_results
+series = client.series.get(series_id)
+seasons = client.seasons.get(series_id)
+episodes = client.season_episodes.get(season_id)
+browse = client.browse_series.get()
+search = client.search.get(query)
 ```

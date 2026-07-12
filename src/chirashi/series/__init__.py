@@ -1,4 +1,3 @@
-# TODO: Validate
 """Contains the Series class."""
 
 from __future__ import annotations

@@ -1,5 +1,4 @@
-# TODO: Validate
-"""Path constants for chirashi."""
+"""Constants."""
 
 from pathlib import Path
 

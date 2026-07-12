@@ -1,5 +1,4 @@
-# TODO: Validate
-"""Exception classes for chirashi."""
+"""Exceptions."""
 
 from __future__ import annotations
 
@@ -7,7 +6,7 @@ from typing import Any
 
 
 class ChirashiError(Exception):
-    """Base exception for chirashi library."""
+    """Base exception for Chirashi."""
 
 
 class HTTPError(ChirashiError):

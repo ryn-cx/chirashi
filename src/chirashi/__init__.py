@@ -1,4 +1,3 @@
-# TODO: Validate
 """Contains the Chirashi class."""
 
 import time

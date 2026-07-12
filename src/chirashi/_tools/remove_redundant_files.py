@@ -1,4 +1,3 @@
-# TODO: Validate
 """Remove redundant Chirashi files."""
 
 import logging
