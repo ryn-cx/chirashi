@@ -1,28 +1,19 @@
+# TODO: Validate
 """Contains the SearchTypeEndpoint class."""
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, override
+from typing import Any, override
 
 from good_ass_pydantic_integrator import GAPIBaseModel
 
 from chirashi.base_api_endpoint import BaseEndpoint
-
-if TYPE_CHECKING:
-    from pathlib import Path
 
 
 class SearchTypeEndpoint[T: GAPIBaseModel](BaseEndpoint[T]):
     """Base class to manage a search file with a specific type."""
 
     type: str
-
-    @classmethod
-    @override
-    def json_files_folder(cls) -> Path:
-        model_path = cls._model_path()
-        folder_name = cls._folder_name(cls._model_name())
-        return model_path.parent.parent.parent / "_files" / folder_name
 
     def download(
         self,

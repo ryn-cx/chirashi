@@ -1,3 +1,4 @@
+# TODO: Validate
 """Contains BaseEndpoint."""
 
 from __future__ import annotations
@@ -7,6 +8,7 @@ from typing import TYPE_CHECKING, Any
 
 from good_ass_pydantic_integrator import GAPIBaseModel, GAPIClient
 
+from chirashi.constants import FILES_PATH
 from chirashi.exceptions import NoContentError
 
 if TYPE_CHECKING:
@@ -15,6 +17,8 @@ if TYPE_CHECKING:
 
 class BaseEndpoint[T: GAPIBaseModel](GAPIClient[T]):
     """Base class for API endpoints."""
+
+    JSON_FILES_ROOT = FILES_PATH
 
     def __init__(self, client: Chirashi) -> None:
         """Initialize the endpoint."""
