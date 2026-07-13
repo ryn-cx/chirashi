@@ -6,18 +6,16 @@ from datetime import datetime
 from typing import TYPE_CHECKING, Any, override
 
 from chirashi.base_api_endpoint import BaseEndpoint
-from chirashi.browse_series.models import (
-    BrowseSeries as BrowseModel,
-)
+from chirashi.browse_series.models import BrowseSeriesModel
 
 if TYPE_CHECKING:
     from chirashi.browse_series.models import Datum
 
 
-class Browse(BaseEndpoint[BrowseModel]):
+class Browse(BaseEndpoint[BrowseSeriesModel]):
     """Manage the browse file."""
 
-    _response_model = BrowseModel
+    _response_model = BrowseSeriesModel
 
     def download(
         self,
@@ -33,7 +31,7 @@ class Browse(BaseEndpoint[BrowseModel]):
         Example request:
             GET /content/v2/discover/browse?n=36&sort_by=newly_added&ratings=true&locale=en-US HTTP/2
             Host: www.crunchyroll.com
-            User-Agent: __REDACTED__
+            User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:152.0) Gecko/20100101 Firefox/152.0
             Accept: application/json, text/plain, */*
             Accept-Language: en-US,en;q=0.9
             Accept-Encoding: gzip, deflate, br, zstd
@@ -57,12 +55,10 @@ class Browse(BaseEndpoint[BrowseModel]):
         if start:
             params["start"] = start
 
-        headers = {"referer": "https://www.crunchyroll.com/videos/new"}
-
         return self._client.download(
             "content/v2/discover/browse",
             params=params,
-            headers=headers,
+            headers={"referer": "https://www.crunchyroll.com/videos/new"},
             log_id=f"{self.__class__.__name__} {start}",
         )
 
@@ -79,7 +75,7 @@ class Browse(BaseEndpoint[BrowseModel]):
         sort_by: str = "newly_added",
         ratings: str = "true",
         locale: str | None = None,
-    ) -> BrowseModel:
+    ) -> BrowseSeriesModel:
         """Downloads and parses the browse file."""
         data = self.download(
             n=n,
@@ -98,10 +94,10 @@ class Browse(BaseEndpoint[BrowseModel]):
         locale: str | None = None,
         sort_by: str = "newly_added",
         ratings: str = "true",
-    ) -> list[BrowseModel]:
+    ) -> list[BrowseSeriesModel]:
         """Downloads all browse pages until end_datetime is reached (inclusive)."""
         start = 0
-        all_data: list[BrowseModel] = []
+        results: list[BrowseSeriesModel] = []
         end_datetime = end_datetime or datetime.now().astimezone()
 
         while True:
@@ -113,15 +109,15 @@ class Browse(BaseEndpoint[BrowseModel]):
                 ratings=ratings,
             )
 
-            all_data.append(result)
+            results.append(result)
             start += n
 
             if result.data[-1].last_public < end_datetime or start >= result.total:
-                return all_data
+                return results
 
     def compile_entries(
         self,
-        input_data: BrowseModel | list[BrowseModel],
+        input_data: BrowseSeriesModel | list[BrowseSeriesModel],
     ) -> list[Datum]:
         """Compile all of the Browse entries into a single list of Datums."""
         if isinstance(input_data, list):

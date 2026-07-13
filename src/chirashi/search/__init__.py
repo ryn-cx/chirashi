@@ -2,13 +2,23 @@
 
 from __future__ import annotations
 
-from typing import Any, override
+from typing import TYPE_CHECKING, Any, override
 
 from good_ass_pydantic_integrator import GAPIBaseModel
 
 from chirashi.base_api_endpoint import BaseEndpoint
-from chirashi.search.models import EpisodeItem, MusicItem, Series, TopResult
-from chirashi.search.models import Search as SearchModel
+from chirashi.search.episode import SearchEpisode
+from chirashi.search.episode.models import Item as EpisodeItem
+from chirashi.search.models import Item, SearchModel
+from chirashi.search.movie_listing import SearchMovieListing
+from chirashi.search.movie_listing.models import Item as MovieListingItem
+from chirashi.search.music import SearchMusic
+from chirashi.search.music.models import Item as MusicItem
+from chirashi.search.series import SearchSeries
+from chirashi.search.series.models import Item as SeriesItem
+
+if TYPE_CHECKING:
+    from chirashi import Chirashi
 
 
 class Search(BaseEndpoint[SearchModel]):
@@ -16,14 +26,21 @@ class Search(BaseEndpoint[SearchModel]):
 
     _response_model = SearchModel
 
-    def download(  # noqa: PLR0913
+    def __init__(self, client: Chirashi) -> None:
+        """Initialize the search file."""
+        super().__init__(client)
+        self.movie_listing = SearchMovieListing(client)
+        self.series = SearchSeries(client)
+        self.music = SearchMusic(client)
+        self.episode = SearchEpisode(client)
+
+    def download(
         self,
-        query: str,
+        q: str,
         *,
         n: int = 6,
         type: str = "music,series,episode,top_results",  # noqa: A002
         ratings: str = "true",
-        preferred_audio_language: str = "ja-JP",
         locale: str | None = None,
     ) -> dict[str, Any]:
         """Downloads the search file.
@@ -47,15 +64,14 @@ class Search(BaseEndpoint[SearchModel]):
         return self._client.download(
             "content/v2/discover/search",
             params={
-                "q": query,
+                "q": q,
                 "n": n,
                 "type": type,
                 "ratings": ratings,
-                "preferred_audio_language": preferred_audio_language,
                 "locale": locale or self._client.locale,
             },
             headers={"referer": "https://www.crunchyroll.com/search"},
-            log_id=f"{self.__class__.__name__} {query}",
+            log_id=f"{self.__class__.__name__} {q}",
         )
 
     @staticmethod
@@ -63,26 +79,24 @@ class Search(BaseEndpoint[SearchModel]):
     def has_content(response: dict[str, Any]) -> bool:
         return any(datum["items"] for datum in response.get("data", []))
 
-    def get(  # noqa: PLR0913
+    def get(
         self,
-        query: str,
+        q: str,
         *,
         n: int = 6,
         type: str = "music,series,episode,top_results",  # noqa: A002
         ratings: str = "true",
-        preferred_audio_language: str = "ja-JP",
         locale: str | None = None,
     ) -> SearchModel:
         """Downloads and parses the search file."""
         data = self.download(
-            query,
+            q,
             n=n,
             type=type,
             ratings=ratings,
-            preferred_audio_language=preferred_audio_language,
             locale=locale,
         )
-        return self._parse_or_raise(data, f"{self.__class__.__name__} {query}")
+        return self._parse_or_raise(data, f"{self.__class__.__name__} {q}")
 
     def _extract_category[U: GAPIBaseModel](
         self,
@@ -98,13 +112,13 @@ class Search(BaseEndpoint[SearchModel]):
                 ]
         return []
 
-    def extract_top_results(self, data: SearchModel) -> list[TopResult]:
+    def extract_top_results(self, data: SearchModel) -> list[Item]:
         """Extract the top results from Search."""
-        return self._extract_category(data, "top_results", TopResult)
+        return self._extract_category(data, "top_results", Item)
 
-    def extract_series(self, data: SearchModel) -> list[Series]:
+    def extract_series(self, data: SearchModel) -> list[SeriesItem]:
         """Extract the series from Search."""
-        return self._extract_category(data, "series", Series)
+        return self._extract_category(data, "series", SeriesItem)
 
     def extract_episode(self, data: SearchModel) -> list[EpisodeItem]:
         """Extract the episodes from Search."""
@@ -113,3 +127,7 @@ class Search(BaseEndpoint[SearchModel]):
     def extract_music(self, data: SearchModel) -> list[MusicItem]:
         """Extract the music from Search."""
         return self._extract_category(data, "music", MusicItem)
+
+    def extract_movie_listing(self, data: SearchModel) -> list[MovieListingItem]:
+        """Extract the movie listings from Search."""
+        return self._extract_category(data, "movie_listing", MovieListingItem)

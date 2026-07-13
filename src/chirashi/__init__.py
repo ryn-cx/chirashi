@@ -19,7 +19,8 @@ from chirashi.series import Series
 logger = getLogger(__name__)
 logger.addHandler(NullHandler())
 
-DOMAIN = "beta-api.crunchyroll.com"
+# beta-api.crunchyroll.com has easier authorization
+API_DOMAIN = "beta-api.crunchyroll.com"
 
 
 class Chirashi:
@@ -52,7 +53,7 @@ class Chirashi:
         return self._access_token_value
 
     def _download_access_token(self) -> None:
-        url = f"https://{DOMAIN}/auth/v1/token"
+        url = f"https://{API_DOMAIN}/auth/v1/token"
         logger.debug("Downloading token:")
         start = time.monotonic()
         response = self.get_around_client.post(
@@ -87,7 +88,7 @@ class Chirashi:
         headers["authorization"] = f"Bearer {self._access_token}"
 
         logger.debug("Downloading: %s", log_id)
-        url = f"https://{DOMAIN}/{endpoint}"
+        url = f"https://{API_DOMAIN}/{endpoint}"
         start = time.monotonic()
         response = self.get_around_client.get(url, params=params, headers=headers)
 

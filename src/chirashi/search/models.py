@@ -345,7 +345,7 @@ class Datum(GAPIBaseModel):
     count: int
 
 
-class Search(GAPIBaseModel):
+class SearchModel(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     data: list[Datum]
     total: int

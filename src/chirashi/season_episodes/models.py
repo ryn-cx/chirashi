@@ -122,7 +122,7 @@ class Meta(GAPIBaseModel):
     versions_considered: bool
 
 
-class Episodes(GAPIBaseModel):
+class SeasonEpisodesModel(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     data: list[Datum]
     total: int

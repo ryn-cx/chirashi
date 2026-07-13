@@ -1,3 +1,4 @@
+# TODO: Validate
 """Contains the SeasonEpisodes class."""
 
 from __future__ import annotations
@@ -5,13 +6,13 @@ from __future__ import annotations
 from typing import Any, override
 
 from chirashi.base_api_endpoint import BaseEndpoint
-from chirashi.season_episodes.models import Episodes as EpisodesModel
+from chirashi.season_episodes.models import SeasonEpisodesModel
 
 
-class SeasonEpisodes(BaseEndpoint[EpisodesModel]):
+class SeasonEpisodes(BaseEndpoint[SeasonEpisodesModel]):
     """Manage the season episodes file."""
 
-    _response_model = EpisodesModel
+    _response_model = SeasonEpisodesModel
 
     def download(self, series_id: str, locale: str | None = None) -> dict[str, Any]:
         """Downloads the season episodes file.
@@ -31,6 +32,7 @@ class SeasonEpisodes(BaseEndpoint[EpisodesModel]):
             Sec-Fetch-Dest: empty
             Sec-Fetch-Mode: cors
             Sec-Fetch-Site: same-origin
+            Priority: u=0
             TE: trailers
         """
         return self._client.download(
@@ -45,7 +47,7 @@ class SeasonEpisodes(BaseEndpoint[EpisodesModel]):
     def has_content(response: dict[str, Any]) -> bool:
         return bool(response["data"])
 
-    def get(self, series_id: str, *, locale: str | None = None) -> EpisodesModel:
+    def get(self, series_id: str, *, locale: str | None = None) -> SeasonEpisodesModel:
         """Downloads and parses the season episodes file."""
         data = self.download(series_id, locale=locale)
         return self._parse_or_raise(data, f"{self.__class__.__name__} {series_id}")

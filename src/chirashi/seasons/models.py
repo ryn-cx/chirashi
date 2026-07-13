@@ -67,7 +67,7 @@ class Meta(GAPIBaseModel):
     versions_considered: bool
 
 
-class Seasons(GAPIBaseModel):
+class SeasonsModel(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     data: list[Datum]
     meta: Meta

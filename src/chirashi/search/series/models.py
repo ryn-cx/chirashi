@@ -1,9 +1,11 @@
 # ruff: noqa: D100, D101, D102, TC001, TC002, TC003
+from typing import Any
+
 from good_ass_pydantic_integrator import GAPIBaseModel
 from pydantic import AwareDatetime, ConfigDict, Field
 
 
-class PosterTallItem(GAPIBaseModel):
+class PosterWideItem(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     width: int
     height: int
@@ -11,7 +13,7 @@ class PosterTallItem(GAPIBaseModel):
     source: str
 
 
-class PosterWideItem(GAPIBaseModel):
+class PosterTallItem(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     width: int
     height: int
@@ -29,8 +31,8 @@ class PromoImageItem(GAPIBaseModel):
 
 class Images(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
-    poster_tall: list[list[PosterTallItem]]
     poster_wide: list[list[PosterWideItem]]
+    poster_tall: list[list[PosterTallItem]]
     promo_image: list[list[PromoImageItem]]
 
 
@@ -42,15 +44,15 @@ class ExtendedMaturityRating(GAPIBaseModel):
     advisories: list[None] | None = None
 
 
+class ContentDescriptorsWithSymbolItem(GAPIBaseModel):
+    model_config = ConfigDict(extra="forbid")
+    label: str
+
+
 class LanguagePresentation(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     audio_notation: str
     text_notation: str
-
-
-class ContentDescriptorsWithSymbolItem(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
-    label: str
 
 
 class Award(GAPIBaseModel):
@@ -69,6 +71,10 @@ class SeriesMetadata(GAPIBaseModel):
     season_count: int
     extended_maturity_rating: ExtendedMaturityRating
     maturity_ratings: list[str]
+    content_descriptors: list[str] | None = None
+    content_descriptors_with_symbol: list[ContentDescriptorsWithSymbolItem] | None = (
+        None
+    )
     is_mature: bool
     mature_blocked: bool
     is_subbed: bool
@@ -81,11 +87,14 @@ class SeriesMetadata(GAPIBaseModel):
     series_launch_year: int
     tenant_categories: list[str]
     language_presentation: LanguagePresentation
-    content_descriptors: list[str] | None = None
-    content_descriptors_with_symbol: list[ContentDescriptorsWithSymbolItem] | None = (
-        None
-    )
     awards: list[Award] | None = None
+
+
+class SearchMetadata(GAPIBaseModel):
+    model_config = ConfigDict(extra="forbid")
+    score: float
+    rank: int
+    popularity_score: int | float
 
 
 class Field1s(GAPIBaseModel):
@@ -134,7 +143,7 @@ class Rating(GAPIBaseModel):
     total: int
 
 
-class Datum(GAPIBaseModel):
+class Item(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     id: str
     external_id: str
@@ -151,11 +160,20 @@ class Datum(GAPIBaseModel):
     last_public: AwareDatetime
     images: Images
     series_metadata: SeriesMetadata
+    search_metadata: SearchMetadata
     language_presentation: LanguagePresentation
     rating: Rating
 
 
-class BrowseSeriesModel(GAPIBaseModel):
+class Datum(GAPIBaseModel):
+    model_config = ConfigDict(extra="forbid")
+    type: str
+    items: list[Item]
+    count: int
+
+
+class SearchSeriesModel(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     data: list[Datum]
     total: int
+    meta: dict[str, Any]

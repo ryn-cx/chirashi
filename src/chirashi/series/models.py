@@ -89,7 +89,7 @@ class Datum(GAPIBaseModel):
     language_presentation: LanguagePresentation
 
 
-class Series(GAPIBaseModel):
+class SeriesModel(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     total: int
     data: list[Datum]

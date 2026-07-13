@@ -19,7 +19,7 @@ def endpoint(client: Chirashi) -> SeasonEpisodes:
 
 class TestEpisodes:
     def test_get(self, endpoint: SeasonEpisodes) -> None:
-        season_id = "GEXH3W29Z"
+        season_id = "G68VCP0VQ"
         episode_count = 12
         model = endpoint.get(season_id)
         assert all(episode.season_id == season_id for episode in model.data)

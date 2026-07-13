@@ -1,4 +1,4 @@
-"""COntains BaseEndpoint."""
+"""Contains BaseEndpoint."""
 
 from __future__ import annotations
 
@@ -26,7 +26,7 @@ class BaseEndpoint[T: GAPIBaseModel](GAPIClient[T]):
         """Return whether the response has meaningful content."""
 
     def _parse_or_raise(self, response: dict[str, Any], log_id: str) -> T:
-        """Parse `response`, or raise `NoContentError` when it is empty.
+        """Parse `response`, or raise `NoContentError` if it is empty.
 
         Raises:
             NoContentError: If `has_content` is false.
