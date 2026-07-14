@@ -26,7 +26,7 @@ class TestObjects:
         download_if_missing(
             endpoint,
             object_id,
-            lambda: endpoint.download([object_id]),
+            lambda: endpoint.download(object_id),
         )
 
     @pytest.mark.parametrize("object_id", OBJECT_IDS)
@@ -39,5 +39,5 @@ class TestObjects:
         assert_http_error(
             endpoint,
             INVALID_OBJECT_ID,
-            lambda: endpoint.download([INVALID_OBJECT_ID]),
+            lambda: endpoint.download(INVALID_OBJECT_ID),
         )

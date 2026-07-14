@@ -15,14 +15,11 @@ class Objects(BaseEndpoint[ObjectsModel]):
 
     def download(
         self,
-        object_ids: list[str],
+        object_id: str,
         *,
         locale: str | None = None,
     ) -> dict[str, Any]:
         """Downloads the objects file.
-
-        Multiple object ids are fetched in a single request by joining them with
-        commas (e.g. ``/objects/GE00258180JAJP,GEXH3W29Z``).
 
         Example request: https://www.crunchyroll.com/watch/GE00258180JAJP/the-magic-that-started-everything
             GET /content/v2/cms/objects/GE00258180JAJP?ratings=true&locale=en-US HTTP/2
@@ -40,19 +37,17 @@ class Objects(BaseEndpoint[ObjectsModel]):
             Sec-Fetch-Site: same-origin
             TE: trailers
         """
-        joined_ids = ",".join(object_ids)
         return self._client.download(
-            endpoint="content/v2/cms/objects/" + joined_ids,
+            endpoint="content/v2/cms/objects/" + object_id,
             params={
                 "ratings": True,
                 "locale": locale or self._client.locale,
             },
-            headers={"referer": f"https://www.crunchyroll.com/watch/{object_ids[0]}"},
-            log_id=f"{self.__class__.__name__} {joined_ids}",
+            headers={"referer": f"https://www.crunchyroll.com/watch/{object_id}"},
+            log_id=f"{self.__class__.__name__} {object_id}",
         )
 
-    def get(self, object_ids: list[str], *, locale: str | None = None) -> ObjectsModel:
+    def get(self, object_id: str, *, locale: str | None = None) -> ObjectsModel:
         """Downloads and parses the objects file."""
-        data = self.download(object_ids, locale=locale)
-        joined_ids = ",".join(object_ids)
-        return self._parse_or_raise(data, f"{self.__class__.__name__} {joined_ids}")
+        data = self.download(object_id, locale=locale)
+        return self.parse(data)
