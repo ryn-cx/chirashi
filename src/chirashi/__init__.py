@@ -12,6 +12,7 @@ from get_around import GetAround
 
 from chirashi.browse_series import Browse
 from chirashi.exceptions import HTTPError
+from chirashi.objects import Objects
 from chirashi.search import Search
 from chirashi.season_episodes import SeasonEpisodes
 from chirashi.seasons import Seasons
@@ -45,6 +46,7 @@ class Chirashi:
         self.series = Series(self)
         self.seasons = Seasons(self)
         self.season_episodes = SeasonEpisodes(self)
+        self.objects = Objects(self)
         self.search = Search(self)
 
     @property
