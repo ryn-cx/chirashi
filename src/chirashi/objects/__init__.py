@@ -2,16 +2,27 @@
 
 from __future__ import annotations
 
+from logging import NullHandler, getLogger
 from typing import Any
 
 from chirashi.base_api_endpoint import BaseEndpoint
 from chirashi.objects.models import ObjectsModel
+
+logger = getLogger(__name__)
+logger.addHandler(NullHandler())
 
 
 class Objects(BaseEndpoint[ObjectsModel]):
     """Manage the objects file."""
 
     _response_model = ObjectsModel
+
+    def get_log_id(self, object_id: str, *, locale: str | None = None) -> str:
+        """Build the log id for a download."""
+        return self.append_non_default_args(
+            f"{self.__class__.__name__} {object_id=}",
+            locale=(locale, None),
+        )
 
     def download(
         self,
@@ -44,10 +55,14 @@ class Objects(BaseEndpoint[ObjectsModel]):
                 "locale": locale or self._client.locale,
             },
             headers={"referer": f"https://www.crunchyroll.com/watch/{object_id}"},
-            log_id=f"{self.__class__.__name__} {object_id}",
+            log_id=self.get_log_id(object_id, locale=locale),
         )
 
-    def get(self, object_id: str, *, locale: str | None = None) -> ObjectsModel:
+    def download_and_parse(
+        self,
+        object_id: str,
+        *,
+        locale: str | None = None,
+    ) -> ObjectsModel:
         """Downloads and parses the objects file."""
-        data = self.download(object_id, locale=locale)
-        return self.parse(data)
+        return self.parse(self.download(object_id, locale=locale))

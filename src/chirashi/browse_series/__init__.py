@@ -4,7 +4,8 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import TYPE_CHECKING, Any, override
+from logging import NullHandler, getLogger
+from typing import TYPE_CHECKING, Any
 
 from chirashi.base_api_endpoint import BaseEndpoint
 from chirashi.browse_series.models import BrowseSeriesModel
@@ -12,11 +13,32 @@ from chirashi.browse_series.models import BrowseSeriesModel
 if TYPE_CHECKING:
     from chirashi.browse_series.models import Datum
 
+logger = getLogger(__name__)
+logger.addHandler(NullHandler())
+
 
 class Browse(BaseEndpoint[BrowseSeriesModel]):
     """Manage the browse file."""
 
     _response_model = BrowseSeriesModel
+
+    def get_log_id(
+        self,
+        *,
+        start: int | None = None,
+        n: int = 36,
+        sort_by: str = "newly_added",
+        ratings: str = "true",
+        locale: str | None = None,
+    ) -> str:
+        """Build the log id for a download."""
+        return self.append_non_default_args(
+            f"{self.__class__.__name__} {start=}",
+            n=(n, 36),
+            sort_by=(sort_by, "newly_added"),
+            ratings=(ratings, "true"),
+            locale=(locale, None),
+        )
 
     def download(
         self,
@@ -60,15 +82,16 @@ class Browse(BaseEndpoint[BrowseSeriesModel]):
             "content/v2/discover/browse",
             params=params,
             headers={"referer": "https://www.crunchyroll.com/videos/new"},
-            log_id=f"{self.__class__.__name__} {start}",
+            log_id=self.get_log_id(
+                start=start,
+                n=n,
+                sort_by=sort_by,
+                ratings=ratings,
+                locale=locale,
+            ),
         )
 
-    @staticmethod
-    @override
-    def has_content(response: dict[str, Any]) -> bool:
-        return bool(response["data"])
-
-    def get(
+    def download_and_parse(
         self,
         *,
         start: int | None = None,
@@ -77,17 +100,21 @@ class Browse(BaseEndpoint[BrowseSeriesModel]):
         ratings: str = "true",
         locale: str | None = None,
     ) -> BrowseSeriesModel:
-        """Downloads and parses the browse file."""
-        data = self.download(
-            n=n,
-            sort_by=sort_by,
-            locale=locale,
-            start=start,
-            ratings=ratings,
-        )
-        return self._parse_or_raise(data, f"{self.__class__.__name__} {start}")
+        """Downloads and parses the browse file.
 
-    def get_since_datetime(
+        An empty response returns a valid (empty) model.
+        """
+        return self.parse(
+            self.download(
+                n=n,
+                sort_by=sort_by,
+                locale=locale,
+                start=start,
+                ratings=ratings,
+            ),
+        )
+
+    def download_and_parse_since_datetime(
         self,
         end_datetime: datetime | None = None,
         *,
@@ -102,7 +129,7 @@ class Browse(BaseEndpoint[BrowseSeriesModel]):
         end_datetime = end_datetime or datetime.now().astimezone()
 
         while True:
-            result = self.get(
+            result = self.download_and_parse(
                 n=n,
                 locale=locale,
                 start=start,

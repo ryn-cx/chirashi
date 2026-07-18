@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-import json
 from typing import TYPE_CHECKING
 
 import pytest
 
-from tests.utils import assert_http_error, data_path, download_if_missing
+from chirashi.exceptions import HTTPError
+from tests.utils import assert_error, download_and_save, parse_json
 
 if TYPE_CHECKING:
     from chirashi import Chirashi
@@ -23,21 +23,31 @@ def endpoint(client: Chirashi) -> Objects:
 class TestObjects:
     @pytest.mark.parametrize("object_id", OBJECT_IDS)
     def test_download(self, endpoint: Objects, object_id: str) -> None:
-        download_if_missing(
+        download_and_save(
             endpoint,
             object_id,
             lambda: endpoint.download(object_id),
         )
 
     @pytest.mark.parametrize("object_id", OBJECT_IDS)
-    def test_value(self, endpoint: Objects, object_id: str) -> None:
-        raw = data_path(endpoint, object_id).read_text()
-        data = endpoint.parse(json.loads(raw))
+    def test_parse(self, endpoint: Objects, object_id: str) -> None:
+        data = parse_json(endpoint, object_id)
         assert data.data[0].id == object_id
 
-    def test_invalid(self, endpoint: Objects) -> None:
-        assert_http_error(
+    def test_invalid_download(self, endpoint: Objects) -> None:
+        assert_error(
             endpoint,
             INVALID_OBJECT_ID,
             lambda: endpoint.download(INVALID_OBJECT_ID),
+            HTTPError,
         )
+
+
+@pytest.mark.parametrize("locale", [None, "fr-FR"])
+def test_log_id(endpoint: Objects, locale: str | None) -> None:
+    object_id = OBJECT_IDS[0]
+    kwargs: dict[str, str] = {} if locale is None else {"locale": locale}
+    expected = f"Objects object_id={object_id!r}"
+    if locale is not None:
+        expected += f" locale={locale!r}"
+    assert endpoint.get_log_id(object_id, **kwargs) == expected

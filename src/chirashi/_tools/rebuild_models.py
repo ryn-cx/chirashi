@@ -1,4 +1,3 @@
-# TODO: Validate
 """Rebuilds Chirashi models."""
 
 import logging

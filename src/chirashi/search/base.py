@@ -3,11 +3,15 @@
 
 from __future__ import annotations
 
-from typing import Any, override
+from logging import NullHandler, getLogger
+from typing import Any
 
 from good_ass_pydantic_integrator import GAPIBaseModel
 
 from chirashi.base_api_endpoint import BaseEndpoint
+
+logger = getLogger(__name__)
+logger.addHandler(NullHandler())
 
 
 class SearchTypeEndpoint[T: GAPIBaseModel](BaseEndpoint[T]):
@@ -105,12 +109,7 @@ class SearchTypeEndpoint[T: GAPIBaseModel](BaseEndpoint[T]):
             locale=locale,
         )
 
-    @staticmethod
-    @override
-    def has_content(response: dict[str, Any]) -> bool:
-        return any(datum["items"] for datum in response.get("data", []))
-
-    def get(
+    def download_and_parse(
         self,
         q: str,
         *,
@@ -118,11 +117,15 @@ class SearchTypeEndpoint[T: GAPIBaseModel](BaseEndpoint[T]):
         ratings: str = "true",
         locale: str | None = None,
     ) -> T:
-        """Downloads and parses the search file."""
-        data = self.download(
-            q=q,
-            n=n,
-            ratings=ratings,
-            locale=locale,
+        """Downloads and parses the search file.
+
+        An empty response returns a valid (empty) model.
+        """
+        return self.parse(
+            self.download(
+                q=q,
+                n=n,
+                ratings=ratings,
+                locale=locale,
+            ),
         )
-        return self._parse_or_raise(data, f"{self.__class__.__name__} {q}")

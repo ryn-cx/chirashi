@@ -3,16 +3,27 @@
 
 from __future__ import annotations
 
-from typing import Any, override
+from logging import NullHandler, getLogger
+from typing import Any
 
 from chirashi.base_api_endpoint import BaseEndpoint
 from chirashi.season_episodes.models import SeasonEpisodesModel
+
+logger = getLogger(__name__)
+logger.addHandler(NullHandler())
 
 
 class SeasonEpisodes(BaseEndpoint[SeasonEpisodesModel]):
     """Manage the season episodes file."""
 
     _response_model = SeasonEpisodesModel
+
+    def get_log_id(self, series_id: str, *, locale: str | None = None) -> str:
+        """Build the log id for a download."""
+        return self.append_non_default_args(
+            f"{self.__class__.__name__} {series_id=}",
+            locale=(locale, None),
+        )
 
     def download(self, series_id: str, locale: str | None = None) -> dict[str, Any]:
         """Downloads the season episodes file.
@@ -39,15 +50,17 @@ class SeasonEpisodes(BaseEndpoint[SeasonEpisodesModel]):
             endpoint=f"content/v2/cms/seasons/{series_id}/episodes",
             params={"locale": locale or self._client.locale},
             headers={"referer": f"https://www.crunchyroll.com/series/{series_id}"},
-            log_id=f"{self.__class__.__name__} {series_id}",
+            log_id=self.get_log_id(series_id, locale=locale),
         )
 
-    @staticmethod
-    @override
-    def has_content(response: dict[str, Any]) -> bool:
-        return bool(response["data"])
+    def download_and_parse(
+        self,
+        series_id: str,
+        *,
+        locale: str | None = None,
+    ) -> SeasonEpisodesModel:
+        """Downloads and parses the season episodes file.
 
-    def get(self, series_id: str, *, locale: str | None = None) -> SeasonEpisodesModel:
-        """Downloads and parses the season episodes file."""
-        data = self.download(series_id, locale=locale)
-        return self._parse_or_raise(data, f"{self.__class__.__name__} {series_id}")
+        An empty response returns a valid (empty) model.
+        """
+        return self.parse(self.download(series_id, locale=locale))

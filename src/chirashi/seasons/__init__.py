@@ -3,16 +3,27 @@
 
 from __future__ import annotations
 
-from typing import Any, override
+from logging import NullHandler, getLogger
+from typing import Any
 
 from chirashi.base_api_endpoint import BaseEndpoint
 from chirashi.seasons.models import SeasonsModel
+
+logger = getLogger(__name__)
+logger.addHandler(NullHandler())
 
 
 class Seasons(BaseEndpoint[SeasonsModel]):
     """Manage the seasons file."""
 
     _response_model = SeasonsModel
+
+    def get_log_id(self, series_id: str, *, locale: str | None = None) -> str:
+        """Build the log id for a download."""
+        return self.append_non_default_args(
+            f"{self.__class__.__name__} {series_id=}",
+            locale=(locale, None),
+        )
 
     def download(
         self,
@@ -47,15 +58,17 @@ class Seasons(BaseEndpoint[SeasonsModel]):
                 "force_locale": None,
             },
             headers={"referer": f"https://www.crunchyroll.com/series/{series_id}"},
-            log_id=f"{self.__class__.__name__} {series_id}",
+            log_id=self.get_log_id(series_id, locale=locale),
         )
 
-    @staticmethod
-    @override
-    def has_content(response: dict[str, Any]) -> bool:
-        return bool(response["data"])
+    def download_and_parse(
+        self,
+        series_id: str,
+        *,
+        locale: str | None = None,
+    ) -> SeasonsModel:
+        """Downloads and parses the seasons file.
 
-    def get(self, series_id: str, *, locale: str | None = None) -> SeasonsModel:
-        """Downloads and parses the seasons file."""
-        data = self.download(series_id, locale=locale)
-        return self._parse_or_raise(data, f"{self.__class__.__name__} {series_id}")
+        An empty response returns a valid (empty) model.
+        """
+        return self.parse(self.download(series_id, locale=locale))

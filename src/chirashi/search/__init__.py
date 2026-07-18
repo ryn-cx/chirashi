@@ -3,7 +3,8 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, override
+from logging import NullHandler, getLogger
+from typing import TYPE_CHECKING, Any
 
 from good_ass_pydantic_integrator import GAPIBaseModel
 
@@ -21,6 +22,11 @@ from chirashi.search.series.models import Item as SeriesItem
 if TYPE_CHECKING:
     from chirashi import Chirashi
 
+logger = getLogger(__name__)
+logger.addHandler(NullHandler())
+
+DEFAULT_TYPE = "music,series,episode,top_results"
+
 
 class Search(BaseEndpoint[SearchModel]):
     """Manage the search file."""
@@ -35,12 +41,30 @@ class Search(BaseEndpoint[SearchModel]):
         self.music = SearchMusic(client)
         self.episode = SearchEpisode(client)
 
+    def get_log_id(
+        self,
+        q: str,
+        *,
+        n: int = 6,
+        type: str = DEFAULT_TYPE,  # noqa: A002
+        ratings: str = "true",
+        locale: str | None = None,
+    ) -> str:
+        """Build the log id for a download."""
+        return self.append_non_default_args(
+            f"{self.__class__.__name__} {q=}",
+            n=(n, 6),
+            type=(type, DEFAULT_TYPE),
+            ratings=(ratings, "true"),
+            locale=(locale, None),
+        )
+
     def download(
         self,
         q: str,
         *,
         n: int = 6,
-        type: str = "music,series,episode,top_results",  # noqa: A002
+        type: str = DEFAULT_TYPE,  # noqa: A002
         ratings: str = "true",
         locale: str | None = None,
     ) -> dict[str, Any]:
@@ -72,32 +96,37 @@ class Search(BaseEndpoint[SearchModel]):
                 "locale": locale or self._client.locale,
             },
             headers={"referer": "https://www.crunchyroll.com/search"},
-            log_id=f"{self.__class__.__name__} {q}",
+            log_id=self.get_log_id(
+                q,
+                n=n,
+                type=type,
+                ratings=ratings,
+                locale=locale,
+            ),
         )
 
-    @staticmethod
-    @override
-    def has_content(response: dict[str, Any]) -> bool:
-        return any(datum["items"] for datum in response.get("data", []))
-
-    def get(
+    def download_and_parse(
         self,
         q: str,
         *,
         n: int = 6,
-        type: str = "music,series,episode,top_results",  # noqa: A002
+        type: str = DEFAULT_TYPE,  # noqa: A002
         ratings: str = "true",
         locale: str | None = None,
     ) -> SearchModel:
-        """Downloads and parses the search file."""
-        data = self.download(
-            q,
-            n=n,
-            type=type,
-            ratings=ratings,
-            locale=locale,
+        """Downloads and parses the search file.
+
+        An empty response returns a valid (empty) model.
+        """
+        return self.parse(
+            self.download(
+                q,
+                n=n,
+                type=type,
+                ratings=ratings,
+                locale=locale,
+            ),
         )
-        return self._parse_or_raise(data, f"{self.__class__.__name__} {q}")
 
     def _extract_category[U: GAPIBaseModel](
         self,
