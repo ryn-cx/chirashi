@@ -22,24 +22,6 @@ class Browse(BaseEndpoint[BrowseSeriesModel]):
 
     _response_model = BrowseSeriesModel
 
-    def get_log_id(
-        self,
-        *,
-        start: int | None = None,
-        n: int = 36,
-        sort_by: str = "newly_added",
-        ratings: str = "true",
-        locale: str | None = None,
-    ) -> str:
-        """Build the log id for a download."""
-        return self.append_non_default_args(
-            f"{self.__class__.__name__} {start=}",
-            n=(n, 36),
-            sort_by=(sort_by, "newly_added"),
-            ratings=(ratings, "true"),
-            locale=(locale, None),
-        )
-
     def download(
         self,
         *,
@@ -68,6 +50,7 @@ class Browse(BaseEndpoint[BrowseSeriesModel]):
             Sec-Fetch-Site: same-origin
             TE: trailers
         """
+        log_id = self.get_log_id(self.download, locals())
         params: dict[str, str | int] = {
             "n": n,
             "sort_by": sort_by,
@@ -82,13 +65,7 @@ class Browse(BaseEndpoint[BrowseSeriesModel]):
             "content/v2/discover/browse",
             params=params,
             headers={"referer": "https://www.crunchyroll.com/videos/new"},
-            log_id=self.get_log_id(
-                start=start,
-                n=n,
-                sort_by=sort_by,
-                ratings=ratings,
-                locale=locale,
-            ),
+            log_id=log_id,
         )
 
     def download_and_parse(

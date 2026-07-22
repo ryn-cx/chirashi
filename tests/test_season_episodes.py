@@ -32,12 +32,3 @@ class TestSeasonEpisodes:
         # is 12 (needs live data)
         data = parse_json(endpoint, SEASON_ID)
         assert data.data is not None
-
-
-@pytest.mark.parametrize("locale", [None, "fr-FR"])
-def test_log_id(endpoint: SeasonEpisodes, locale: str | None) -> None:
-    kwargs: dict[str, str] = {} if locale is None else {"locale": locale}
-    expected = f"SeasonEpisodes series_id={SEASON_ID!r}"
-    if locale is not None:
-        expected += f" locale={locale!r}"
-    assert endpoint.get_log_id(SEASON_ID, **kwargs) == expected

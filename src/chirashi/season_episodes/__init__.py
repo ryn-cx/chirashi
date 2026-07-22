@@ -18,13 +18,6 @@ class SeasonEpisodes(BaseEndpoint[SeasonEpisodesModel]):
 
     _response_model = SeasonEpisodesModel
 
-    def get_log_id(self, series_id: str, *, locale: str | None = None) -> str:
-        """Build the log id for a download."""
-        return self.append_non_default_args(
-            f"{self.__class__.__name__} {series_id=}",
-            locale=(locale, None),
-        )
-
     def download(self, series_id: str, locale: str | None = None) -> dict[str, Any]:
         """Downloads the season episodes file.
 
@@ -46,11 +39,12 @@ class SeasonEpisodes(BaseEndpoint[SeasonEpisodesModel]):
             Priority: u=0
             TE: trailers
         """
+        log_id = self.get_log_id(self.download, locals())
         return self._client.download(
             endpoint=f"content/v2/cms/seasons/{series_id}/episodes",
             params={"locale": locale or self._client.locale},
             headers={"referer": f"https://www.crunchyroll.com/series/{series_id}"},
-            log_id=self.get_log_id(series_id, locale=locale),
+            log_id=log_id,
         )
 
     def download_and_parse(

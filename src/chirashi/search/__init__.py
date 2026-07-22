@@ -41,24 +41,6 @@ class Search(BaseEndpoint[SearchModel]):
         self.music = SearchMusic(client)
         self.episode = SearchEpisode(client)
 
-    def get_log_id(
-        self,
-        q: str,
-        *,
-        n: int = 6,
-        type: str = DEFAULT_TYPE,  # noqa: A002
-        ratings: str = "true",
-        locale: str | None = None,
-    ) -> str:
-        """Build the log id for a download."""
-        return self.append_non_default_args(
-            f"{self.__class__.__name__} {q=}",
-            n=(n, 6),
-            type=(type, DEFAULT_TYPE),
-            ratings=(ratings, "true"),
-            locale=(locale, None),
-        )
-
     def download(
         self,
         q: str,
@@ -86,6 +68,7 @@ class Search(BaseEndpoint[SearchModel]):
             Sec-Fetch-Site: same-origin
             TE: trailers
         """
+        log_id = self.get_log_id(self.download, locals())
         return self._client.download(
             "content/v2/discover/search",
             params={
@@ -96,13 +79,7 @@ class Search(BaseEndpoint[SearchModel]):
                 "locale": locale or self._client.locale,
             },
             headers={"referer": "https://www.crunchyroll.com/search"},
-            log_id=self.get_log_id(
-                q,
-                n=n,
-                type=type,
-                ratings=ratings,
-                locale=locale,
-            ),
+            log_id=log_id,
         )
 
     def download_and_parse(

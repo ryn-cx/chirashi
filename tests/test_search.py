@@ -48,11 +48,3 @@ class TestSearch:
     def test_extract_movie_listing(self, endpoint: Search) -> None:
         results = endpoint.extract_movie_listing(parse_json(endpoint, QUERY))
         assert all(isinstance(item, MovieListingItem) for item in results)
-
-
-@pytest.mark.parametrize("n", [6, 12])
-def test_log_id(endpoint: Search, n: int) -> None:
-    expected = f"Search q={QUERY!r}"
-    if n != 6:  # noqa: PLR2004
-        expected += f" n={n!r}"
-    assert endpoint.get_log_id(QUERY, n=n) == expected

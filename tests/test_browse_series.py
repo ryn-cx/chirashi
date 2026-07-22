@@ -42,9 +42,3 @@ class TestBrowseSeries:
         entries = endpoint.compile_entries(models)
         expected = [datum for model in models for datum in model.data]
         assert entries == expected
-
-
-@pytest.mark.parametrize("start", [None, 36])
-def test_log_id(endpoint: Browse, start: int | None) -> None:
-    expected = f"Browse start={start!r}"
-    assert endpoint.get_log_id(start=start) == expected

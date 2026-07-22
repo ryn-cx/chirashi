@@ -17,13 +17,6 @@ class Objects(BaseEndpoint[ObjectsModel]):
 
     _response_model = ObjectsModel
 
-    def get_log_id(self, object_id: str, *, locale: str | None = None) -> str:
-        """Build the log id for a download."""
-        return self.append_non_default_args(
-            f"{self.__class__.__name__} {object_id=}",
-            locale=(locale, None),
-        )
-
     def download(
         self,
         object_id: str,
@@ -48,6 +41,7 @@ class Objects(BaseEndpoint[ObjectsModel]):
             Sec-Fetch-Site: same-origin
             TE: trailers
         """
+        log_id = self.get_log_id(self.download, locals())
         return self._client.download(
             endpoint="content/v2/cms/objects/" + object_id,
             params={
@@ -55,7 +49,7 @@ class Objects(BaseEndpoint[ObjectsModel]):
                 "locale": locale or self._client.locale,
             },
             headers={"referer": f"https://www.crunchyroll.com/watch/{object_id}"},
-            log_id=self.get_log_id(object_id, locale=locale),
+            log_id=log_id,
         )
 
     def download_and_parse(

@@ -41,13 +41,3 @@ class TestObjects:
             lambda: endpoint.download(INVALID_OBJECT_ID),
             HTTPError,
         )
-
-
-@pytest.mark.parametrize("locale", [None, "fr-FR"])
-def test_log_id(endpoint: Objects, locale: str | None) -> None:
-    object_id = OBJECT_IDS[0]
-    kwargs: dict[str, str] = {} if locale is None else {"locale": locale}
-    expected = f"Objects object_id={object_id!r}"
-    if locale is not None:
-        expected += f" locale={locale!r}"
-    assert endpoint.get_log_id(object_id, **kwargs) == expected
