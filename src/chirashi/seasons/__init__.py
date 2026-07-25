@@ -7,7 +7,7 @@ from logging import NullHandler, getLogger
 from typing import Any, override
 
 from chirashi.base_api_endpoint import BaseEndpoint
-from chirashi.exceptions import ResourceNotFoundError, SeasonNotFoundError
+from chirashi.exceptions import ResourceNotFoundError, SeriesNotFoundError
 from chirashi.seasons.models import SeasonsModel
 
 logger = getLogger(__name__)
@@ -62,7 +62,7 @@ class Seasons(BaseEndpoint[SeasonsModel]):
                 log_id=log_id,
             )
         except ResourceNotFoundError as err:
-            raise SeasonNotFoundError(
+            raise SeriesNotFoundError(
                 series_id,
                 err.status_code,
                 err.response,
@@ -75,7 +75,7 @@ class Seasons(BaseEndpoint[SeasonsModel]):
         series_id: str,
     ) -> dict[str, Any]:
         if not response.get("data"):
-            raise SeasonNotFoundError(series_id, HTTPStatus.OK, response)
+            raise SeriesNotFoundError(series_id, HTTPStatus.OK, response)
         return response
 
     @override

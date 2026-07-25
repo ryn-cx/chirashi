@@ -82,7 +82,8 @@ def download_and_save(
 ) -> Path:
     file = json_path(gapi_client, name, category)
     if file.exists():
-        pytest.skip(f"File already recorded for {type(gapi_client).__name__}/{name}")
+        msg = f"File already recorded for {type(gapi_client).__name__}/{name}"
+        pytest.skip(msg)  # ty: ignore[too-many-positional-arguments]
     file.parent.mkdir(parents=True, exist_ok=True)
     file.write_text(json.dumps(get(), indent=2))
     return file
@@ -95,7 +96,8 @@ def assert_error(
     error: type[ChirashiError],
 ) -> None:
     if json_path(gapi_client, name, "Error").exists():
-        pytest.skip(f"File already recorded for {type(gapi_client).__name__}/{name}")
+        msg = f"File already recorded for {type(gapi_client).__name__}/{name}"
+        pytest.skip(msg)  # ty: ignore[too-many-positional-arguments]
     with pytest.raises(error) as excinfo:
         download()
     record_error(gapi_client, name, excinfo.value.response)

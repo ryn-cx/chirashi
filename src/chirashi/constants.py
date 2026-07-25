@@ -1,4 +1,3 @@
-# TODO: Validate
 """Constants."""
 
 from pathlib import Path

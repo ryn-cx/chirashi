@@ -58,21 +58,7 @@ class SeriesNotFoundError(ResourceNotFoundError):
 
 
 class SeasonNotFoundError(ResourceNotFoundError):
-    """Raised when the requested series' seasons do not exist."""
-
-    def __init__(
-        self,
-        series_id: str,
-        status_code: int,
-        response: str | dict[str, Any] | None,
-    ) -> None:
-        """Initialize with the series id and the originating response."""
-        self.series_id = series_id
-        super().__init__(status_code, response)
-
-
-class SeasonEpisodesNotFoundError(ResourceNotFoundError):
-    """Raised when the requested season's episodes do not exist."""
+    """Raised when the requested season does not exist."""
 
     def __init__(
         self,

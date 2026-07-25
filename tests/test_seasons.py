@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from chirashi.exceptions import SeasonNotFoundError
+from chirashi.exceptions import SeriesNotFoundError
 from tests.utils import assert_error, download_and_save, parsed_json
 
 if TYPE_CHECKING:
@@ -35,5 +35,5 @@ def test_download_invalid(client: Seasons) -> None:
         client,
         INVALID_SERIES_ID,
         lambda: client.download(INVALID_SERIES_ID),
-        SeasonNotFoundError,
+        SeriesNotFoundError,
     )
