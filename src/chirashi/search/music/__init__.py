@@ -1,14 +1,13 @@
-# TODO: Validate
 """Contains the SearchMusic class."""
 
 from __future__ import annotations
 
-from chirashi.search.base import SearchTypeEndpoint
+from chirashi.search.base import BaseSearch
 from chirashi.search.music.models import SearchMusicModel
 
 
-class SearchMusic(SearchTypeEndpoint[SearchMusicModel]):
+class SearchMusic(BaseSearch[SearchMusicModel]):
     """Manage the search music file."""
 
-    type = "music"
+    search_type = "music"
     _response_model = SearchMusicModel

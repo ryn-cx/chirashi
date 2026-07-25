@@ -1,14 +1,15 @@
-# TODO: Validate
 """Contains the Browse class."""
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from datetime import datetime
 from logging import NullHandler, getLogger
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, override
 
 from chirashi.base_api_endpoint import BaseEndpoint
 from chirashi.browse_series.models import BrowseSeriesModel
+from chirashi.exceptions import StartOutOfRangeError
 
 if TYPE_CHECKING:
     from chirashi.browse_series.models import Datum
@@ -16,40 +17,49 @@ if TYPE_CHECKING:
 logger = getLogger(__name__)
 logger.addHandler(NullHandler())
 
+N = 36
+
 
 class Browse(BaseEndpoint[BrowseSeriesModel]):
-    """Manage the browse file."""
+    """Manage the browse file.
+
+    Source: https://www.crunchyroll.com/videos/new
+
+    Example request:
+        - GET /content/v2/discover/browse?
+            - n=36&
+            - sort_by=newly_added&
+            - ratings=true&
+            - locale=en-US
+            - HTTP/2
+        - Host: www.crunchyroll.com
+        - User-Agent: __REDACTED__
+        - Accept: application/json, text/plain, */*
+        - Accept-Language: en-US,en;q=0.9
+        - Accept-Encoding: gzip, deflate, br, zstd
+        - Authorization: Bearer __REDACTED__
+        - Sec-GPC: 1
+        - Connection: keep-alive
+        - Referer: https://www.crunchyroll.com/videos/new
+        - Cookie: __REDACTED__
+        - Sec-Fetch-Dest: empty
+        - Sec-Fetch-Mode: cors
+        - Sec-Fetch-Site: same-origin
+        - TE: trailers
+    """
 
     _response_model = BrowseSeriesModel
 
+    @override
     def download(
         self,
         *,
-        start: int | None = None,
-        n: int = 36,
+        start: int = 0,
+        n: int = N,
         sort_by: str = "newly_added",
         ratings: str = "true",
         locale: str | None = None,
     ) -> dict[str, Any]:
-        """Downloads the browse file.
-
-        Example request:
-            GET /content/v2/discover/browse?n=36&sort_by=newly_added&ratings=true&locale=en-US HTTP/2
-            Host: www.crunchyroll.com
-            User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:152.0) Gecko/20100101 Firefox/152.0
-            Accept: application/json, text/plain, */*
-            Accept-Language: en-US,en;q=0.9
-            Accept-Encoding: gzip, deflate, br, zstd
-            Authorization: Bearer __REDACTED__
-            Sec-GPC: 1
-            Connection: keep-alive
-            Referer: https://www.crunchyroll.com/videos/new
-            Cookie: __REDACTED__
-            Sec-Fetch-Dest: empty
-            Sec-Fetch-Mode: cors
-            Sec-Fetch-Site: same-origin
-            TE: trailers
-        """
         log_id = self.get_log_id(self.download, locals())
         params: dict[str, str | int] = {
             "n": n,
@@ -61,74 +71,113 @@ class Browse(BaseEndpoint[BrowseSeriesModel]):
         if start:
             params["start"] = start
 
-        return self._client.download(
+        response = self._client.download(
             "content/v2/discover/browse",
             params=params,
             headers={"referer": "https://www.crunchyroll.com/videos/new"},
             log_id=log_id,
         )
+        return self._validate_download(response, start)
 
-    def download_and_parse(
+    def _validate_download(
         self,
-        *,
-        start: int | None = None,
-        n: int = 36,
-        sort_by: str = "newly_added",
-        ratings: str = "true",
-        locale: str | None = None,
-    ) -> BrowseSeriesModel:
-        """Downloads and parses the browse file.
+        response: dict[str, Any],
+        start: int,
+    ) -> dict[str, Any]:
+        total = response["total"]
+        if start and start > total:
+            raise StartOutOfRangeError(start, total, response)
+        return response
 
-        An empty response returns a valid (empty) model.
-        """
-        return self.parse(
-            self.download(
-                n=n,
-                sort_by=sort_by,
-                locale=locale,
-                start=start,
-                ratings=ratings,
-            ),
-        )
-
-    def download_and_parse_since_datetime(
+    def download_until_datetime(  # noqa: PLR0913 - Required to match API.
         self,
         end_datetime: datetime | None = None,
         *,
-        n: int = 36,
+        start: int = 0,
+        n: int = N,
         locale: str | None = None,
         sort_by: str = "newly_added",
         ratings: str = "true",
-    ) -> list[BrowseSeriesModel]:
-        """Downloads all browse pages until end_datetime is reached (inclusive)."""
-        start = 0
-        results: list[BrowseSeriesModel] = []
+    ) -> list[dict[str, Any]]:
+        """Downloads all files until end_datetime is reached."""
+        results: list[dict[str, Any]] = []
         end_datetime = end_datetime or datetime.now().astimezone()
 
         while True:
-            result = self.download_and_parse(
+            page = self.download(
                 n=n,
                 locale=locale,
                 start=start,
                 sort_by=sort_by,
                 ratings=ratings,
             )
-
-            results.append(result)
+            results.append(page)
             start += n
 
-            if result.data[-1].last_public < end_datetime or start >= result.total:
+            last_public = datetime.fromisoformat(page["data"][-1]["last_public"])
+            if last_public < end_datetime or start >= page["total"]:
                 return results
 
-    def compile_entries(
+    def parse_until_datetime(
         self,
-        input_data: BrowseSeriesModel | list[BrowseSeriesModel],
-    ) -> list[Datum]:
-        """Compile all of the Browse entries into a single list of Datums."""
-        if isinstance(input_data, list):
-            result: list[Datum] = []
-            for response in input_data:
-                result.extend(self.compile_entries(response))
-            return result
+        datas: list[dict[str, Any]],
+    ) -> list[BrowseSeriesModel]:
+        """Parses the output of download_until_datetime."""
+        return [self.parse(data) for data in datas]
 
-        return input_data.data
+    @override
+    def download_and_parse(
+        self,
+        *,
+        start: int = 0,
+        n: int = N,
+        sort_by: str = "newly_added",
+        ratings: str = "true",
+        locale: str | None = None,
+    ) -> BrowseSeriesModel:
+        response = self.download(
+            start=start,
+            n=n,
+            sort_by=sort_by,
+            ratings=ratings,
+            locale=locale,
+        )
+        return self.parse(response)
+
+    def download_and_parse_until_datetime(
+        self,
+        end_datetime: datetime | None = None,
+        *,
+        n: int = N,
+        locale: str | None = None,
+        sort_by: str = "newly_added",
+        ratings: str = "true",
+    ) -> list[BrowseSeriesModel]:
+        """Downloads and parses all files until end_datetime is reached."""
+        responses = self.download_until_datetime(
+            end_datetime,
+            n=n,
+            locale=locale,
+            sort_by=sort_by,
+            ratings=ratings,
+        )
+        return self.parse_until_datetime(responses)
+
+    def extract_data(
+        self,
+        input_data: BrowseSeriesModel
+        | dict[str, Any]
+        | Sequence[BrowseSeriesModel | dict[str, Any]],
+    ) -> list[Datum]:
+        """Extracts data entries from one or more files."""
+        responses = input_data if isinstance(input_data, Sequence) else [input_data]
+
+        result: list[Datum] = []
+        for response in responses:
+            parsed = (
+                response
+                if isinstance(response, BrowseSeriesModel)
+                else self.parse(response)
+            )
+            result.extend(parsed.data)
+        return result

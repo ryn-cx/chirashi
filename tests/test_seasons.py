@@ -1,33 +1,39 @@
-# TODO: Validate
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
 import pytest
 
-from tests.utils import download_and_save, parse_json
+from chirashi.exceptions import SeasonNotFoundError
+from tests.utils import assert_error, download_and_save, parsed_json
 
 if TYPE_CHECKING:
     from chirashi import Chirashi
     from chirashi.seasons import Seasons
 
 SERIES_ID = "GEXH3W29Z"
+INVALID_SERIES_ID = "GGGGGGGGG"
 
 
 @pytest.fixture(scope="session")
-def endpoint(client: Chirashi) -> Seasons:
+def client(client: Chirashi) -> Seasons:
     return client.seasons
 
 
-class TestSeasons:
-    def test_download(self, endpoint: Seasons) -> None:
-        download_and_save(
-            endpoint,
-            SERIES_ID,
-            lambda: endpoint.download(SERIES_ID),
-        )
+def test_download(client: Seasons) -> None:
+    download_and_save(client, SERIES_ID, lambda: client.download(SERIES_ID))
 
-    def test_parse(self, endpoint: Seasons) -> None:
-        # TODO: assert every season series id matches SERIES_ID (needs live data)
-        data = parse_json(endpoint, SERIES_ID)
-        assert data.data is not None
+
+def test_parse(client: Seasons) -> None:
+    data = parsed_json(client, SERIES_ID)
+    assert data.data
+    assert all(season.series_id == SERIES_ID for season in data.data)
+
+
+def test_download_invalid(client: Seasons) -> None:
+    assert_error(
+        client,
+        INVALID_SERIES_ID,
+        lambda: client.download(INVALID_SERIES_ID),
+        SeasonNotFoundError,
+    )

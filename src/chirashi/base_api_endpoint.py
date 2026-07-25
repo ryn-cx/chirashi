@@ -1,12 +1,13 @@
-# TODO: Validate
 """Contains BaseEndpoint."""
 
 from __future__ import annotations
 
+from abc import abstractmethod
 from inspect import Parameter, signature
 from typing import TYPE_CHECKING, Any
 
-from good_ass_pydantic_integrator import GAPIBaseModel, GAPIClient
+from good_ass_pydantic_integrator import GAPIClient
+from pydantic import BaseModel
 
 from chirashi.constants import FILES_PATH
 
@@ -16,13 +17,13 @@ if TYPE_CHECKING:
     from chirashi import Chirashi
 
 
-class BaseEndpoint[T: GAPIBaseModel](GAPIClient[T]):
+class BaseEndpoint[T: BaseModel, **P = ...](GAPIClient[T]):
     """Base class for API endpoints."""
 
     JSON_FILES_ROOT = FILES_PATH
 
     def __init__(self, client: Chirashi) -> None:
-        """Initialize the endpoint."""
+        """Initialize the endpoint with the Chirashi client."""
         self._client = client
 
     @staticmethod
@@ -57,3 +58,11 @@ class BaseEndpoint[T: GAPIBaseModel](GAPIClient[T]):
         if not parts:
             return name
         return f"{name} ({' '.join(parts)})"
+
+    @abstractmethod
+    def download(self, *args: P.args, **kwargs: P.kwargs) -> dict[str, Any]:
+        """Downloads the file."""
+
+    @abstractmethod
+    def download_and_parse(self, *args: P.args, **kwargs: P.kwargs) -> T:
+        """Downloads and parses the file."""

@@ -1,32 +1,26 @@
-# ruff: noqa: D100, D101, D102, TC001, TC002, TC003
-from typing import Any
-
 from good_ass_pydantic_integrator import GAPIBaseModel
 from pydantic import ConfigDict
-
+from typing import Any
 
 class ExtendedMaturityRating(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra='forbid')
     system: str
     rating: str
     level: str
 
-
 class ContentDescriptorsWithSymbolItem(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra='forbid')
     label: str
 
-
 class Version(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra='forbid')
     audio_locale: str
     guid: str
     original: bool
     variant: str
 
-
 class Datum(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra='forbid')
     id: str
     channel_id: str
     title: str
@@ -43,9 +37,7 @@ class Datum(GAPIBaseModel):
     extended_maturity_rating: ExtendedMaturityRating
     maturity_ratings: list[str]
     content_descriptors: list[str]
-    content_descriptors_with_symbol: list[ContentDescriptorsWithSymbolItem] | None = (
-        None
-    )
+    content_descriptors_with_symbol: list[ContentDescriptorsWithSymbolItem] | None = None
     is_mature: bool
     mature_blocked: bool
     is_subbed: bool
@@ -61,14 +53,12 @@ class Datum(GAPIBaseModel):
     identifier: str
     number_of_episodes: int
 
-
 class Meta(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra='forbid')
     versions_considered: bool
 
-
 class SeasonsModel(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra='forbid')
     data: list[Datum]
     meta: Meta
     total: int

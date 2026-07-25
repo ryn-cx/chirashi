@@ -1,11 +1,10 @@
-# TODO: Validate
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
 import pytest
 
-from tests.utils import download_and_save, parse_json
+from tests.utils import download_and_save, parsed_json
 
 if TYPE_CHECKING:
     from chirashi import Chirashi
@@ -15,15 +14,14 @@ QUERY = "#COMPASS2.0 ANIMATION PROJECT"
 
 
 @pytest.fixture(scope="session")
-def endpoint(client: Chirashi) -> SearchSeries:
-    return client.search.series
+def client(client: Chirashi) -> SearchSeries:
+    return client.search_series
 
 
-class TestSearchSeries:
-    def test_download(self, endpoint: SearchSeries) -> None:
-        download_and_save(endpoint, QUERY, lambda: endpoint.download(QUERY))
+def test_download(client: SearchSeries) -> None:
+    download_and_save(client, QUERY, lambda: client.download(QUERY))
 
-    def test_parse(self, endpoint: SearchSeries) -> None:
-        # TODO: assert the expected series id is present (needs live data)
-        data = parse_json(endpoint, QUERY)
-        assert data.data is not None
+
+def test_parse(client: SearchSeries) -> None:
+    data = parsed_json(client, QUERY)
+    assert data.data[0].items[0].title == QUERY

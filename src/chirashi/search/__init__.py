@@ -1,105 +1,90 @@
-# TODO: Validate
 """Contains the Search class."""
 
 from __future__ import annotations
 
 from logging import NullHandler, getLogger
-from typing import TYPE_CHECKING, Any
+from typing import Any, override
 
 from good_ass_pydantic_integrator import GAPIBaseModel
 
-from chirashi.base_api_endpoint import BaseEndpoint
-from chirashi.search.episode import SearchEpisode
+from chirashi.search.base import BaseSearch
 from chirashi.search.episode.models import Item as EpisodeItem
 from chirashi.search.models import Item, SearchModel
-from chirashi.search.movie_listing import SearchMovieListing
 from chirashi.search.movie_listing.models import Item as MovieListingItem
-from chirashi.search.music import SearchMusic
 from chirashi.search.music.models import Item as MusicItem
-from chirashi.search.series import SearchSeries
 from chirashi.search.series.models import Item as SeriesItem
-
-if TYPE_CHECKING:
-    from chirashi import Chirashi
 
 logger = getLogger(__name__)
 logger.addHandler(NullHandler())
 
-DEFAULT_TYPE = "music,series,episode,top_results"
+DEFAULT_TYPE = "music,series,episode,movie_listing,top_results"
 
 
-class Search(BaseEndpoint[SearchModel]):
-    """Manage the search file."""
+class Search(BaseSearch[SearchModel]):
+    """Manage the search file.
+
+    Source: https://www.crunchyroll.com/search?q={query}
+
+    Example request:
+        - GET /content/v2/discover/search?
+            - q={query}&
+            - n=6&
+            - type={type}&
+            - ratings=true&
+            - locale=en-US
+            - HTTP/2
+        - Host: www.crunchyroll.com
+        - User-Agent: __REDACTED__
+        - Accept: application/json, text/plain, */*
+        - Accept-Language: en-US,en;q=0.9
+        - Accept-Encoding: gzip, deflate, br, zstd
+        - Authorization: Bearer __REDACTED__
+        - Connection: keep-alive
+        - Referer: https://www.crunchyroll.com/search?q={query}
+        - Cookie: __REDACTED__
+        - Sec-Fetch-Dest: empty
+        - Sec-Fetch-Mode: cors
+        - Sec-Fetch-Site: same-origin
+        - TE: trailers
+    """
 
     _response_model = SearchModel
+    search_type = DEFAULT_TYPE
+    n = 6
 
-    def __init__(self, client: Chirashi) -> None:
-        """Initialize the search file."""
-        super().__init__(client)
-        self.movie_listing = SearchMovieListing(client)
-        self.series = SearchSeries(client)
-        self.music = SearchMusic(client)
-        self.episode = SearchEpisode(client)
-
+    @override
     def download(
         self,
         q: str,
         *,
-        n: int = 6,
-        type: str = DEFAULT_TYPE,  # noqa: A002
-        ratings: str = "true",
+        n: int | None = None,
+        search_type: str | None = None,
+        ratings: bool = True,
         locale: str | None = None,
     ) -> dict[str, Any]:
-        """Downloads the search file.
-
-        Example request: https://www.crunchyroll.com/search?q=%23COMPASS2.0%20ANIMATION%20PROJECT
-            GET /content/v2/discover/search?q=%23COMPASS2.0+ANIMATION+PROJECT&n=6&type=music,series,episode,top_results,movie_listing&ratings=true&locale=en-US HTTP/2
-            Host: www.crunchyroll.com
-            User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:152.0) Gecko/20100101 Firefox/152.0
-            Accept: application/json, text/plain, */*
-            Accept-Language: en-US,en;q=0.9
-            Accept-Encoding: gzip, deflate, br, zstd
-            Authorization: Bearer __REDACTED__
-            Connection: keep-alive
-            Referer: https://www.crunchyroll.com/search?q=%23COMPASS2.0%20ANIMATION%20PROJECT
-            Cookie: __REDACTED__
-            Sec-Fetch-Dest: empty
-            Sec-Fetch-Mode: cors
-            Sec-Fetch-Site: same-origin
-            TE: trailers
-        """
-        log_id = self.get_log_id(self.download, locals())
-        return self._client.download(
-            "content/v2/discover/search",
-            params={
-                "q": q,
-                "n": n,
-                "type": type,
-                "ratings": ratings,
-                "locale": locale or self._client.locale,
-            },
-            headers={"referer": "https://www.crunchyroll.com/search"},
-            log_id=log_id,
+        return self._download(
+            q,
+            n=n,
+            search_type=search_type,
+            ratings=ratings,
+            locale=locale,
         )
 
+    @override
     def download_and_parse(
         self,
         q: str,
         *,
-        n: int = 6,
-        type: str = DEFAULT_TYPE,  # noqa: A002
-        ratings: str = "true",
+        n: int | None = None,
+        search_type: str | None = None,
+        ratings: bool = True,
         locale: str | None = None,
     ) -> SearchModel:
-        """Downloads and parses the search file.
-
-        An empty response returns a valid (empty) model.
-        """
         return self.parse(
             self.download(
                 q,
                 n=n,
-                type=type,
+                search_type=search_type,
                 ratings=ratings,
                 locale=locale,
             ),
@@ -111,13 +96,14 @@ class Search(BaseEndpoint[SearchModel]):
         field_type: str,
         model: type[U],
     ) -> list[U]:
-        for datum in data.data or []:
+        for datum in data.data:
             if datum.type == field_type:
                 return [
                     model.model_validate(item)
                     for item in self.original_input(datum.items)
                 ]
-        return []
+        msg = f"No data found for field type '{field_type}' in search results."
+        raise ValueError(msg)
 
     def extract_top_results(self, data: SearchModel) -> list[Item]:
         """Extract the top results from Search."""

@@ -1,44 +1,74 @@
-# TODO: Validate
 from __future__ import annotations
 
+from datetime import datetime, timedelta
 from typing import TYPE_CHECKING
 
 import pytest
 
-from tests.utils import download_and_save, parse_json
+from chirashi.browse_series import N
+from chirashi.exceptions import StartOutOfRangeError
+from tests.utils import assert_error, download_and_save, loaded_json, parsed_json
 
 if TYPE_CHECKING:
     from chirashi import Chirashi
     from chirashi.browse_series import Browse
 
-START = 0
-
 
 @pytest.fixture(scope="session")
-def endpoint(client: Chirashi) -> Browse:
+def client(client: Chirashi) -> Browse:
     return client.browse_series
 
 
-class TestBrowseSeries:
-    def test_download(self, endpoint: Browse) -> None:
-        download_and_save(
-            endpoint,
-            str(START),
-            lambda: endpoint.download(start=START),
-        )
+def test_download(client: Browse) -> None:
+    download_and_save(client, 0, lambda: client.download(start=0))
 
-    def test_parse(self, endpoint: Browse) -> None:
-        # TODO: assert the total and per-page entry counts (needs live data)
-        data = parse_json(endpoint, str(START))
-        assert data.data is not None
 
-    def test_compile_entries_from_single_browse(self, endpoint: Browse) -> None:
-        data = parse_json(endpoint, str(START))
-        entries = endpoint.compile_entries(data)
-        assert entries == data.data
+def test_download_until_datetime(client: Browse) -> None:
+    end_datetime = datetime.now().astimezone() - timedelta(days=7)
+    download_and_save(
+        client,
+        "until_datetime",
+        lambda: client.download_until_datetime(end_datetime),
+        "Multipage",
+    )
 
-    def test_compile_entries_from_list_of_browses(self, endpoint: Browse) -> None:
-        models = [parse_json(endpoint, str(START))]
-        entries = endpoint.compile_entries(models)
-        expected = [datum for model in models for datum in model.data]
-        assert entries == expected
+
+def test_download_invalid(client: Browse) -> None:
+    assert_error(
+        client,
+        9999,
+        lambda: client.download(start=9999),
+        StartOutOfRangeError,
+    )
+
+
+def test_parse(client: Browse) -> None:
+    data = parsed_json(client, 0)
+    assert len(data.data) == N
+
+
+def test_parse_until_datetime(client: Browse) -> None:
+    results = parsed_json(client, "until_datetime", category="Multipage")
+    assert len(results) > 1
+    for result in results:
+        assert len(result.data) == N
+
+
+def test_extract_data(client: Browse) -> None:
+    loaded = loaded_json(client, 0)
+    extracted_loaded = client.extract_data(loaded)
+
+    data = parsed_json(client, 0)
+    extracted_data = client.extract_data(data)
+    assert extracted_data == extracted_loaded
+    assert len(extracted_data) == N
+
+
+def test_extract_data_until_datetime(client: Browse) -> None:
+    loaded = loaded_json(client, "until_datetime", category="Multipage")
+    extracted_loaded = client.extract_data(loaded)
+
+    data = parsed_json(client, "until_datetime", category="Multipage")
+    extracted_data = client.extract_data(data)
+    assert extracted_data == extracted_loaded
+    assert len(extracted_data) == len(loaded) * N

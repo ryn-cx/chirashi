@@ -1,17 +1,15 @@
-# ruff: noqa: D100, D101, D102, TC001, TC002, TC003
 from good_ass_pydantic_integrator import GAPIBaseModel
 from pydantic import AwareDatetime, ConfigDict
-
+from typing import Any
 
 class ExtendedMaturityRating(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra='forbid')
     system: str
     rating: str
     level: str
 
-
 class Version(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra='forbid')
     audio_locale: str
     guid: str
     original: bool
@@ -21,39 +19,33 @@ class Version(GAPIBaseModel):
     is_premium_only: bool
     roles: list[str]
 
-
 class ContentDescriptorsWithSymbolItem(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra='forbid')
     label: str
 
-
 class ThumbnailItem(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra='forbid')
     width: int
     height: int
     type: str
     source: str
 
-
 class Images(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra='forbid')
     thumbnail: list[list[ThumbnailItem]]
 
-
 class AdBreak(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra='forbid')
     type: str
     offset_ms: int
 
-
 class LanguagePresentation(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra='forbid')
     audio_notation: str
     text_notation: str
 
-
 class Datum(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra='forbid')
     id: str
     channel_id: str
     series_id: str
@@ -116,14 +108,12 @@ class Datum(GAPIBaseModel):
     language_presentation: LanguagePresentation
     roles: list[str]
 
-
 class Meta(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra='forbid')
     versions_considered: bool
 
-
 class SeasonEpisodesModel(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra='forbid')
     data: list[Datum]
     total: int
     meta: Meta

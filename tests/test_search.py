@@ -1,50 +1,59 @@
-# TODO: Validate
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
 import pytest
 
-from chirashi.search.episode.models import Item as EpisodeItem
-from chirashi.search.models import Item as TopResultItem
-from chirashi.search.movie_listing.models import Item as MovieListingItem
-from chirashi.search.music.models import Item as MusicItem
-from chirashi.search.series.models import Item as SeriesItem
-from tests.utils import download_and_save, parse_json
+from tests.utils import download_and_save, parsed_json
 
 if TYPE_CHECKING:
     from chirashi import Chirashi
     from chirashi.search import Search
 
-QUERY = "#COMPASS2.0 ANIMATION PROJECT"
+TOP_RESULTS_QUERY = "#COMPASS2.0 ANIMATION PROJECT"
+SERIES_QUERY = "#COMPASS2.0 ANIMATION PROJECT"
+EPISODE_QUERY = "This Is #COMPASS2.0"
+MUSIC_QUERY = "CASANOVA POSSE"
+MOVIE_LISTING_QUERY = "009-1: The End of the Beginning"
+
+QUERIES = [
+    TOP_RESULTS_QUERY,
+    EPISODE_QUERY,
+    MUSIC_QUERY,
+    MOVIE_LISTING_QUERY,
+]
 
 
 @pytest.fixture(scope="session")
-def endpoint(client: Chirashi) -> Search:
+def client(client: Chirashi) -> Search:
     return client.search
 
 
-class TestSearch:
-    def test_download(self, endpoint: Search) -> None:
-        download_and_save(endpoint, QUERY, lambda: endpoint.download(QUERY))
+@pytest.mark.parametrize("query", QUERIES)
+def test_download(client: Search, query: str) -> None:
+    download_and_save(client, query, lambda: client.download(query))
 
-    def test_extract_top_results(self, endpoint: Search) -> None:
-        results = endpoint.extract_top_results(parse_json(endpoint, QUERY))
-        assert all(isinstance(item, TopResultItem) for item in results)
 
-    def test_extract_series(self, endpoint: Search) -> None:
-        # TODO: assert the expected series id is present (needs live data)
-        results = endpoint.extract_series(parse_json(endpoint, QUERY))
-        assert all(isinstance(item, SeriesItem) for item in results)
+def test_extract_top_results(client: Search) -> None:
+    results = client.extract_top_results(parsed_json(client, TOP_RESULTS_QUERY))
+    assert results[0].title == TOP_RESULTS_QUERY
 
-    def test_extract_episode(self, endpoint: Search) -> None:
-        results = endpoint.extract_episode(parse_json(endpoint, QUERY))
-        assert all(isinstance(item, EpisodeItem) for item in results)
 
-    def test_extract_music(self, endpoint: Search) -> None:
-        results = endpoint.extract_music(parse_json(endpoint, QUERY))
-        assert all(isinstance(item, MusicItem) for item in results)
+def test_extract_series(client: Search) -> None:
+    results = client.extract_series(parsed_json(client, SERIES_QUERY))
+    assert results[0].title == SERIES_QUERY
 
-    def test_extract_movie_listing(self, endpoint: Search) -> None:
-        results = endpoint.extract_movie_listing(parse_json(endpoint, QUERY))
-        assert all(isinstance(item, MovieListingItem) for item in results)
+
+def test_extract_episode(client: Search) -> None:
+    results = client.extract_episode(parsed_json(client, EPISODE_QUERY))
+    assert results[0].title == EPISODE_QUERY
+
+
+def test_extract_music(client: Search) -> None:
+    results = client.extract_music(parsed_json(client, MUSIC_QUERY))
+    assert results[0].title == MUSIC_QUERY
+
+
+def test_extract_movie_listing(client: Search) -> None:
+    results = client.extract_movie_listing(parsed_json(client, MOVIE_LISTING_QUERY))
+    assert results[0].title == MOVIE_LISTING_QUERY

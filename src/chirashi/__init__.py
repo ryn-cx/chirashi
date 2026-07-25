@@ -1,6 +1,6 @@
-# TODO: Validate
 """Contains the Chirashi class."""
 
+import json
 import time
 import uuid
 from datetime import UTC, datetime, timedelta
@@ -11,9 +11,13 @@ from typing import Any
 from get_around import GetAround
 
 from chirashi.browse_series import Browse
-from chirashi.exceptions import HTTPError
+from chirashi.exceptions import HTTPError, ResourceNotFoundError
 from chirashi.objects import Objects
 from chirashi.search import Search
+from chirashi.search.episode import SearchEpisode
+from chirashi.search.movie_listing import SearchMovieListing
+from chirashi.search.music import SearchMusic
+from chirashi.search.series import SearchSeries
 from chirashi.season_episodes import SeasonEpisodes
 from chirashi.seasons import Seasons
 from chirashi.series import Series
@@ -21,7 +25,8 @@ from chirashi.series import Series
 logger = getLogger(__name__)
 logger.addHandler(NullHandler())
 
-# beta-api.crunchyroll.com has easier authorization
+# beta-api.crunchyroll.com has easier authorization, but it may be deprecated in the
+# future.
 API_DOMAIN = "beta-api.crunchyroll.com"
 
 
@@ -33,7 +38,7 @@ class Chirashi:
         get_around_client: GetAround | None = None,
         locale: str = "en-US",
     ) -> None:
-        """Initialize the Chirashi client."""
+        """Initializes the Chirashi client."""
         self.locale = locale
         self.get_around_client = get_around_client or GetAround()
         self.device_id = uuid.uuid4().hex
@@ -48,6 +53,10 @@ class Chirashi:
         self.season_episodes = SeasonEpisodes(self)
         self.objects = Objects(self)
         self.search = Search(self)
+        self.search_movie_listing = SearchMovieListing(self)
+        self.search_series = SearchSeries(self)
+        self.search_music = SearchMusic(self)
+        self.search_episode = SearchEpisode(self)
 
     @property
     def _access_token(self) -> str:
@@ -69,8 +78,7 @@ class Chirashi:
             headers={"Authorization": "Basic bm9haWhkZXZtXzZpeWcwYThsMHE6"},
         )
         if response.status_code != HTTPStatus.OK:
-            msg = f"Unexpected response status code: {response.status_code}"
-            raise HTTPError(msg)
+            raise HTTPError(response.status_code, response.text)
 
         logger.debug("Downloaded token (%.4f s)", time.monotonic() - start)
 
@@ -95,9 +103,14 @@ class Chirashi:
         start = time.monotonic()
         response = self.get_around_client.get(url, params=params, headers=headers)
 
-        if not response.is_success:
-            msg = f"Unexpected response status code: {response.status_code}"
-            raise HTTPError(msg)
+        if response.status_code != HTTPStatus.OK:
+            try:
+                code = json.loads(response.text).get("code")
+            except ValueError, AttributeError:
+                code = None
+            if isinstance(code, str) and code.endswith(".resource_not_found"):
+                raise ResourceNotFoundError(response.status_code, response.text)
+            raise HTTPError(response.status_code, response.text)
 
         logger.debug("Downloaded %s (%.4f s)", log_id, time.monotonic() - start)
         return response.json()

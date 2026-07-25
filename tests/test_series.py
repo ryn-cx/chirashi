@@ -1,12 +1,11 @@
-# TODO: Validate
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
 import pytest
 
-from chirashi.exceptions import HTTPError
-from tests.utils import assert_error, download_and_save, parse_json
+from chirashi.exceptions import SeriesNotFoundError
+from tests.utils import assert_error, download_and_save, parsed_json
 
 if TYPE_CHECKING:
     from chirashi import Chirashi
@@ -17,27 +16,23 @@ INVALID_SERIES_ID = "GGGGGGGGG"
 
 
 @pytest.fixture(scope="session")
-def endpoint(client: Chirashi) -> Series:
+def client(client: Chirashi) -> Series:
     return client.series
 
 
-class TestSeries:
-    def test_download(self, endpoint: Series) -> None:
-        download_and_save(
-            endpoint,
-            SERIES_ID,
-            lambda: endpoint.download(SERIES_ID),
-        )
+def test_download(client: Series) -> None:
+    download_and_save(client, SERIES_ID, lambda: client.download(SERIES_ID))
 
-    def test_parse(self, endpoint: Series) -> None:
-        # TODO: assert the series id matches SERIES_ID (needs live data)
-        data = parse_json(endpoint, SERIES_ID)
-        assert data.data is not None
 
-    def test_invalid_download(self, endpoint: Series) -> None:
-        assert_error(
-            endpoint,
-            INVALID_SERIES_ID,
-            lambda: endpoint.download(INVALID_SERIES_ID),
-            HTTPError,
-        )
+def test_parse(client: Series) -> None:
+    data = parsed_json(client, SERIES_ID)
+    assert data.data[0].id == SERIES_ID
+
+
+def test_download_invalid(client: Series) -> None:
+    assert_error(
+        client,
+        INVALID_SERIES_ID,
+        lambda: client.download(INVALID_SERIES_ID),
+        SeriesNotFoundError,
+    )

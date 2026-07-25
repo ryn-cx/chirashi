@@ -1,60 +1,50 @@
-# ruff: noqa: D100, D101, D102, TC001, TC002, TC003
-from typing import Any
-
 from good_ass_pydantic_integrator import GAPIBaseModel
 from pydantic import ConfigDict
-
+from typing import Any
 
 class PosterWideItem(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra='forbid')
     width: int
     height: int
     type: str
     source: str
-
 
 class PosterTallItem(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra='forbid')
     width: int
     height: int
     type: str
     source: str
 
-
 class Images(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra='forbid')
     poster_wide: list[list[PosterWideItem]]
     poster_tall: list[list[PosterTallItem]]
 
-
 class ExtendedMaturityRating(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra='forbid')
     system: str
     rating: str
     level: str
 
-
 class Award(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra='forbid')
     text: str
     icon_url: str
     is_current_award: bool
     is_winner: bool
 
-
 class ContentDescriptorsWithSymbolItem(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra='forbid')
     label: str
 
-
 class LanguagePresentation(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra='forbid')
     audio_notation: str
     text_notation: str
 
-
 class Datum(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra='forbid')
     id: str
     channel_id: str
     title: str
@@ -88,9 +78,8 @@ class Datum(GAPIBaseModel):
     content_descriptors_with_symbol: list[ContentDescriptorsWithSymbolItem]
     language_presentation: LanguagePresentation
 
-
 class SeriesModel(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra='forbid')
     total: int
     data: list[Datum]
     meta: dict[str, Any]
