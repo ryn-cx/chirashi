@@ -24,4 +24,5 @@ def test_download(client: SearchEpisode) -> None:
 
 def test_parse(client: SearchEpisode) -> None:
     data = parsed_json(client, QUERY)
-    assert data.data[0].items[0].title == QUERY
+    # Ads are sometimes injected directly into search results.
+    assert QUERY in [item.title for item in data.data[0].items]

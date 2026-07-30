@@ -1,8 +1,10 @@
+# TODO: Validate
 """Utils."""
 
 from __future__ import annotations
 
 import json
+import re
 from typing import TYPE_CHECKING, Literal, overload
 
 import pytest
@@ -19,20 +21,47 @@ if TYPE_CHECKING:
     from chirashi.exceptions import ChirashiError
 
 
+_INVALID_FILE_NAME_CHARS = re.compile(r'[<>:"/\\|?*\x00-\x1f]')
+"""Characters Windows does not allow in a file name."""
+
+_RESERVED_FILE_NAMES = frozenset(
+    {"CON", "PRN", "AUX", "NUL"}
+    | {f"COM{i}" for i in range(1, 10)}
+    | {f"LPT{i}" for i in range(1, 10)},
+)
+"""Device names Windows reserves and cannot be used as a file name."""
+
+
+def sanitized_file_name(name: str | int) -> str:
+    """Turn a name into a file name that is valid on Windows.
+
+    Invalid characters are replaced with an underscore, trailing dots and spaces
+    are stripped because Windows silently drops them, and reserved device names
+    are suffixed so they stay usable.
+    """
+    sanitized = _INVALID_FILE_NAME_CHARS.sub("_", str(name)).rstrip(". ")
+    if not sanitized:
+        return "_"
+    if sanitized.partition(".")[0].upper() in _RESERVED_FILE_NAMES:
+        return f"{sanitized}_"
+    return sanitized
+
+
 def json_path(
     gapi_client: GAPIClient[Any],
     name: str | int,
     category: Literal["Multipage", "Error"] | None = None,
 ) -> Path:
+    file_name = f"{sanitized_file_name(name)}.json"
     if category:
         return (
             gapi_client.json_files_folder().parent
             / (category + "s")
             / gapi_client.json_files_folder().stem
-            / f"{name}.json"
+            / file_name
         )
 
-    return gapi_client.json_files_folder() / f"{name}.json"
+    return gapi_client.json_files_folder() / file_name
 
 
 def json_content[T: BaseModel](

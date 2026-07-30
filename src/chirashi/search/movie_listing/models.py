@@ -40,17 +40,17 @@ class ContentDescriptorsWithSymbolItem(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
     label: str
 
-class LanguagePresentation(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    audio_notation: str
-    text_notation: str
-
 class Award(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
     text: str
     icon_url: str
     is_current_award: bool
     is_winner: bool
+
+class LanguagePresentation(GAPIBaseModel):
+    model_config = ConfigDict(extra='forbid')
+    audio_notation: str
+    text_notation: str
 
 class SeriesMetadata(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
@@ -72,9 +72,9 @@ class SeriesMetadata(GAPIBaseModel):
     audio_locales: list[str]
     subtitle_locales: list[str]
     series_launch_year: int
+    awards: list[Award] | None = None
     tenant_categories: list[str]
     language_presentation: LanguagePresentation
-    awards: list[Award] | None = None
 
 class SearchMetadata(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')

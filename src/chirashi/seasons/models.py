@@ -37,7 +37,7 @@ class Datum(GAPIBaseModel):
     extended_maturity_rating: ExtendedMaturityRating
     maturity_ratings: list[str]
     content_descriptors: list[str]
-    content_descriptors_with_symbol: list[ContentDescriptorsWithSymbolItem] | None = None
+    content_descriptors_with_symbol: list[ContentDescriptorsWithSymbolItem]
     is_mature: bool
     mature_blocked: bool
     is_subbed: bool

@@ -2,14 +2,14 @@ from good_ass_pydantic_integrator import GAPIBaseModel
 from pydantic import AwareDatetime, ConfigDict, Field
 from typing import Any
 
-class PosterTallItem(GAPIBaseModel):
+class PosterWideItem(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
     width: int
     height: int
     type: str
     source: str
 
-class PosterWideItem(GAPIBaseModel):
+class PosterTallItem(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
     width: int
     height: int
@@ -25,25 +25,25 @@ class PromoImageItem(GAPIBaseModel):
 
 class Images(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
-    poster_tall: list[list[PosterTallItem]]
     poster_wide: list[list[PosterWideItem]]
+    poster_tall: list[list[PosterTallItem]]
     promo_image: list[list[PromoImageItem]]
 
 class ExtendedMaturityRating(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
-    system: str | None = None
-    rating: str | None = None
-    level: str | None = None
-    advisories: list[None] | None = None
+    system: str
+    rating: str
+    level: str
+    advisories: list[None]
+
+class ContentDescriptorsWithSymbolItem(GAPIBaseModel):
+    model_config = ConfigDict(extra='forbid')
+    label: str
 
 class LanguagePresentation(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
     audio_notation: str
     text_notation: str
-
-class ContentDescriptorsWithSymbolItem(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    label: str
 
 class Award(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
@@ -60,6 +60,8 @@ class SeriesMetadata(GAPIBaseModel):
     season_count: int
     extended_maturity_rating: ExtendedMaturityRating
     maturity_ratings: list[str]
+    content_descriptors: list[str] | None = None
+    content_descriptors_with_symbol: list[ContentDescriptorsWithSymbolItem] | None = None
     is_mature: bool
     mature_blocked: bool
     is_subbed: bool
@@ -72,8 +74,6 @@ class SeriesMetadata(GAPIBaseModel):
     series_launch_year: int
     tenant_categories: list[str]
     language_presentation: LanguagePresentation
-    content_descriptors: list[str] | None = None
-    content_descriptors_with_symbol: list[ContentDescriptorsWithSymbolItem] | None = None
     awards: list[Award] | None = None
 
 class Field1s(GAPIBaseModel):

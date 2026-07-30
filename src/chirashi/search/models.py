@@ -1,6 +1,7 @@
 from good_ass_pydantic_integrator import GAPIBaseModel
 from pydantic import AwareDatetime, ConfigDict, Field
 from typing import Any
+from uuid import UUID
 
 class PosterWideItem(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
@@ -55,17 +56,17 @@ class ContentDescriptorsWithSymbolItem(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
     label: str
 
+class LanguagePresentation(GAPIBaseModel):
+    model_config = ConfigDict(extra='forbid')
+    audio_notation: str
+    text_notation: str
+
 class Award(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
     text: str
     icon_url: str
     is_current_award: bool
     is_winner: bool
-
-class LanguagePresentation(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    audio_notation: str
-    text_notation: str
 
 class SeriesMetadata(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
@@ -87,9 +88,9 @@ class SeriesMetadata(GAPIBaseModel):
     audio_locales: list[str]
     subtitle_locales: list[str]
     series_launch_year: int
-    awards: list[Award] | None = None
     tenant_categories: list[str]
     language_presentation: LanguagePresentation
+    awards: list[Award] | None = None
 
 class SearchMetadata(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
@@ -213,16 +214,13 @@ class EpisodeMetadata(GAPIBaseModel):
     roles: list[str]
     language_presentation: LanguagePresentation
 
-class MainArtistItem(GAPIBaseModel):
+class Artist(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
-    connector: str
     id: str
     name: str
-    roles: list[str]
-    sequence_number: int = Field(..., alias='sequenceNumber')
     slug: str
 
-class FeaturedArtistItem(GAPIBaseModel):
+class MainArtistItem(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
     connector: str
     id: str
@@ -234,23 +232,16 @@ class FeaturedArtistItem(GAPIBaseModel):
 class Artists(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
     main_artist: list[MainArtistItem] = Field(..., alias='MainArtist')
-    featured_artist: list[FeaturedArtistItem] | None = Field(None, alias='FeaturedArtist')
-
-class Artist(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    id: str
-    name: str
-    slug: str
-
-class Genre(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    display_value: str = Field(..., alias='displayValue')
-    id: str
 
 class Availability(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
     end_date: AwareDatetime = Field(..., alias='endDate')
     start_date: AwareDatetime = Field(..., alias='startDate')
+
+class Genre(GAPIBaseModel):
+    model_config = ConfigDict(extra='forbid')
+    display_value: str = Field(..., alias='displayValue')
+    id: str
 
 class Item(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
@@ -273,29 +264,29 @@ class Item(GAPIBaseModel):
     language_presentation: LanguagePresentation | None = None
     rating: Rating | None = None
     episode_metadata: EpisodeMetadata | None = None
-    is_premium_only: bool | None = Field(None, alias='isPremiumOnly')
-    artists: Artists | None = None
-    maturity_ratings: dict[str, Any] | None = Field(None, alias='maturityRatings')
+    hash: UUID | None = None
     artist: Artist | None = None
-    publish_date: AwareDatetime | None = Field(None, alias='publishDate')
+    is_mature: bool | None = Field(None, alias='isMature')
+    is_premium_only: bool | None = Field(None, alias='isPremiumOnly')
+    ready_to_publish: bool | None = Field(None, alias='readyToPublish')
+    updated_at: AwareDatetime | None = Field(None, alias='updatedAt')
+    streams_link: str | None = None
+    artists: Artists | None = None
+    availability: Availability | None = None
     display_artist_name_required: bool | None = Field(None, alias='displayArtistNameRequired')
     is_public: bool | None = Field(None, alias='isPublic')
-    created_at: str | None = Field(None, alias='createdAt')
-    hash: str | None = None
-    anime_ids: list[str] | None = Field(None, alias='animeIds')
-    sequence_number: int | None = Field(None, alias='sequenceNumber')
-    streams_link: str | None = None
-    display_artist_name: str | None = Field(None, alias='displayArtistName')
-    genres: list[Genre] | None = None
-    original_release: AwareDatetime | None = Field(None, alias='originalRelease')
-    availability: Availability | None = None
-    updated_at: str | None = Field(None, alias='updatedAt')
-    mature_blocked: bool | None = Field(None, alias='matureBlocked')
-    copyright: str | None = None
-    licensor: str | None = None
-    ready_to_publish: bool | None = Field(None, alias='readyToPublish')
     duration_ms: int | None = Field(None, alias='durationMs')
-    is_mature: bool | None = Field(None, alias='isMature')
+    mature_blocked: bool | None = Field(None, alias='matureBlocked')
+    maturity_ratings: dict[str, Any] | None = Field(None, alias='maturityRatings')
+    original_release: AwareDatetime | None = Field(None, alias='originalRelease')
+    genres: list[Genre] | None = None
+    licensor: str | None = None
+    copyright: str | None = None
+    created_at: AwareDatetime | None = Field(None, alias='createdAt')
+    display_artist_name: str | None = Field(None, alias='displayArtistName')
+    publish_date: AwareDatetime | None = Field(None, alias='publishDate')
+    sequence_number: int | None = Field(None, alias='sequenceNumber')
+    anime_ids: list[str] | None = Field(None, alias='animeIds')
 
 class Datum(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')

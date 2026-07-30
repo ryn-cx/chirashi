@@ -36,24 +36,29 @@ def test_download(client: Search, query: str) -> None:
 
 def test_extract_top_results(client: Search) -> None:
     results = client.extract_top_results(parsed_json(client, TOP_RESULTS_QUERY))
-    assert results[0].title == TOP_RESULTS_QUERY
+    # Ads are sometimes injected directly into search results.
+    assert TOP_RESULTS_QUERY in [result.title for result in results]
 
 
 def test_extract_series(client: Search) -> None:
     results = client.extract_series(parsed_json(client, SERIES_QUERY))
-    assert results[0].title == SERIES_QUERY
+    # Ads are sometimes injected directly into search results.
+    assert SERIES_QUERY in [result.title for result in results]
 
 
 def test_extract_episode(client: Search) -> None:
     results = client.extract_episode(parsed_json(client, EPISODE_QUERY))
-    assert results[0].title == EPISODE_QUERY
+    # Ads are sometimes injected directly into search results.
+    assert EPISODE_QUERY in [result.title for result in results]
 
 
 def test_extract_music(client: Search) -> None:
     results = client.extract_music(parsed_json(client, MUSIC_QUERY))
-    assert results[0].title == MUSIC_QUERY
+    # Ads are sometimes injected directly into search results.
+    assert MUSIC_QUERY in [result.title for result in results]
 
 
 def test_extract_movie_listing(client: Search) -> None:
     results = client.extract_movie_listing(parsed_json(client, MOVIE_LISTING_QUERY))
-    assert results[0].title == MOVIE_LISTING_QUERY
+    # Ads are sometimes injected directly into search results.
+    assert MOVIE_LISTING_QUERY in [result.title for result in results]

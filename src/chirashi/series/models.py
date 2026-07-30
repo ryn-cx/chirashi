@@ -2,14 +2,14 @@ from good_ass_pydantic_integrator import GAPIBaseModel
 from pydantic import ConfigDict
 from typing import Any
 
-class PosterWideItem(GAPIBaseModel):
+class PosterTallItem(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
     width: int
     height: int
     type: str
     source: str
 
-class PosterTallItem(GAPIBaseModel):
+class PosterWideItem(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
     width: int
     height: int
@@ -18,8 +18,8 @@ class PosterTallItem(GAPIBaseModel):
 
 class Images(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
-    poster_wide: list[list[PosterWideItem]]
     poster_tall: list[list[PosterTallItem]]
+    poster_wide: list[list[PosterWideItem]]
 
 class ExtendedMaturityRating(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
