@@ -73,7 +73,7 @@ class Datum(GAPIBaseModel):
     availability_status: str
     availability_notes: str
     series_launch_year: int
-    awards: list[Award]
+    awards: list[Award] | None = None
     content_descriptors: list[str]
     content_descriptors_with_symbol: list[ContentDescriptorsWithSymbolItem]
     language_presentation: LanguagePresentation

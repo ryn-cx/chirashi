@@ -71,6 +71,48 @@ class SeasonNotFoundError(ResourceNotFoundError):
         super().__init__(status_code, response)
 
 
+class MusicVideoNotFoundError(ResourceNotFoundError):
+    """Raised when the requested music video does not exist."""
+
+    def __init__(
+        self,
+        music_video_id: str,
+        status_code: int,
+        response: str | dict[str, Any] | None,
+    ) -> None:
+        """Initialize with the music video id and the originating response."""
+        self.music_video_id = music_video_id
+        super().__init__(status_code, response)
+
+
+class ConcertNotFoundError(ResourceNotFoundError):
+    """Raised when the requested concert does not exist."""
+
+    def __init__(
+        self,
+        concert_id: str,
+        status_code: int,
+        response: str | dict[str, Any] | None,
+    ) -> None:
+        """Initialize with the concert id and the originating response."""
+        self.concert_id = concert_id
+        super().__init__(status_code, response)
+
+
+class ArtistNotFoundError(ResourceNotFoundError):
+    """Raised when the requested artist does not exist."""
+
+    def __init__(
+        self,
+        artist_id: str,
+        status_code: int,
+        response: str | dict[str, Any] | None,
+    ) -> None:
+        """Initialize with the artist id and the originating response."""
+        self.artist_id = artist_id
+        super().__init__(status_code, response)
+
+
 class StartOutOfRangeError(ChirashiError, ValueError):
     """Raised when the requested start offset exceeds the total available items."""
 

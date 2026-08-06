@@ -10,8 +10,14 @@ from typing import Any
 
 from get_around import GetAround
 
+from chirashi.artist import Artist
+from chirashi.artist_concerts import ArtistConcerts
+from chirashi.artist_music_videos import ArtistMusicVideos
+from chirashi.browse_music import BrowseMusic
 from chirashi.browse_series import Browse
+from chirashi.concert import Concert
 from chirashi.exceptions import HTTPError, ResourceNotFoundError
+from chirashi.music_video import MusicVideo
 from chirashi.objects import Objects
 from chirashi.search import Search
 from chirashi.search.episode import SearchEpisode
@@ -57,6 +63,12 @@ class Chirashi:
         self.search_series = SearchSeries(self)
         self.search_music = SearchMusic(self)
         self.search_episode = SearchEpisode(self)
+        self.browse_music = BrowseMusic(self)
+        self.music_video = MusicVideo(self)
+        self.concert = Concert(self)
+        self.artist = Artist(self)
+        self.artist_music_videos = ArtistMusicVideos(self)
+        self.artist_concerts = ArtistConcerts(self)
 
     @property
     def _access_token(self) -> str:
