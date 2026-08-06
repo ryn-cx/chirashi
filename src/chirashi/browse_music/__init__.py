@@ -21,34 +21,9 @@ N = 36
 
 
 class BrowseMusic(BaseEndpoint[BrowseMusicModel]):
-    """Manage the browse music file.
+    """Endpoint contraining information about the entire music catalogue.
 
-    The music catalogue is browsed by artist: every entry is a `musicArtist`,
-    whose videos and concerts are then fetched per artist. Unlike the series
-    browse this endpoint takes no `type` filter and only accepts
-    `sort_by=newly_added`; anything else answers with a 400.
-
-    Source: https://www.crunchyroll.com/music
-
-    Example request:
-        - GET /content/v2/music/browse?
-            - n=36&
-            - locale=en-US
-            - HTTP/2
-        - Host: www.crunchyroll.com
-        - User-Agent: __REDACTED__
-        - Accept: application/json, text/plain, */*
-        - Accept-Language: en-US,en;q=0.9
-        - Accept-Encoding: gzip, deflate, br, zstd
-        - Authorization: Bearer __REDACTED__
-        - Sec-GPC: 1
-        - Connection: keep-alive
-        - Referer: https://www.crunchyroll.com/music
-        - Cookie: __REDACTED__
-        - Sec-Fetch-Dest: empty
-        - Sec-Fetch-Mode: cors
-        - Sec-Fetch-Site: same-origin
-        - TE: trailers
+    Warning: This endpoint does not appear to actually used on the Crunchyroll website.
     """
 
     _response_model = BrowseMusicModel
