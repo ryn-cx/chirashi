@@ -63,8 +63,8 @@ class EpisodeMetadata(GAPIBaseModel):
     is_premium_only: bool
     extended_maturity_rating: ExtendedMaturityRating
     maturity_ratings: list[str]
-    content_descriptors: list[str]
-    content_descriptors_with_symbol: list[ContentDescriptorsWithSymbolItem]
+    content_descriptors: list[str] | None = None
+    content_descriptors_with_symbol: list[ContentDescriptorsWithSymbolItem] | None = None
     is_mature: bool
     mature_blocked: bool
     available_date: AwareDatetime
