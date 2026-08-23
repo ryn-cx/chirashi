@@ -1,92 +1,60 @@
-from good_ass_pydantic_integrator import GAPIBaseModel
-from pydantic import AwareDatetime, ConfigDict, Field
-from typing import Any
-from uuid import UUID
+"""ArtistMusicVideosModel, strict to a type checker, all-optional at runtime.
 
-class ThumbnailItem(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    height: int
-    source: str
-    type: str
-    width: int
+A type checker reads the strict model, so every field carries the type and
+the requiredness the schema recorded. At runtime the all-optional copy is imported
+instead, so a response that has drifted still parses and a field the data is
+missing is None despite what its type hint says.
+"""
 
-class Images(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    thumbnail: list[ThumbnailItem]
+from typing import TYPE_CHECKING
 
-class Artist(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    id: str
-    name: str
-    slug: str
+from good_ass_pydantic_integrator import load
 
-class Availability(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    end_date: AwareDatetime = Field(..., alias='endDate')
-    start_date: AwareDatetime = Field(..., alias='startDate')
+from .optional_models import ArtistMusicVideosModel as OptionalModel
+from .strict_models import ArtistMusicVideosModel as StrictModel
 
-class Genre(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    display_value: str = Field(..., alias='displayValue')
-    id: str
+if TYPE_CHECKING:
+    from .strict_models import (
+        Artist,
+        ArtistMusicVideosModel,
+        Artists,
+        Availability,
+        Datum,
+        FeaturedArtistItem,
+        Genre,
+        Images,
+        MainArtistItem,
+        ThumbnailItem,
+    )
+else:
+    from .optional_models import (
+        Artist,
+        ArtistMusicVideosModel,
+        Artists,
+        Availability,
+        Datum,
+        FeaturedArtistItem,
+        Genre,
+        Images,
+        MainArtistItem,
+        ThumbnailItem,
+    )
 
-class MainArtistItem(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    connector: str
-    id: str
-    name: str
-    roles: list[str]
-    sequence_number: int = Field(..., alias='sequenceNumber')
-    slug: str
+__all__ = [
+    "Artist",
+    "ArtistMusicVideosModel",
+    "Artists",
+    "Availability",
+    "Datum",
+    "FeaturedArtistItem",
+    "Genre",
+    "Images",
+    "MainArtistItem",
+    "ThumbnailItem",
+    "model_validate_json",
+]
 
-class FeaturedArtistItem(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    connector: str
-    id: str
-    name: str
-    roles: list[str]
-    sequence_number: int = Field(..., alias='sequenceNumber')
-    slug: str
 
-class Artists(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    main_artist: list[MainArtistItem] = Field(..., alias='MainArtist')
-    featured_artist: list[FeaturedArtistItem] | None = Field(None, alias='FeaturedArtist')
-
-class Datum(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    is_mature: bool = Field(..., alias='isMature')
-    maturity_ratings: dict[str, Any] = Field(..., alias='maturityRatings')
-    updated_at: AwareDatetime = Field(..., alias='updatedAt')
-    display_artist_name_required: bool = Field(..., alias='displayArtistNameRequired')
-    images: Images
-    is_public: bool = Field(..., alias='isPublic')
-    publish_date: AwareDatetime = Field(..., alias='publishDate')
-    ready_to_publish: bool = Field(..., alias='readyToPublish')
-    artist: Artist
-    availability: Availability
-    id: str
-    mature_blocked: bool = Field(..., alias='matureBlocked')
-    sequence_number: int = Field(..., alias='sequenceNumber')
-    type: str
-    genres: list[Genre]
-    hash: UUID
-    artists: Artists
-    original_release: AwareDatetime = Field(..., alias='originalRelease')
-    title: str
-    anime_ids: list[str] = Field(..., alias='animeIds')
-    copyright: str
-    created_at: AwareDatetime = Field(..., alias='createdAt')
-    display_artist_name: str = Field(..., alias='displayArtistName')
-    is_premium_only: bool = Field(..., alias='isPremiumOnly')
-    licensor: str
-    streams_link: str
-    description: str
-    duration_ms: int = Field(..., alias='durationMs')
-    slug: str
-
-class ArtistMusicVideosModel(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    total: int
-    data: list[Datum]
-    meta: dict[str, Any]
+def model_validate_json(data: str | bytes | object, log_id: str) -> ArtistMusicVideosModel:
+    """Read a downloaded file into ArtistMusicVideosModel."""
+    return load.model_validate_json(StrictModel, OptionalModel, data, log_id)

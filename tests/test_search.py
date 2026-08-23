@@ -1,64 +1,76 @@
+# TODO: Validate
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
 import pytest
 
-from tests.utils import download_and_save, parsed_json
+from chirashi.search import Search
+from chirashi.search.models import SearchModel
+from tests.utils import RecordedEndpoint
 
 if TYPE_CHECKING:
-    from chirashi import Chirashi
-    from chirashi.search import Search
+    from collections.abc import Callable
 
-TOP_RESULTS_QUERY = "#COMPASS2.0 ANIMATION PROJECT"
-SERIES_QUERY = "#COMPASS2.0 ANIMATION PROJECT"
-EPISODE_QUERY = "This Is #COMPASS2.0"
-MUSIC_QUERY = "CASANOVA POSSE"
-MOVIE_LISTING_QUERY = "009-1: The End of the Beginning"
+    from chirashi import Chirashi
+    from chirashi.search.models import Item
 
 QUERIES = [
-    TOP_RESULTS_QUERY,
-    EPISODE_QUERY,
-    MUSIC_QUERY,
-    MOVIE_LISTING_QUERY,
+    pytest.param("#COMPASS2.0 ANIMATION PROJECT", id="compass 2.0 series"),
+    pytest.param("This Is #COMPASS2.0", id="compass 2.0 episode"),
+    pytest.param("CASANOVA POSSE", id="casanova posse music"),
+    pytest.param("009-1: The End of the Beginning", id="009-1 movie listing"),
 ]
 
 
-@pytest.fixture(scope="session")
-def client(client: Chirashi) -> Search:
-    return client.search
+# TODO: Validate
+class SearchTest(RecordedEndpoint):
+    MODEL = SearchModel
 
 
+# TODO: Validate
 @pytest.mark.parametrize("query", QUERIES)
-def test_download(client: Search, query: str) -> None:
-    download_and_save(client, query, lambda: client.download(query))
+def test_download(client: Chirashi, query: str) -> None:
+    SearchTest.download_test(query, lambda: client.search.download(query))
 
 
-def test_extract_top_results(client: Search) -> None:
-    results = client.extract_top_results(parsed_json(client, TOP_RESULTS_QUERY))
+# TODO: Validate
+@pytest.mark.parametrize("query", QUERIES)
+def test_parse(query: str) -> None:
+    SearchTest.parse_test(query)
+
+
+# TODO: Validate
+@pytest.mark.parametrize(
+    ("query", "extract"),
+    [
+        pytest.param(
+            "#COMPASS2.0 ANIMATION PROJECT",
+            Search.extract_top_results,
+            id="top results",
+        ),
+        pytest.param(
+            "#COMPASS2.0 ANIMATION PROJECT",
+            Search.extract_series,
+            id="series",
+        ),
+        pytest.param("This Is #COMPASS2.0", Search.extract_episode, id="episode"),
+        pytest.param("CASANOVA POSSE", Search.extract_music, id="music"),
+        pytest.param(
+            "009-1: The End of the Beginning",
+            Search.extract_movie_listing,
+            id="movie listing",
+        ),
+    ],
+)
+def test_extract(
+    client: Chirashi,
+    query: str,
+    extract: Callable[[Search, SearchModel], list[Item]],
+) -> None:
+    results = extract(
+        client.search,
+        client.search.load(SearchTest.recorded_content(query)),
+    )
     # Ads are sometimes injected directly into search results.
-    assert TOP_RESULTS_QUERY in [result.title for result in results]
-
-
-def test_extract_series(client: Search) -> None:
-    results = client.extract_series(parsed_json(client, SERIES_QUERY))
-    # Ads are sometimes injected directly into search results.
-    assert SERIES_QUERY in [result.title for result in results]
-
-
-def test_extract_episode(client: Search) -> None:
-    results = client.extract_episode(parsed_json(client, EPISODE_QUERY))
-    # Ads are sometimes injected directly into search results.
-    assert EPISODE_QUERY in [result.title for result in results]
-
-
-def test_extract_music(client: Search) -> None:
-    results = client.extract_music(parsed_json(client, MUSIC_QUERY))
-    # Ads are sometimes injected directly into search results.
-    assert MUSIC_QUERY in [result.title for result in results]
-
-
-def test_extract_movie_listing(client: Search) -> None:
-    results = client.extract_movie_listing(parsed_json(client, MOVIE_LISTING_QUERY))
-    # Ads are sometimes injected directly into search results.
-    assert MOVIE_LISTING_QUERY in [result.title for result in results]
+    assert query in [result.title for result in results]

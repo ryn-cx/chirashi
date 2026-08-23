@@ -3,11 +3,12 @@
 from __future__ import annotations
 
 from chirashi.search.base import BaseSearch
-from chirashi.search.episode.models import SearchEpisodeModel
+from chirashi.search.episode.models import SearchEpisodeModel, model_validate_json
 
 
 class SearchEpisode(BaseSearch[SearchEpisodeModel]):
     """Manage the search episode file."""
 
     search_type = "episode"
-    _response_model = SearchEpisodeModel
+    MODEL = SearchEpisodeModel
+    LOAD = staticmethod(model_validate_json)

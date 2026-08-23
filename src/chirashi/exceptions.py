@@ -116,7 +116,13 @@ class ArtistNotFoundError(ResourceNotFoundError):
 class StartOutOfRangeError(ChirashiError, ValueError):
     """Raised when the requested start offset exceeds the total available items."""
 
-    def __init__(self, start: int, total: int, response: dict[str, Any]) -> None:
+    # TODO: Validate
+    def __init__(
+        self,
+        start: int,
+        total: int,
+        response: str | dict[str, Any] | None,
+    ) -> None:
         """Initialize with the start, available total, and original response."""
         self.start = start
         self.total = total

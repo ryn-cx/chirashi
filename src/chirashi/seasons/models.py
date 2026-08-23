@@ -1,64 +1,48 @@
-from good_ass_pydantic_integrator import GAPIBaseModel
-from pydantic import ConfigDict
-from typing import Any
+"""SeasonsModel, strict to a type checker, all-optional at runtime.
 
-class ExtendedMaturityRating(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    system: str
-    rating: str
-    level: str
+A type checker reads the strict model, so every field carries the type and
+the requiredness the schema recorded. At runtime the all-optional copy is imported
+instead, so a response that has drifted still parses and a field the data is
+missing is None despite what its type hint says.
+"""
 
-class ContentDescriptorsWithSymbolItem(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    label: str
+from typing import TYPE_CHECKING
 
-class Version(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    audio_locale: str
-    guid: str
-    original: bool
-    variant: str
+from good_ass_pydantic_integrator import load
 
-class Datum(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    id: str
-    channel_id: str
-    title: str
-    slug_title: str
-    series_id: str
-    season_display_number: str
-    season_sequence_number: int
-    season_number: int
-    is_complete: bool
-    description: str
-    keywords: list[str]
-    season_tags: list[str]
-    images: dict[str, Any]
-    extended_maturity_rating: ExtendedMaturityRating
-    maturity_ratings: list[str]
-    content_descriptors: list[str]
-    content_descriptors_with_symbol: list[ContentDescriptorsWithSymbolItem]
-    is_mature: bool
-    mature_blocked: bool
-    is_subbed: bool
-    is_dubbed: bool
-    is_simulcast: bool
-    seo_title: str
-    seo_description: str
-    availability_notes: str
-    audio_locales: list[str]
-    subtitle_locales: list[str]
-    audio_locale: str
-    versions: list[Version]
-    identifier: str
-    number_of_episodes: int
+from .optional_models import SeasonsModel as OptionalModel
+from .strict_models import SeasonsModel as StrictModel
 
-class Meta(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    versions_considered: bool
+if TYPE_CHECKING:
+    from .strict_models import (
+        ContentDescriptorsWithSymbolItem,
+        Datum,
+        ExtendedMaturityRating,
+        Meta,
+        SeasonsModel,
+        Version,
+    )
+else:
+    from .optional_models import (
+        ContentDescriptorsWithSymbolItem,
+        Datum,
+        ExtendedMaturityRating,
+        Meta,
+        SeasonsModel,
+        Version,
+    )
 
-class SeasonsModel(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    data: list[Datum]
-    meta: Meta
-    total: int
+__all__ = [
+    "ContentDescriptorsWithSymbolItem",
+    "Datum",
+    "ExtendedMaturityRating",
+    "Meta",
+    "SeasonsModel",
+    "Version",
+    "model_validate_json",
+]
+
+
+def model_validate_json(data: str | bytes | object, log_id: str) -> SeasonsModel:
+    """Read a downloaded file into SeasonsModel."""
+    return load.model_validate_json(StrictModel, OptionalModel, data, log_id)

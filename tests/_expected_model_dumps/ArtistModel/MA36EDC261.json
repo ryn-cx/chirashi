@@ -1,0 +1,170 @@
+[
+  {
+    "total": 1,
+    "data": [
+      {
+        "images": {
+          "poster_tall": [
+            {
+              "height": 90,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/60x90/catalog/music/7b5abc08f3b5eb752f626edabe449c2d.jpeg",
+              "type": "poster_tall",
+              "width": 60
+            },
+            {
+              "height": 180,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/120x180/catalog/music/7b5abc08f3b5eb752f626edabe449c2d.jpeg",
+              "type": "poster_tall",
+              "width": 120
+            },
+            {
+              "height": 360,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/240x360/catalog/music/7b5abc08f3b5eb752f626edabe449c2d.jpeg",
+              "type": "poster_tall",
+              "width": 240
+            },
+            {
+              "height": 720,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/480x720/catalog/music/7b5abc08f3b5eb752f626edabe449c2d.jpeg",
+              "type": "poster_tall",
+              "width": 480
+            },
+            {
+              "height": 1125,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/750x1125/catalog/music/7b5abc08f3b5eb752f626edabe449c2d.jpeg",
+              "type": "poster_tall",
+              "width": 750
+            },
+            {
+              "height": 1440,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/960x1440/catalog/music/7b5abc08f3b5eb752f626edabe449c2d.jpeg",
+              "type": "poster_tall",
+              "width": 960
+            },
+            {
+              "height": 1688,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1125x1688/catalog/music/7b5abc08f3b5eb752f626edabe449c2d.jpeg",
+              "type": "poster_tall",
+              "width": 1125
+            },
+            {
+              "height": 1800,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1200x1800/catalog/music/7b5abc08f3b5eb752f626edabe449c2d.jpeg",
+              "type": "poster_tall",
+              "width": 1200
+            },
+            {
+              "height": 2340,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1560x2340/catalog/music/7b5abc08f3b5eb752f626edabe449c2d.jpeg",
+              "type": "poster_tall",
+              "width": 1560
+            }
+          ],
+          "poster_wide": [
+            {
+              "height": 180,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/320x180/catalog/music/9a15a9640a3feef1fe14faf3f06a638a.jpeg",
+              "type": "poster_wide",
+              "width": 320
+            },
+            {
+              "height": 338,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/600x338/catalog/music/9a15a9640a3feef1fe14faf3f06a638a.jpeg",
+              "type": "poster_wide",
+              "width": 600
+            },
+            {
+              "height": 360,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/640x360/catalog/music/9a15a9640a3feef1fe14faf3f06a638a.jpeg",
+              "type": "poster_wide",
+              "width": 640
+            },
+            {
+              "height": 450,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/800x450/catalog/music/9a15a9640a3feef1fe14faf3f06a638a.jpeg",
+              "type": "poster_wide",
+              "width": 800
+            },
+            {
+              "height": 675,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1200x675/catalog/music/9a15a9640a3feef1fe14faf3f06a638a.jpeg",
+              "type": "poster_wide",
+              "width": 1200
+            },
+            {
+              "height": 810,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1440x810/catalog/music/9a15a9640a3feef1fe14faf3f06a638a.jpeg",
+              "type": "poster_wide",
+              "width": 1440
+            },
+            {
+              "height": 900,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1600x900/catalog/music/9a15a9640a3feef1fe14faf3f06a638a.jpeg",
+              "type": "poster_wide",
+              "width": 1600
+            },
+            {
+              "height": 1080,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1920x1080/catalog/music/9a15a9640a3feef1fe14faf3f06a638a.jpeg",
+              "type": "poster_wide",
+              "width": 1920
+            }
+          ]
+        },
+        "publish_date": "2024-04-17T19:00:00Z",
+        "ready_to_publish": true,
+        "total_video_duration_ms": 4987000,
+        "type": "musicArtist",
+        "genres": [
+          {
+            "display_value": "Hip-Hop/Rap",
+            "id": "hip-hoprap"
+          },
+          {
+            "display_value": "Alternative",
+            "id": "alternative"
+          },
+          {
+            "display_value": "J-Pop",
+            "id": "j-pop"
+          },
+          {
+            "display_value": "Reggae/Dub",
+            "id": "reggaedub"
+          }
+        ],
+        "slug": "ali",
+        "is_public": true,
+        "name": "ALI",
+        "total_concert_duration_ms": 0,
+        "updated_at": "2026-08-03T17:17:54.797000Z",
+        "videos": [
+          "MV517EC35F",
+          "MV661D0B94",
+          "MV3DB93C6D",
+          "MVA284C18",
+          "MV5ADCC418",
+          "MVA022CC63",
+          "MV6304C0BC",
+          "MV5E398916",
+          "MV452A922B",
+          "MV4CC3C793",
+          "MV49661057",
+          "MV2EDE3D50",
+          "MV540DF093",
+          "MV5FFF77B",
+          "MV59D90DC6",
+          "MV5725FCF5",
+          "MVB7D76CEA",
+          "MV2720688B",
+          "MV9F6F37AA"
+        ],
+        "concerts": [],
+        "created_at": "2024-04-10T16:57:15.470000Z",
+        "description": "ALI is a boundary-pushing project centered around its vocalist LEO, a multicultural artist whose roots span Japan, Spain, the UK, and the Philippines. Based in Shibuya, Tokyo, the group lives by the motto \u201cLong Live Music,\u201d blending the rhythms of funk, soul, jazz, and Latin music with the raw energy of hip-hop, rock, and ska to create a truly genre-crossing sound.\n\nThey first made waves with their independently released 2019 single \"Wild Side,\" which served as the opening theme for the anime BEASTARS. Following this release, they skyrocketed to mainstream success with their first major-label track \u201cLOST IN PARADISE feat. AKLO,\u201d which was chosen to be the ending theme for the global hit anime JUJUTSU KAISEN. MLB star Shohei Ohtani used the song as his walk-up song during his time with the Los Angeles Angels, shining even more light on the band and their work.\n\nIn 2022, ALI contributed \u201cNEVER SAY GOODBYE feat. Mummy-D\u201d as the opening theme for the anime Golden Kamuy, and in 2024, their songs \u201cProfessionalism feat. Hannya\u201d and \u201cBEYOND feat. MaRI\u201d were used as opening and ending themes for the anime The Fable. Most recently, in 2025, their song \u201cCASANOVA POSSE\u201d was chosen as the opening for the first part of the fourth season of the anime Dr. STONE.In 2026, Awich \u00d7 ALI \u201cGolden Horizon\u201d was chosen as the theme song for Golden Kamuy (theatrical preview arc \u201cSapporo Beer Factory Arc\u201d) and as the anime\u2019s opening theme.\n\nWith a strong international presence, ALI enjoys strong international popularity, having performed across the U.S., Argentina, Brazil, and successfully completed an Asia Tour in 2025. They appear at major festivals and perform live every year in multiple countries, energizing audiences worldwide. Their performances and cross-cultural sound continue to defy conventions, break barriers, and unite fans across the globe.",
+        "id": "MA36EDC261"
+      }
+    ],
+    "meta": {}
+  }
+]

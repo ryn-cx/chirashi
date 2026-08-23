@@ -39,12 +39,18 @@ API_DOMAIN = "beta-api.crunchyroll.com"
 class Chirashi:
     """Crunchyroll API wrapper."""
 
+    # TODO: Validate
     def __init__(
         self,
         get_around_client: GetAround | None = None,
         locale: str = "en-US",
     ) -> None:
-        """Initializes the Chirashi client."""
+        """Initializes the Chirashi client.
+
+        The client holds one attribute per endpoint, so `client.concert(id)`
+        looks a concert up and `client.concert.download(id)` and
+        `client.concert.load(data)` are the halves of it.
+        """
         self.locale = locale
         self.get_around_client = get_around_client or GetAround()
         self.device_id = uuid.uuid4().hex
@@ -106,8 +112,12 @@ class Chirashi:
         params: dict[str, Any],
         headers: dict[str, str],
         log_id: str,
-    ) -> dict[str, Any]:
-        """Downloads from the API."""
+    ) -> str:
+        """Downloads from the API.
+
+        What comes back is the body as it was served. Reading it is the model's,
+        through the endpoint's `transform_input`.
+        """
         headers["authorization"] = f"Bearer {self._access_token}"
 
         logger.debug("Downloading: %s", log_id)
@@ -125,4 +135,4 @@ class Chirashi:
             raise HTTPError(response.status_code, response.text)
 
         logger.debug("Downloaded %s (%.4f s)", log_id, time.monotonic() - start)
-        return response.json()
+        return response.text

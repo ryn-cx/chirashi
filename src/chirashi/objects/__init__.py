@@ -3,17 +3,16 @@
 from __future__ import annotations
 
 from logging import NullHandler, getLogger
-from typing import Any, override
 
 from chirashi.base_api_endpoint import BaseEndpoint
 from chirashi.exceptions import EpisodeNotFoundError, ResourceNotFoundError
-from chirashi.objects.models import ObjectsModel
+from chirashi.objects.models import ObjectsModel, model_validate_json
 
 logger = getLogger(__name__)
 logger.addHandler(NullHandler())
 
 
-class Objects(BaseEndpoint[ObjectsModel]):
+class Objects(BaseEndpoint):
     """Manage the objects file.
 
     Source: https://www.crunchyroll.com/watch/{object_id}/{slug}
@@ -38,15 +37,25 @@ class Objects(BaseEndpoint[ObjectsModel]):
         - TE: trailers
     """
 
-    _response_model = ObjectsModel
+    # TODO: Validate
+    def __call__(
+        self,
+        object_id: str,
+        *,
+        locale: str | None = None,
+    ) -> ObjectsModel:
+        """Look the objects up and return the model it is read into."""
+        log_id = self.get_log_id(self.__call__, locals())
+        return self.load(self.download(object_id, locale=locale), log_id)
 
-    @override
+    # TODO: Validate
     def download(
         self,
         object_id: str,
         *,
         locale: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> str:
+        """Download the objects file."""
         log_id = self.get_log_id(self.download, locals())
         try:
             return self._client.download(
@@ -65,11 +74,7 @@ class Objects(BaseEndpoint[ObjectsModel]):
                 err.response,
             ) from err
 
-    @override
-    def download_and_parse(
-        self,
-        object_id: str,
-        *,
-        locale: str | None = None,
-    ) -> ObjectsModel:
-        return self.parse(self.download(object_id, locale=locale))
+    # TODO: Validate
+    def load(self, data: str, log_id: str = "") -> ObjectsModel:
+        """Read a downloaded objects file into its model."""
+        return model_validate_json(data, log_id or type(self).__name__)

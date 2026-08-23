@@ -4,17 +4,16 @@
 from __future__ import annotations
 
 from logging import NullHandler, getLogger
-from typing import Any, override
 
 from chirashi.base_api_endpoint import BaseEndpoint
-from chirashi.concert.models import ConcertModel
+from chirashi.concert.models import ConcertModel, model_validate_json
 from chirashi.exceptions import ConcertNotFoundError, ResourceNotFoundError
 
 logger = getLogger(__name__)
 logger.addHandler(NullHandler())
 
 
-class Concert(BaseEndpoint[ConcertModel]):
+class Concert(BaseEndpoint):
     """Manage the concert file.
 
     Source: https://www.crunchyroll.com/watch/concert/{concert_id}/{slug}
@@ -39,15 +38,25 @@ class Concert(BaseEndpoint[ConcertModel]):
         - TE: trailers
     """
 
-    _response_model = ConcertModel
+    # TODO: Validate
+    def __call__(
+        self,
+        concert_id: str,
+        *,
+        locale: str | None = None,
+    ) -> ConcertModel:
+        """Look the concert up and return the model it is read into."""
+        log_id = self.get_log_id(self.__call__, locals())
+        return self.load(self.download(concert_id, locale=locale), log_id)
 
-    @override
+    # TODO: Validate
     def download(
         self,
         concert_id: str,
         *,
         locale: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> str:
+        """Download the concert file."""
         log_id = self.get_log_id(self.download, locals())
         referer = f"https://www.crunchyroll.com/watch/concert/{concert_id}"
         try:
@@ -64,11 +73,7 @@ class Concert(BaseEndpoint[ConcertModel]):
                 err.response,
             ) from err
 
-    @override
-    def download_and_parse(
-        self,
-        concert_id: str,
-        *,
-        locale: str | None = None,
-    ) -> ConcertModel:
-        return self.parse(self.download(concert_id, locale=locale))
+    # TODO: Validate
+    def load(self, data: str, log_id: str = "") -> ConcertModel:
+        """Read a downloaded concert file into its model."""
+        return model_validate_json(data, log_id or type(self).__name__)

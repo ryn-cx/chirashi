@@ -1,52 +1,48 @@
-from pydantic import AwareDatetime, ConfigDict, Field
-from good_ass_pydantic_integrator import GAPIBaseModel
-from typing import Any
+"""ArtistModel, strict to a type checker, all-optional at runtime.
 
-class Genre(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    display_value: str = Field(..., alias='displayValue')
-    id: str
+A type checker reads the strict model, so every field carries the type and
+the requiredness the schema recorded. At runtime the all-optional copy is imported
+instead, so a response that has drifted still parses and a field the data is
+missing is None despite what its type hint says.
+"""
 
-class PosterTallItem(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    height: int
-    source: str
-    type: str
-    width: int
+from typing import TYPE_CHECKING
 
-class PosterWideItem(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    height: int
-    source: str
-    type: str
-    width: int
+from good_ass_pydantic_integrator import load
 
-class Images(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    poster_tall: list[PosterTallItem]
-    poster_wide: list[PosterWideItem]
+from .optional_models import ArtistModel as OptionalModel
+from .strict_models import ArtistModel as StrictModel
 
-class Datum(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    slug: str
-    total_video_duration_ms: int = Field(..., alias='totalVideoDurationMs')
-    description: str
-    type: str
-    genres: list[Genre]
-    images: Images
-    ready_to_publish: bool = Field(..., alias='readyToPublish')
-    concerts: list[None]
-    created_at: AwareDatetime = Field(..., alias='createdAt')
-    id: str
-    publish_date: AwareDatetime = Field(..., alias='publishDate')
-    total_concert_duration_ms: int = Field(..., alias='totalConcertDurationMs')
-    updated_at: AwareDatetime = Field(..., alias='updatedAt')
-    videos: list[str]
-    is_public: bool = Field(..., alias='isPublic')
-    name: str
+if TYPE_CHECKING:
+    from .strict_models import (
+        ArtistModel,
+        Datum,
+        Genre,
+        Images,
+        PosterTallItem,
+        PosterWideItem,
+    )
+else:
+    from .optional_models import (
+        ArtistModel,
+        Datum,
+        Genre,
+        Images,
+        PosterTallItem,
+        PosterWideItem,
+    )
 
-class ArtistModel(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    total: int
-    data: list[Datum]
-    meta: dict[str, Any]
+__all__ = [
+    "ArtistModel",
+    "Datum",
+    "Genre",
+    "Images",
+    "PosterTallItem",
+    "PosterWideItem",
+    "model_validate_json",
+]
+
+
+def model_validate_json(data: str | bytes | object, log_id: str) -> ArtistModel:
+    """Read a downloaded file into ArtistModel."""
+    return load.model_validate_json(StrictModel, OptionalModel, data, log_id)

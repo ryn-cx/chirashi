@@ -2,16 +2,18 @@
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+import json
 from datetime import datetime
 from logging import NullHandler, getLogger
-from typing import TYPE_CHECKING, Any, override
+from typing import TYPE_CHECKING
 
 from chirashi.base_api_endpoint import BaseEndpoint
-from chirashi.browse_series.models import BrowseSeriesModel
+from chirashi.browse_series.models import BrowseSeriesModel, model_validate_json
 from chirashi.exceptions import StartOutOfRangeError
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
     from chirashi.browse_series.models import Datum
 
 logger = getLogger(__name__)
@@ -20,7 +22,7 @@ logger.addHandler(NullHandler())
 N = 36
 
 
-class Browse(BaseEndpoint[BrowseSeriesModel]):
+class Browse(BaseEndpoint):
     """Manage the browse file.
 
     Source: https://www.crunchyroll.com/videos/new
@@ -48,9 +50,30 @@ class Browse(BaseEndpoint[BrowseSeriesModel]):
         - TE: trailers
     """
 
-    _response_model = BrowseSeriesModel
+    # TODO: Validate
+    def __call__(
+        self,
+        *,
+        start: int = 0,
+        n: int = N,
+        sort_by: str = "newly_added",
+        ratings: str = "true",
+        locale: str | None = None,
+    ) -> BrowseSeriesModel:
+        """Look the browse series up and return the model it is read into."""
+        log_id = self.get_log_id(self.__call__, locals())
+        return self.load(
+            self.download(
+                start=start,
+                n=n,
+                sort_by=sort_by,
+                ratings=ratings,
+                locale=locale,
+            ),
+            log_id,
+        )
 
-    @override
+    # TODO: Validate
     def download(
         self,
         *,
@@ -59,7 +82,8 @@ class Browse(BaseEndpoint[BrowseSeriesModel]):
         sort_by: str = "newly_added",
         ratings: str = "true",
         locale: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> str:
+        """Download the browse file."""
         log_id = self.get_log_id(self.download, locals())
         params: dict[str, str | int] = {
             "n": n,
@@ -79,12 +103,9 @@ class Browse(BaseEndpoint[BrowseSeriesModel]):
         )
         return self._validate_download(response, start)
 
-    def _validate_download(
-        self,
-        response: dict[str, Any],
-        start: int,
-    ) -> dict[str, Any]:
-        total = response["total"]
+    # TODO: Validate
+    def _validate_download(self, response: str, start: int) -> str:
+        total = json.loads(response)["total"]
         if start and start > total:
             raise StartOutOfRangeError(start, total, response)
         return response
@@ -98,9 +119,9 @@ class Browse(BaseEndpoint[BrowseSeriesModel]):
         locale: str | None = None,
         sort_by: str = "newly_added",
         ratings: str = "true",
-    ) -> list[dict[str, Any]]:
+    ) -> list[str]:
         """Downloads all files until end_datetime is reached."""
-        results: list[dict[str, Any]] = []
+        results: list[str] = []
         end_datetime = end_datetime or datetime.now().astimezone()
 
         while True:
@@ -114,70 +135,68 @@ class Browse(BaseEndpoint[BrowseSeriesModel]):
             results.append(page)
             start += n
 
-            last_public = datetime.fromisoformat(page["data"][-1]["last_public"])
-            if last_public < end_datetime or start >= page["total"]:
+            parsed = json.loads(page)
+            last_public = datetime.fromisoformat(parsed["data"][-1]["last_public"])
+            if last_public < end_datetime or start >= parsed["total"]:
                 return results
 
-    def parse_until_datetime(
-        self,
-        datas: list[dict[str, Any]],
-    ) -> list[BrowseSeriesModel]:
-        """Parses the output of download_until_datetime."""
-        return [self.parse(data) for data in datas]
-
-    @override
-    def download_and_parse(
-        self,
-        *,
-        start: int = 0,
-        n: int = N,
-        sort_by: str = "newly_added",
-        ratings: str = "true",
-        locale: str | None = None,
-    ) -> BrowseSeriesModel:
-        response = self.download(
-            start=start,
-            n=n,
-            sort_by=sort_by,
-            ratings=ratings,
-            locale=locale,
-        )
-        return self.parse(response)
-
-    def download_and_parse_until_datetime(
+    # TODO: Validate
+    def download_merged_until_datetime(  # noqa: PLR0913 - Required to match API.
         self,
         end_datetime: datetime | None = None,
         *,
+        start: int = 0,
         n: int = N,
         locale: str | None = None,
         sort_by: str = "newly_added",
         ratings: str = "true",
-    ) -> list[BrowseSeriesModel]:
-        """Downloads and parses all files until end_datetime is reached."""
-        responses = self.download_until_datetime(
-            end_datetime,
-            n=n,
-            locale=locale,
-            sort_by=sort_by,
-            ratings=ratings,
+    ) -> str:
+        """Download every page down to `end_datetime` as a single file.
+
+        The pages are put together into one file holding every series the walk
+        reached, which is that stretch of the catalogue written the way one page
+        of it is, rather than the pages themselves.
+        """
+        return self.merge_pages(
+            self.download_until_datetime(
+                end_datetime,
+                start=start,
+                n=n,
+                locale=locale,
+                sort_by=sort_by,
+                ratings=ratings,
+            ),
         )
-        return self.parse_until_datetime(responses)
+
+    # TODO: Validate
+    def load(self, data: str, log_id: str = "") -> BrowseSeriesModel:
+        """Read a downloaded browse file into its model."""
+        return model_validate_json(data, log_id or type(self).__name__)
+
+    # TODO: Validate
+    def load_pages(self, datas: list[str]) -> list[BrowseSeriesModel]:
+        """Read the pages `download_until_datetime` returns into their models."""
+        return [self.load(data) for data in datas]
 
     def extract_data(
         self,
-        input_data: BrowseSeriesModel
-        | dict[str, Any]
-        | Sequence[BrowseSeriesModel | dict[str, Any]],
+        input_data: BrowseSeriesModel | str | Sequence[BrowseSeriesModel | str],
     ) -> list[Datum]:
         """Extracts data entries from one or more files."""
-        responses = input_data if isinstance(input_data, Sequence) else [input_data]
+        # A single file is text, which is itself a Sequence, so it is held apart
+        # from a sequence of files.
+        responses = (
+            [input_data]
+            if isinstance(input_data, (BrowseSeriesModel, str))
+            else input_data
+        )
 
         result: list[Datum] = []
         for response in responses:
             parsed = (
                 response
                 if isinstance(response, BrowseSeriesModel)
-                else self.parse(response)
+                else self.load(response)
             )
             result.extend(parsed.data)
         return result

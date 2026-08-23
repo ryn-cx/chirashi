@@ -1,0 +1,127 @@
+[
+  {
+    "data": [
+      {
+        "type": "music",
+        "items": [
+          {
+            "id": "MV5ADCC418",
+            "type": "musicVideo",
+            "title": "CASANOVA POSSE",
+            "description": "",
+            "slug": "casanova-posse",
+            "images": {
+              "thumbnail": [
+                {
+                  "width": 320,
+                  "height": 180,
+                  "type": "thumbnail",
+                  "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/320x180/catalog/music/94fd4c995d29cd08caa0a6d6ad8af693.jpeg"
+                },
+                {
+                  "width": 600,
+                  "height": 338,
+                  "type": "thumbnail",
+                  "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/600x338/catalog/music/94fd4c995d29cd08caa0a6d6ad8af693.jpeg"
+                },
+                {
+                  "width": 640,
+                  "height": 360,
+                  "type": "thumbnail",
+                  "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/640x360/catalog/music/94fd4c995d29cd08caa0a6d6ad8af693.jpeg"
+                },
+                {
+                  "width": 800,
+                  "height": 450,
+                  "type": "thumbnail",
+                  "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/800x450/catalog/music/94fd4c995d29cd08caa0a6d6ad8af693.jpeg"
+                },
+                {
+                  "width": 1200,
+                  "height": 675,
+                  "type": "thumbnail",
+                  "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1200x675/catalog/music/94fd4c995d29cd08caa0a6d6ad8af693.jpeg"
+                },
+                {
+                  "width": 1440,
+                  "height": 810,
+                  "type": "thumbnail",
+                  "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1440x810/catalog/music/94fd4c995d29cd08caa0a6d6ad8af693.jpeg"
+                },
+                {
+                  "width": 1600,
+                  "height": 900,
+                  "type": "thumbnail",
+                  "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1600x900/catalog/music/94fd4c995d29cd08caa0a6d6ad8af693.jpeg"
+                },
+                {
+                  "width": 1920,
+                  "height": 1080,
+                  "type": "thumbnail",
+                  "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1920x1080/catalog/music/94fd4c995d29cd08caa0a6d6ad8af693.jpeg"
+                }
+              ]
+            },
+            "search_metadata": {
+              "score": 1029.1373
+            },
+            "genres": [
+              {
+                "display_value": "J-Pop",
+                "id": "j-pop"
+              }
+            ],
+            "publish_date": "2026-04-15T00:00:00Z",
+            "artist": {
+              "id": "MA36EDC261",
+              "name": "ALI",
+              "slug": "ali"
+            },
+            "maturity_ratings": {},
+            "licensor": "Sony Music Labels Inc.",
+            "new": false,
+            "mature_blocked": false,
+            "is_premium_only": true,
+            "is_public": true,
+            "anime_ids": [
+              "GYEXQKJG6"
+            ],
+            "artists": {
+              "main_artist": [
+                {
+                  "connector": "",
+                  "id": "MA36EDC261",
+                  "name": "ALI",
+                  "roles": [
+                    "MainArtist"
+                  ],
+                  "sequence_number": 1,
+                  "slug": "ali"
+                }
+              ]
+            },
+            "updated_at": "2026-07-31T14:15:10.570000Z",
+            "sequence_number": 1,
+            "display_artist_name": "ALI",
+            "hash": "997b0b31-56fd-d987-7573-d92d10e99c44",
+            "original_release": "2025-01-09T00:00:00Z",
+            "duration_ms": 242000,
+            "is_mature": false,
+            "availability": {
+              "end_date": "2099-05-14T00:00:00Z",
+              "start_date": "2026-04-01T00:00:00Z"
+            },
+            "copyright": "(C) 2025 Sony Music Labels Inc.",
+            "ready_to_publish": true,
+            "created_at": "2026-04-15T17:47:17.013000Z",
+            "streams_link": "/content/v2/music/MV5ADCC418/streams",
+            "display_artist_name_required": false
+          }
+        ],
+        "count": 1
+      }
+    ],
+    "total": 1,
+    "meta": {}
+  }
+]

@@ -1,156 +1,90 @@
-from good_ass_pydantic_integrator import GAPIBaseModel
-from pydantic import AwareDatetime, ConfigDict, Field
-from typing import Any
+"""SearchMovieListingModel, strict to a type checker, all-optional at runtime.
 
-class PosterWideItem(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    width: int
-    height: int
-    type: str
-    source: str
+A type checker reads the strict model, so every field carries the type and
+the requiredness the schema recorded. At runtime the all-optional copy is imported
+instead, so a response that has drifted still parses and a field the data is
+missing is None despite what its type hint says.
+"""
 
-class PosterTallItem(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    width: int
-    height: int
-    type: str
-    source: str
+from typing import TYPE_CHECKING
 
-class PromoImageItem(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    width: int
-    height: int
-    type: str
-    source: str
+from good_ass_pydantic_integrator import load
 
-class Images(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    poster_wide: list[list[PosterWideItem]]
-    poster_tall: list[list[PosterTallItem]]
-    promo_image: list[list[PromoImageItem]]
+from .optional_models import SearchMovieListingModel as OptionalModel
+from .strict_models import SearchMovieListingModel as StrictModel
 
-class ExtendedMaturityRating(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    system: str
-    rating: str
-    level: str
-    advisories: list[None]
+if TYPE_CHECKING:
+    from .strict_models import (
+        Award,
+        ContentDescriptorsWithSymbolItem,
+        Datum,
+        ExtendedMaturityRating,
+        Field1s,
+        Field2s,
+        Field3s,
+        Field4s,
+        Field5s,
+        Images,
+        Item,
+        LanguagePresentation,
+        LocalizedImages,
+        PosterTallItem,
+        PosterWideItem,
+        PromoImageItem,
+        Rating,
+        SearchMetadata,
+        SearchMovieListingModel,
+        SeriesMetadata,
+    )
+else:
+    from .optional_models import (
+        Award,
+        ContentDescriptorsWithSymbolItem,
+        Datum,
+        ExtendedMaturityRating,
+        Field1s,
+        Field2s,
+        Field3s,
+        Field4s,
+        Field5s,
+        Images,
+        Item,
+        LanguagePresentation,
+        LocalizedImages,
+        PosterTallItem,
+        PosterWideItem,
+        PromoImageItem,
+        Rating,
+        SearchMetadata,
+        SearchMovieListingModel,
+        SeriesMetadata,
+    )
 
-class ContentDescriptorsWithSymbolItem(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    label: str
+__all__ = [
+    "Award",
+    "ContentDescriptorsWithSymbolItem",
+    "Datum",
+    "ExtendedMaturityRating",
+    "Field1s",
+    "Field2s",
+    "Field3s",
+    "Field4s",
+    "Field5s",
+    "Images",
+    "Item",
+    "LanguagePresentation",
+    "LocalizedImages",
+    "PosterTallItem",
+    "PosterWideItem",
+    "PromoImageItem",
+    "Rating",
+    "SearchMetadata",
+    "SearchMovieListingModel",
+    "SeriesMetadata",
+    "model_validate_json",
+]
 
-class Award(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    text: str
-    icon_url: str
-    is_current_award: bool
-    is_winner: bool
 
-class LanguagePresentation(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    audio_notation: str
-    text_notation: str
-
-class SeriesMetadata(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    availability_status: str
-    extended_description: str
-    episode_count: int
-    season_count: int
-    extended_maturity_rating: ExtendedMaturityRating
-    maturity_ratings: list[str]
-    content_descriptors: list[str] | None = None
-    content_descriptors_with_symbol: list[ContentDescriptorsWithSymbolItem] | None = None
-    is_mature: bool
-    mature_blocked: bool
-    is_subbed: bool
-    is_dubbed: bool
-    is_simulcast: bool
-    linked_guid: str
-    availability_notes: str
-    audio_locales: list[str]
-    subtitle_locales: list[str]
-    series_launch_year: int
-    awards: list[Award] | None = None
-    tenant_categories: list[str]
-    language_presentation: LanguagePresentation
-
-class SearchMetadata(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    score: float
-    rank: int
-    popularity_score: int | float
-
-class Field1s(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    displayed: str
-    unit: str
-    percentage: int
-
-class Field2s(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    displayed: str
-    unit: str
-    percentage: int
-
-class Field3s(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    displayed: str
-    unit: str
-    percentage: int
-
-class Field4s(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    displayed: str
-    unit: str
-    percentage: int
-
-class Field5s(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    displayed: str
-    unit: str
-    percentage: int
-
-class Rating(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    field_1s: Field1s = Field(..., alias='1s')
-    field_2s: Field2s = Field(..., alias='2s')
-    field_3s: Field3s = Field(..., alias='3s')
-    field_4s: Field4s = Field(..., alias='4s')
-    field_5s: Field5s = Field(..., alias='5s')
-    average: str
-    total: int
-
-class Item(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    id: str
-    external_id: str
-    channel_id: str
-    linked_resource_key: str
-    new: bool
-    title: str
-    description: str
-    promo_title: str
-    promo_description: str
-    type: str
-    slug: str
-    slug_title: str
-    last_public: AwareDatetime
-    images: Images
-    series_metadata: SeriesMetadata
-    search_metadata: SearchMetadata
-    language_presentation: LanguagePresentation
-    rating: Rating
-
-class Datum(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    type: str
-    items: list[Item]
-    count: int
-
-class SearchMovieListingModel(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    data: list[Datum]
-    total: int
-    meta: dict[str, Any]
+def model_validate_json(data: str | bytes | object, log_id: str) -> SearchMovieListingModel:
+    """Read a downloaded file into SearchMovieListingModel."""
+    return load.model_validate_json(StrictModel, OptionalModel, data, log_id)

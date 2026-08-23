@@ -1,0 +1,303 @@
+[
+  {
+    "data": [
+      {
+        "id": "GE00258180JAJP",
+        "external_id": "EPI.GE00258180JAJP",
+        "channel_id": "crunchyroll",
+        "title": "The Magic That Started Everything",
+        "description": "Coco, a girl fascinated by magic, meets Qifrey and discovers the secrets of witches.",
+        "type": "episode",
+        "slug": "",
+        "slug_title": "the-magic-that-started-everything",
+        "images": {
+          "thumbnail": [
+            [
+              {
+                "width": 320,
+                "height": 180,
+                "type": "thumbnail",
+                "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/320x180/catalog/crunchyroll/c22f598190660794c5c2e164ed2a07c4.png"
+              },
+              {
+                "width": 600,
+                "height": 338,
+                "type": "thumbnail",
+                "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/600x338/catalog/crunchyroll/c22f598190660794c5c2e164ed2a07c4.png"
+              },
+              {
+                "width": 640,
+                "height": 360,
+                "type": "thumbnail",
+                "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/640x360/catalog/crunchyroll/c22f598190660794c5c2e164ed2a07c4.png"
+              },
+              {
+                "width": 800,
+                "height": 450,
+                "type": "thumbnail",
+                "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/800x450/catalog/crunchyroll/c22f598190660794c5c2e164ed2a07c4.png"
+              },
+              {
+                "width": 1200,
+                "height": 675,
+                "type": "thumbnail",
+                "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1200x675/catalog/crunchyroll/c22f598190660794c5c2e164ed2a07c4.png"
+              },
+              {
+                "width": 1440,
+                "height": 810,
+                "type": "thumbnail",
+                "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1440x810/catalog/crunchyroll/c22f598190660794c5c2e164ed2a07c4.png"
+              },
+              {
+                "width": 1600,
+                "height": 900,
+                "type": "thumbnail",
+                "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1600x900/catalog/crunchyroll/c22f598190660794c5c2e164ed2a07c4.png"
+              },
+              {
+                "width": 1920,
+                "height": 1080,
+                "type": "thumbnail",
+                "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1920x1080/catalog/crunchyroll/c22f598190660794c5c2e164ed2a07c4.png"
+              }
+            ]
+          ]
+        },
+        "localized_images": {
+          "thumbnail": "https://imgsrv.crunchyroll.com/cdn-cgi/image/{:param}/catalog/crunchyroll/c22f598190660794c5c2e164ed2a07c4.png"
+        },
+        "episode_metadata": {
+          "series_id": "GT00258001",
+          "series_title": "Witch Hat Atelier",
+          "series_slug_title": "witch-hat-atelier",
+          "season_id": "GS00258022JAJP",
+          "season_title": "Season 1",
+          "season_slug_title": "season-1",
+          "season_number": 1,
+          "season_display_number": "",
+          "season_sequence_number": 1,
+          "episode": "1",
+          "episode_number": 1,
+          "sequence_number": 1,
+          "duration_ms": 1420004,
+          "ad_breaks": [
+            {
+              "type": "preroll",
+              "offset_ms": 0
+            },
+            {
+              "type": "midroll",
+              "offset_ms": 355001
+            },
+            {
+              "type": "midroll",
+              "offset_ms": 710002
+            },
+            {
+              "type": "midroll",
+              "offset_ms": 1065003
+            }
+          ],
+          "episode_air_date": "2026-04-06T00:00:00Z",
+          "upload_date": "2026-04-06T00:00:00Z",
+          "availability_starts": "9998-11-30T17:45:00Z",
+          "availability_ends": "9998-11-30T17:45:00Z",
+          "eligible_region": "US",
+          "is_premium_only": true,
+          "extended_maturity_rating": {
+            "system": "cr-tv",
+            "rating": "12",
+            "level": "M2"
+          },
+          "maturity_ratings": [
+            "12"
+          ],
+          "content_descriptors": [
+            "Violence"
+          ],
+          "content_descriptors_with_symbol": [
+            {
+              "label": "Violence"
+            }
+          ],
+          "is_mature": false,
+          "mature_blocked": false,
+          "available_date": "9998-11-30T17:45:00Z",
+          "free_available_date": "9998-11-30T17:45:00Z",
+          "premium_date": null,
+          "premium_available_date": "2026-04-06T14:00:00Z",
+          "is_subbed": true,
+          "is_dubbed": true,
+          "is_clip": false,
+          "available_offline": true,
+          "tenant_categories": [
+            "Fantasy",
+            "Adventure",
+            "Drama"
+          ],
+          "subtitle_locales": [
+            "ar-SA",
+            "de-DE",
+            "en-US",
+            "es-419",
+            "es-ES",
+            "fr-FR",
+            "it-IT",
+            "pt-BR",
+            "ru-RU",
+            "pl-PL"
+          ],
+          "availability_notes": "",
+          "audio_locale": "ja-JP",
+          "versions": [
+            {
+              "audio_locale": "en-US",
+              "guid": "GE00258180ENUS",
+              "original": false,
+              "variant": "",
+              "season_guid": "GS00258022ENUS",
+              "media_guid": "GE00258180ENUSV",
+              "is_premium_only": true,
+              "roles": [
+                "description",
+                "dub"
+              ]
+            },
+            {
+              "audio_locale": "ja-JP",
+              "guid": "GE00258180JAJP",
+              "original": true,
+              "variant": "",
+              "season_guid": "GS00258022JAJP",
+              "media_guid": "GE00258180JAJPV",
+              "is_premium_only": true,
+              "roles": [
+                "main"
+              ]
+            },
+            {
+              "audio_locale": "fr-FR",
+              "guid": "GE00258180FRFR",
+              "original": false,
+              "variant": "",
+              "season_guid": "GS00258022FRFR",
+              "media_guid": "GE00258180FRFRV",
+              "is_premium_only": true,
+              "roles": [
+                "description",
+                "dub"
+              ]
+            },
+            {
+              "audio_locale": "es-ES",
+              "guid": "GE00258180ESES",
+              "original": false,
+              "variant": "",
+              "season_guid": "GS00258022ESES",
+              "media_guid": "GE00258180ESESV",
+              "is_premium_only": true,
+              "roles": [
+                "description",
+                "dub"
+              ]
+            },
+            {
+              "audio_locale": "ar-SA",
+              "guid": "GE00258180ARSA",
+              "original": false,
+              "variant": "",
+              "season_guid": "GS00258022ARSA",
+              "media_guid": "GE00258180ARSAV",
+              "is_premium_only": true,
+              "roles": [
+                "dub"
+              ]
+            },
+            {
+              "audio_locale": "de-DE",
+              "guid": "GE00258180DEDE",
+              "original": false,
+              "variant": "",
+              "season_guid": "GS00258022DEDE",
+              "media_guid": "GE00258180DEDEV",
+              "is_premium_only": true,
+              "roles": [
+                "description",
+                "dub"
+              ]
+            },
+            {
+              "audio_locale": "it-IT",
+              "guid": "GE00258180ITIT",
+              "original": false,
+              "variant": "",
+              "season_guid": "GS00258022ITIT",
+              "media_guid": "GE00258180ITITV",
+              "is_premium_only": true,
+              "roles": [
+                "description",
+                "dub"
+              ]
+            },
+            {
+              "audio_locale": "es-419",
+              "guid": "GE00258180ES419",
+              "original": false,
+              "variant": "",
+              "season_guid": "GS00258022ES419",
+              "media_guid": "GE00258180ES419V",
+              "is_premium_only": true,
+              "roles": [
+                "description",
+                "dub"
+              ]
+            },
+            {
+              "audio_locale": "pt-BR",
+              "guid": "GE00258180PTBR",
+              "original": false,
+              "variant": "",
+              "season_guid": "GS00258022PTBR",
+              "media_guid": "GE00258180PTBRV",
+              "is_premium_only": true,
+              "roles": [
+                "description",
+                "dub"
+              ]
+            }
+          ],
+          "closed_captions_available": false,
+          "identifier": "GT00258001|S00258022|E1",
+          "availability_status": "premium_only",
+          "roles": [
+            "main"
+          ]
+        },
+        "rating": {
+          "up": {
+            "displayed": "37.8",
+            "unit": "K"
+          },
+          "down": {
+            "displayed": "166",
+            "unit": ""
+          },
+          "total": 37978
+        },
+        "linked_resource_key": "cms:/episodes/GE00258180JAJP",
+        "language_presentation": {
+          "audio_notation": "EN",
+          "text_notation": "EN",
+          "is_original_audio": false,
+          "audio_locale": "en-US",
+          "text_locale": "en-US",
+          "audio_notation_reason": "default",
+          "text_notation_reason": "default"
+        }
+      }
+    ],
+    "total": 1,
+    "meta": {}
+  }
+]

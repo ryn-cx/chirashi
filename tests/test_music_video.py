@@ -1,3 +1,4 @@
+# TODO: Validate
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
@@ -5,35 +6,46 @@ from typing import TYPE_CHECKING
 import pytest
 
 from chirashi.exceptions import MusicVideoNotFoundError
-from tests.utils import assert_error, download_and_save, parsed_json
+from chirashi.music_video.models import MusicVideoModel
+from tests.utils import RecordedEndpoint
 
 if TYPE_CHECKING:
     from chirashi import Chirashi
-    from chirashi.music_video import MusicVideo
 
-# https://www.crunchyroll.com/watch/musicvideo/MV5ADCC418
-MUSIC_VIDEO_ID = "MV5ADCC418"
-INVALID_MUSIC_VIDEO_ID = "MV00000000"
-
-
-@pytest.fixture(scope="session")
-def client(client: Chirashi) -> MusicVideo:
-    return client.music_video
+MUSIC_VIDEO_IDS = [
+    # https://www.crunchyroll.com/watch/musicvideo/MV5ADCC418
+    pytest.param("MV5ADCC418", id="casanova posse by ali"),
+]
 
 
-def test_download(client: MusicVideo) -> None:
-    download_and_save(client, MUSIC_VIDEO_ID, lambda: client.download(MUSIC_VIDEO_ID))
+# TODO: Validate
+class MusicVideoTest(RecordedEndpoint):
+    MODEL = MusicVideoModel
 
 
-def test_parse(client: MusicVideo) -> None:
-    data = parsed_json(client, MUSIC_VIDEO_ID)
-    assert data.data[0].id == MUSIC_VIDEO_ID
+# TODO: Validate
+@pytest.mark.parametrize("music_video_id", MUSIC_VIDEO_IDS)
+def test_download(client: Chirashi, music_video_id: str) -> None:
+    MusicVideoTest.download_test(
+        music_video_id,
+        lambda: client.music_video.download(music_video_id),
+    )
 
 
-def test_download_invalid(client: MusicVideo) -> None:
-    assert_error(
-        client,
-        INVALID_MUSIC_VIDEO_ID,
-        lambda: client.download(INVALID_MUSIC_VIDEO_ID),
+# TODO: Validate
+@pytest.mark.parametrize("music_video_id", MUSIC_VIDEO_IDS)
+def test_parse(music_video_id: str) -> None:
+    MusicVideoTest.parse_test(music_video_id)
+
+
+# TODO: Validate
+@pytest.mark.parametrize(
+    "music_video_id",
+    [pytest.param("MV00000000", id="music video that does not exist")],
+)
+def test_download_invalid(client: Chirashi, music_video_id: str) -> None:
+    MusicVideoTest.error_test(
+        music_video_id,
+        lambda: client.music_video.download(music_video_id),
         MusicVideoNotFoundError,
     )

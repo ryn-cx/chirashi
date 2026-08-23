@@ -1,3 +1,4 @@
+# TODO: Validate
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
@@ -5,35 +6,43 @@ from typing import TYPE_CHECKING
 import pytest
 
 from chirashi.exceptions import SeasonNotFoundError
-from tests.utils import assert_error, download_and_save, parsed_json
+from chirashi.season_episodes.models import SeasonEpisodesModel
+from tests.utils import RecordedEndpoint
 
 if TYPE_CHECKING:
     from chirashi import Chirashi
-    from chirashi.season_episodes import SeasonEpisodes
 
-SEASON_ID = "G68VCP0VQ"
-INVALID_SEASON_ID = "GGGGGGGGG"
+SEASON_IDS = [pytest.param("G68VCP0VQ", id="#compass2.0 animation project season 1")]
 
 
-@pytest.fixture(scope="session")
-def client(client: Chirashi) -> SeasonEpisodes:
-    return client.season_episodes
+# TODO: Validate
+class SeasonEpisodesTest(RecordedEndpoint):
+    MODEL = SeasonEpisodesModel
 
 
-def test_download(client: SeasonEpisodes) -> None:
-    download_and_save(client, SEASON_ID, lambda: client.download(SEASON_ID))
+# TODO: Validate
+@pytest.mark.parametrize("season_id", SEASON_IDS)
+def test_download(client: Chirashi, season_id: str) -> None:
+    SeasonEpisodesTest.download_test(
+        season_id,
+        lambda: client.season_episodes.download(season_id),
+    )
 
 
-def test_parse(client: SeasonEpisodes) -> None:
-    data = parsed_json(client, SEASON_ID)
-    assert data.data
-    assert all(episode.season_id == SEASON_ID for episode in data.data)
+# TODO: Validate
+@pytest.mark.parametrize("season_id", SEASON_IDS)
+def test_parse(season_id: str) -> None:
+    SeasonEpisodesTest.parse_test(season_id)
 
 
-def test_download_invalid(client: SeasonEpisodes) -> None:
-    assert_error(
-        client,
-        INVALID_SEASON_ID,
-        lambda: client.download(INVALID_SEASON_ID),
+# TODO: Validate
+@pytest.mark.parametrize(
+    "season_id",
+    [pytest.param("GGGGGGGGG", id="season that does not exist")],
+)
+def test_download_invalid(client: Chirashi, season_id: str) -> None:
+    SeasonEpisodesTest.error_test(
+        season_id,
+        lambda: client.season_episodes.download(season_id),
         SeasonNotFoundError,
     )

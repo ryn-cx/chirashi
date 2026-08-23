@@ -1,15 +1,11 @@
+# TODO: Validate
 """Contains BaseEndpoint."""
 
 from __future__ import annotations
 
-from abc import abstractmethod
+import json
 from inspect import Parameter, signature
 from typing import TYPE_CHECKING, Any
-
-from good_ass_pydantic_integrator import GAPIClient
-from pydantic import BaseModel
-
-from chirashi.constants import FILES_PATH
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -17,14 +13,37 @@ if TYPE_CHECKING:
     from chirashi import Chirashi
 
 
-class BaseEndpoint[T: BaseModel, **P = ...](GAPIClient[T]):
+# TODO: Validate
+class BaseEndpoint:
     """Base class for API endpoints."""
-
-    JSON_FILES_ROOT = FILES_PATH
 
     def __init__(self, client: Chirashi) -> None:
         """Initialize the endpoint with the Chirashi client."""
         self._client = client
+
+    # TODO: Validate
+    @staticmethod
+    def merge_pages(pages: list[str]) -> str:
+        """Return the pages of one listing written out as a single file.
+
+        The first page is what the merged file is built on, since its total is
+        the size of the whole listing, and its data is replaced by the data of
+        every page in the order they were served.
+
+        Raises:
+            ValueError: If there are no pages, since there is nothing to say the
+                listing was answered with.
+        """
+        if not pages:
+            msg = "Expected at least one page, got none."
+            raise ValueError(msg)
+
+        documents: list[dict[str, Any]] = [json.loads(page) for page in pages]
+        merged = dict(documents[0])
+        merged["data"] = [
+            item for document in documents for item in document.get("data", ())
+        ]
+        return json.dumps(merged)
 
     @staticmethod
     def non_default_args(
@@ -41,7 +60,7 @@ class BaseEndpoint[T: BaseModel, **P = ...](GAPIClient[T]):
         }
 
     def get_log_id(self, func: Callable[..., Any], values: dict[str, Any]) -> str:
-        """Gets the log id.
+        """Get the log id.
 
         Example: ClassName (arg1='value1' arg2='value2')
         """
@@ -58,11 +77,3 @@ class BaseEndpoint[T: BaseModel, **P = ...](GAPIClient[T]):
         if not parts:
             return name
         return f"{name} ({' '.join(parts)})"
-
-    @abstractmethod
-    def download(self, *args: P.args, **kwargs: P.kwargs) -> dict[str, Any]:
-        """Downloads the file."""
-
-    @abstractmethod
-    def download_and_parse(self, *args: P.args, **kwargs: P.kwargs) -> T:
-        """Downloads and parses the file."""

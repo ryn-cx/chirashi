@@ -1,148 +1,78 @@
-from good_ass_pydantic_integrator import GAPIBaseModel
-from pydantic import AwareDatetime, ConfigDict
-from typing import Any
+"""SearchEpisodeModel, strict to a type checker, all-optional at runtime.
 
-class ThumbnailItem(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    width: int
-    height: int
-    type: str
-    source: str
+A type checker reads the strict model, so every field carries the type and
+the requiredness the schema recorded. At runtime the all-optional copy is imported
+instead, so a response that has drifted still parses and a field the data is
+missing is None despite what its type hint says.
+"""
 
-class Images(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    thumbnail: list[list[ThumbnailItem]] | None = None
+from typing import TYPE_CHECKING
 
-class AdBreak(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    type: str
-    offset_ms: int
+from good_ass_pydantic_integrator import load
 
-class ExtendedMaturityRating(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    system: str
-    rating: str
-    level: str
-    advisories: list[None]
+from .optional_models import SearchEpisodeModel as OptionalModel
+from .strict_models import SearchEpisodeModel as StrictModel
 
-class ContentDescriptorsWithSymbolItem(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    label: str
+if TYPE_CHECKING:
+    from .strict_models import (
+        AdBreak,
+        ContentDescriptorsWithSymbolItem,
+        Datum,
+        Down,
+        EpisodeMetadata,
+        ExtendedMaturityRating,
+        Images,
+        Item,
+        LanguagePresentation,
+        LocalizedImages,
+        Rating,
+        SearchEpisodeModel,
+        SearchMetadata,
+        ThumbnailItem,
+        Up,
+        Version,
+    )
+else:
+    from .optional_models import (
+        AdBreak,
+        ContentDescriptorsWithSymbolItem,
+        Datum,
+        Down,
+        EpisodeMetadata,
+        ExtendedMaturityRating,
+        Images,
+        Item,
+        LanguagePresentation,
+        LocalizedImages,
+        Rating,
+        SearchEpisodeModel,
+        SearchMetadata,
+        ThumbnailItem,
+        Up,
+        Version,
+    )
 
-class Version(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    audio_locale: str
-    guid: str
-    original: bool
-    variant: str
-    season_guid: str
-    media_guid: str
-    is_premium_only: bool
-    roles: list[str]
+__all__ = [
+    "AdBreak",
+    "ContentDescriptorsWithSymbolItem",
+    "Datum",
+    "Down",
+    "EpisodeMetadata",
+    "ExtendedMaturityRating",
+    "Images",
+    "Item",
+    "LanguagePresentation",
+    "LocalizedImages",
+    "Rating",
+    "SearchEpisodeModel",
+    "SearchMetadata",
+    "ThumbnailItem",
+    "Up",
+    "Version",
+    "model_validate_json",
+]
 
-class LanguagePresentation(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    audio_notation: str
-    text_notation: str
 
-class EpisodeMetadata(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    series_id: str
-    series_title: str
-    series_slug_title: str
-    season_id: str
-    season_title: str
-    season_slug_title: str
-    season_number: int
-    episode_number: int
-    episode: str
-    sequence_number: int
-    season_display_number: str
-    season_sequence_number: int
-    duration_ms: int
-    ad_breaks: list[AdBreak] | None = None
-    episode_air_date: AwareDatetime
-    upload_date: AwareDatetime
-    availability_starts: AwareDatetime
-    availability_ends: AwareDatetime
-    eligible_region: str
-    is_premium_only: bool
-    extended_maturity_rating: ExtendedMaturityRating
-    maturity_ratings: list[str]
-    content_descriptors: list[str] | None = None
-    content_descriptors_with_symbol: list[ContentDescriptorsWithSymbolItem] | None = None
-    is_mature: bool
-    mature_blocked: bool
-    available_date: None
-    free_available_date: AwareDatetime
-    premium_date: None
-    premium_available_date: AwareDatetime
-    is_subbed: bool
-    is_dubbed: bool
-    is_clip: bool
-    available_offline: bool
-    linked_guid: str
-    tenant_categories: list[str]
-    subtitle_locales: list[str]
-    availability_notes: str
-    audio_locale: str
-    versions: list[Version]
-    closed_captions_available: bool
-    identifier: str
-    availability_status: str
-    roles: list[str]
-    language_presentation: LanguagePresentation
-
-class SearchMetadata(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    score: float
-    rank: int
-    popularity_score: int
-
-class Up(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    displayed: str
-    unit: str
-
-class Down(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    displayed: str
-    unit: str
-
-class Rating(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    up: Up
-    down: Down
-    total: int
-
-class Item(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    id: str
-    external_id: str
-    channel_id: str
-    linked_resource_key: str
-    new: bool
-    title: str
-    description: str
-    promo_title: str
-    promo_description: str
-    type: str
-    slug: str
-    slug_title: str
-    images: Images
-    episode_metadata: EpisodeMetadata
-    search_metadata: SearchMetadata
-    language_presentation: LanguagePresentation
-    rating: Rating
-
-class Datum(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    type: str
-    items: list[Item]
-    count: int
-
-class SearchEpisodeModel(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    data: list[Datum]
-    total: int
-    meta: dict[str, Any]
+def model_validate_json(data: str | bytes | object, log_id: str) -> SearchEpisodeModel:
+    """Read a downloaded file into SearchEpisodeModel."""
+    return load.model_validate_json(StrictModel, OptionalModel, data, log_id)

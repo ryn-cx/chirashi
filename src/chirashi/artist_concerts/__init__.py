@@ -4,9 +4,8 @@
 from __future__ import annotations
 
 from logging import NullHandler, getLogger
-from typing import Any, override
 
-from chirashi.artist_concerts.models import ArtistConcertsModel
+from chirashi.artist_concerts.models import ArtistConcertsModel, model_validate_json
 from chirashi.base_api_endpoint import BaseEndpoint
 from chirashi.exceptions import ArtistNotFoundError, ResourceNotFoundError
 
@@ -14,7 +13,7 @@ logger = getLogger(__name__)
 logger.addHandler(NullHandler())
 
 
-class ArtistConcerts(BaseEndpoint[ArtistConcertsModel]):
+class ArtistConcerts(BaseEndpoint):
     """Manage the artist concerts file.
 
     An artist with no concerts answers with a `total` of 0 rather than an error,
@@ -42,15 +41,25 @@ class ArtistConcerts(BaseEndpoint[ArtistConcertsModel]):
         - TE: trailers
     """
 
-    _response_model = ArtistConcertsModel
+    # TODO: Validate
+    def __call__(
+        self,
+        artist_id: str,
+        *,
+        locale: str | None = None,
+    ) -> ArtistConcertsModel:
+        """Look the artist concerts up and return the model it is read into."""
+        log_id = self.get_log_id(self.__call__, locals())
+        return self.load(self.download(artist_id, locale=locale), log_id)
 
-    @override
+    # TODO: Validate
     def download(
         self,
         artist_id: str,
         *,
         locale: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> str:
+        """Download the artist concerts file."""
         log_id = self.get_log_id(self.download, locals())
         try:
             return self._client.download(
@@ -66,11 +75,7 @@ class ArtistConcerts(BaseEndpoint[ArtistConcertsModel]):
                 err.response,
             ) from err
 
-    @override
-    def download_and_parse(
-        self,
-        artist_id: str,
-        *,
-        locale: str | None = None,
-    ) -> ArtistConcertsModel:
-        return self.parse(self.download(artist_id, locale=locale))
+    # TODO: Validate
+    def load(self, data: str, log_id: str = "") -> ArtistConcertsModel:
+        """Read a downloaded artist concerts file into its model."""
+        return model_validate_json(data, log_id or type(self).__name__)

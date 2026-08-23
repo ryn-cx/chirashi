@@ -4,17 +4,16 @@
 from __future__ import annotations
 
 from logging import NullHandler, getLogger
-from typing import Any, override
 
 from chirashi.base_api_endpoint import BaseEndpoint
 from chirashi.exceptions import MusicVideoNotFoundError, ResourceNotFoundError
-from chirashi.music_video.models import MusicVideoModel
+from chirashi.music_video.models import MusicVideoModel, model_validate_json
 
 logger = getLogger(__name__)
 logger.addHandler(NullHandler())
 
 
-class MusicVideo(BaseEndpoint[MusicVideoModel]):
+class MusicVideo(BaseEndpoint):
     """Manage the music video file.
 
     Source: https://www.crunchyroll.com/watch/musicvideo/{music_video_id}/{slug}
@@ -39,15 +38,25 @@ class MusicVideo(BaseEndpoint[MusicVideoModel]):
         - TE: trailers
     """
 
-    _response_model = MusicVideoModel
+    # TODO: Validate
+    def __call__(
+        self,
+        music_video_id: str,
+        *,
+        locale: str | None = None,
+    ) -> MusicVideoModel:
+        """Look the music video up and return the model it is read into."""
+        log_id = self.get_log_id(self.__call__, locals())
+        return self.load(self.download(music_video_id, locale=locale), log_id)
 
-    @override
+    # TODO: Validate
     def download(
         self,
         music_video_id: str,
         *,
         locale: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> str:
+        """Download the music video file."""
         log_id = self.get_log_id(self.download, locals())
         referer = f"https://www.crunchyroll.com/watch/musicvideo/{music_video_id}"
         try:
@@ -64,11 +73,7 @@ class MusicVideo(BaseEndpoint[MusicVideoModel]):
                 err.response,
             ) from err
 
-    @override
-    def download_and_parse(
-        self,
-        music_video_id: str,
-        *,
-        locale: str | None = None,
-    ) -> MusicVideoModel:
-        return self.parse(self.download(music_video_id, locale=locale))
+    # TODO: Validate
+    def load(self, data: str, log_id: str = "") -> MusicVideoModel:
+        """Read a downloaded music video file into its model."""
+        return model_validate_json(data, log_id or type(self).__name__)

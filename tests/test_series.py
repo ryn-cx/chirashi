@@ -1,3 +1,4 @@
+# TODO: Validate
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
@@ -5,34 +6,40 @@ from typing import TYPE_CHECKING
 import pytest
 
 from chirashi.exceptions import SeriesNotFoundError
-from tests.utils import assert_error, download_and_save, parsed_json
+from chirashi.series.models import SeriesModel
+from tests.utils import RecordedEndpoint
 
 if TYPE_CHECKING:
     from chirashi import Chirashi
-    from chirashi.series import Series
 
-SERIES_ID = "GG5H5XQX4"
-INVALID_SERIES_ID = "GGGGGGGGG"
+SERIES_IDS = [pytest.param("GG5H5XQX4", id="frieren: beyond journey's end")]
 
 
-@pytest.fixture(scope="session")
-def client(client: Chirashi) -> Series:
-    return client.series
+# TODO: Validate
+class SeriesTest(RecordedEndpoint):
+    MODEL = SeriesModel
 
 
-def test_download(client: Series) -> None:
-    download_and_save(client, SERIES_ID, lambda: client.download(SERIES_ID))
+# TODO: Validate
+@pytest.mark.parametrize("series_id", SERIES_IDS)
+def test_download(client: Chirashi, series_id: str) -> None:
+    SeriesTest.download_test(series_id, lambda: client.series.download(series_id))
 
 
-def test_parse(client: Series) -> None:
-    data = parsed_json(client, SERIES_ID)
-    assert data.data[0].id == SERIES_ID
+# TODO: Validate
+@pytest.mark.parametrize("series_id", SERIES_IDS)
+def test_parse(series_id: str) -> None:
+    SeriesTest.parse_test(series_id)
 
 
-def test_download_invalid(client: Series) -> None:
-    assert_error(
-        client,
-        INVALID_SERIES_ID,
-        lambda: client.download(INVALID_SERIES_ID),
+# TODO: Validate
+@pytest.mark.parametrize(
+    "series_id",
+    [pytest.param("GGGGGGGGG", id="series that does not exist")],
+)
+def test_download_invalid(client: Chirashi, series_id: str) -> None:
+    SeriesTest.error_test(
+        series_id,
+        lambda: client.series.download(series_id),
         SeriesNotFoundError,
     )

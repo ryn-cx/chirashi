@@ -1,0 +1,114 @@
+[
+  {
+    "total": 1,
+    "data": [
+      {
+        "availability": {
+          "end_date": "2099-05-14T00:00:00Z",
+          "start_date": "2023-05-31T13:00:00Z"
+        },
+        "copyright": "\u00a9 2008 Sony Music Labels Inc.",
+        "created_at": "2023-02-28T12:46:44.820000Z",
+        "display_artist_name_required": false,
+        "duration_ms": 6293320,
+        "images": {
+          "thumbnail": [
+            {
+              "height": 180,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/320x180/catalog/music/2dea35dc1ac19e648cdccda1b5df7873.JPEG",
+              "type": "thumbnail",
+              "width": 320
+            },
+            {
+              "height": 338,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/600x338/catalog/music/2dea35dc1ac19e648cdccda1b5df7873.JPEG",
+              "type": "thumbnail",
+              "width": 600
+            },
+            {
+              "height": 360,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/640x360/catalog/music/2dea35dc1ac19e648cdccda1b5df7873.JPEG",
+              "type": "thumbnail",
+              "width": 640
+            },
+            {
+              "height": 450,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/800x450/catalog/music/2dea35dc1ac19e648cdccda1b5df7873.JPEG",
+              "type": "thumbnail",
+              "width": 800
+            },
+            {
+              "height": 675,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1200x675/catalog/music/2dea35dc1ac19e648cdccda1b5df7873.JPEG",
+              "type": "thumbnail",
+              "width": 1200
+            },
+            {
+              "height": 810,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1440x810/catalog/music/2dea35dc1ac19e648cdccda1b5df7873.JPEG",
+              "type": "thumbnail",
+              "width": 1440
+            },
+            {
+              "height": 900,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1600x900/catalog/music/2dea35dc1ac19e648cdccda1b5df7873.JPEG",
+              "type": "thumbnail",
+              "width": 1600
+            },
+            {
+              "height": 1080,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1920x1080/catalog/music/2dea35dc1ac19e648cdccda1b5df7873.JPEG",
+              "type": "thumbnail",
+              "width": 1920
+            }
+          ]
+        },
+        "slug": "shoko-nakagawa-first-concert-donyoku-matsuri-",
+        "description": "Beloved idol Shoko Nakagawa, a/k/a \"Shokotan\"'s first concert in October at Shibuya C.C.Lemon Hall, Tokyo.",
+        "hash": "a945f9be-bd13-4c9c-4f94-ac98413adfa8",
+        "is_premium_only": true,
+        "is_public": true,
+        "licensor": "BMG",
+        "ready_to_publish": true,
+        "type": "musicConcert",
+        "artist": {
+          "id": "MA6480DAB5",
+          "name": "Shoko Nakagawa",
+          "slug": "shoko-nakagawa"
+        },
+        "artists": {
+          "main_artist": [
+            {
+              "connector": "",
+              "id": "MA6480DAB5",
+              "name": "Shoko Nakagawa",
+              "roles": [
+                "MainArtist"
+              ],
+              "sequence_number": 1,
+              "slug": "shoko-nakagawa"
+            }
+          ]
+        },
+        "is_mature": false,
+        "mature_blocked": false,
+        "maturity_ratings": {},
+        "original_release": "2008-01-01T00:00:00Z",
+        "publish_date": "2023-05-31T13:00:00Z",
+        "streams_link": "/content/v2/music/MC51D55EA6/streams",
+        "display_artist_name": "Shoko Nakagawa",
+        "genres": [
+          {
+            "display_value": "J-Pop",
+            "id": "j-pop"
+          }
+        ],
+        "id": "MC51D55EA6",
+        "sequence_number": 0,
+        "title": "SHOKO NAKAGAWA First Concert -Donyoku Matsuri-",
+        "updated_at": "2026-07-23T16:22:56.302000Z"
+      }
+    ],
+    "meta": {}
+  }
+]

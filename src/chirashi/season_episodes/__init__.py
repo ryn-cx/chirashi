@@ -2,19 +2,19 @@
 
 from __future__ import annotations
 
+import json
 from http import HTTPStatus
 from logging import NullHandler, getLogger
-from typing import Any, override
 
 from chirashi.base_api_endpoint import BaseEndpoint
 from chirashi.exceptions import ResourceNotFoundError, SeasonNotFoundError
-from chirashi.season_episodes.models import SeasonEpisodesModel
+from chirashi.season_episodes.models import SeasonEpisodesModel, model_validate_json
 
 logger = getLogger(__name__)
 logger.addHandler(NullHandler())
 
 
-class SeasonEpisodes(BaseEndpoint[SeasonEpisodesModel]):
+class SeasonEpisodes(BaseEndpoint):
     """Manage the season episodes file.
 
     Source: https://www.crunchyroll.com/series/{series_id}/{slug}
@@ -40,15 +40,25 @@ class SeasonEpisodes(BaseEndpoint[SeasonEpisodesModel]):
         - TE: trailers
     """
 
-    _response_model = SeasonEpisodesModel
+    # TODO: Validate
+    def __call__(
+        self,
+        season_id: str,
+        *,
+        locale: str | None = None,
+    ) -> SeasonEpisodesModel:
+        """Look the season episodes up and return the model it is read into."""
+        log_id = self.get_log_id(self.__call__, locals())
+        return self.load(self.download(season_id, locale=locale), log_id)
 
-    @override
+    # TODO: Validate
     def download(
         self,
         season_id: str,
         *,
         locale: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> str:
+        """Download the season episodes file."""
         log_id = self.get_log_id(self.download, locals())
         try:
             response = self._client.download(
@@ -65,20 +75,13 @@ class SeasonEpisodes(BaseEndpoint[SeasonEpisodesModel]):
             ) from err
         return self._validate_download(response, season_id)
 
-    def _validate_download(
-        self,
-        response: dict[str, Any],
-        season_id: str,
-    ) -> dict[str, Any]:
-        if not response.get("data"):
+    # TODO: Validate
+    def _validate_download(self, response: str, season_id: str) -> str:
+        if not json.loads(response).get("data"):
             raise SeasonNotFoundError(season_id, HTTPStatus.OK, response)
         return response
 
-    @override
-    def download_and_parse(
-        self,
-        season_id: str,
-        *,
-        locale: str | None = None,
-    ) -> SeasonEpisodesModel:
-        return self.parse(self.download(season_id, locale=locale))
+    # TODO: Validate
+    def load(self, data: str, log_id: str = "") -> SeasonEpisodesModel:
+        """Read a downloaded season episodes file into its model."""
+        return model_validate_json(data, log_id or type(self).__name__)

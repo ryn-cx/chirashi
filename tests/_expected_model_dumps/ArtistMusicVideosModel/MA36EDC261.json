@@ -1,0 +1,2132 @@
+[
+  {
+    "total": 18,
+    "data": [
+      {
+        "images": {
+          "thumbnail": [
+            {
+              "height": 180,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/320x180/catalog/music/e23e125bf1c28e71b1035c1b80ed1df7.jpeg",
+              "type": "thumbnail",
+              "width": 320
+            },
+            {
+              "height": 338,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/600x338/catalog/music/e23e125bf1c28e71b1035c1b80ed1df7.jpeg",
+              "type": "thumbnail",
+              "width": 600
+            },
+            {
+              "height": 360,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/640x360/catalog/music/e23e125bf1c28e71b1035c1b80ed1df7.jpeg",
+              "type": "thumbnail",
+              "width": 640
+            },
+            {
+              "height": 450,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/800x450/catalog/music/e23e125bf1c28e71b1035c1b80ed1df7.jpeg",
+              "type": "thumbnail",
+              "width": 800
+            },
+            {
+              "height": 675,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1200x675/catalog/music/e23e125bf1c28e71b1035c1b80ed1df7.jpeg",
+              "type": "thumbnail",
+              "width": 1200
+            },
+            {
+              "height": 810,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1440x810/catalog/music/e23e125bf1c28e71b1035c1b80ed1df7.jpeg",
+              "type": "thumbnail",
+              "width": 1440
+            },
+            {
+              "height": 900,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1600x900/catalog/music/e23e125bf1c28e71b1035c1b80ed1df7.jpeg",
+              "type": "thumbnail",
+              "width": 1600
+            },
+            {
+              "height": 1080,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1920x1080/catalog/music/e23e125bf1c28e71b1035c1b80ed1df7.jpeg",
+              "type": "thumbnail",
+              "width": 1920
+            }
+          ]
+        },
+        "sequence_number": 1,
+        "copyright": "(C) 2025 Sony Music Labels Inc.",
+        "display_artist_name": "Awich x ALI",
+        "genres": [
+          {
+            "display_value": "Hip-Hop/Rap",
+            "id": "hip-hoprap"
+          }
+        ],
+        "licensor": "Sony Music Labels Inc.",
+        "updated_at": "2026-07-31T15:17:09.776000Z",
+        "description": "",
+        "id": "MV452A922B",
+        "is_mature": false,
+        "maturity_ratings": {},
+        "artist": {
+          "id": "MAB2C78E38",
+          "name": "Awich",
+          "slug": "awich"
+        },
+        "created_at": "2026-02-26T16:38:18.077000Z",
+        "display_artist_name_required": false,
+        "mature_blocked": false,
+        "publish_date": "2026-03-04T19:00:00Z",
+        "anime_ids": [
+          "GY8DWQN5Y"
+        ],
+        "availability": {
+          "end_date": "2099-05-14T00:00:00Z",
+          "start_date": "2026-02-18T00:00:00Z"
+        },
+        "duration_ms": 193000,
+        "is_public": true,
+        "original_release": "2025-10-08T00:00:00Z",
+        "ready_to_publish": true,
+        "title": "Golden Horizon",
+        "is_premium_only": true,
+        "hash": "7aa34f81-b904-064d-f36e-1dcdff0aeddd",
+        "artists": {
+          "main_artist": [
+            {
+              "connector": "",
+              "id": "MAB2C78E38",
+              "name": "Awich",
+              "roles": [
+                "MainArtist"
+              ],
+              "sequence_number": 1,
+              "slug": "awich"
+            },
+            {
+              "connector": "",
+              "id": "MA36EDC261",
+              "name": "ALI",
+              "roles": [
+                "MainArtist"
+              ],
+              "sequence_number": 2,
+              "slug": "ali"
+            }
+          ],
+          "featured_artist": null
+        },
+        "slug": "golden-horizon",
+        "type": "musicVideo",
+        "streams_link": "/content/v2/music/MV452A922B/streams"
+      },
+      {
+        "images": {
+          "thumbnail": [
+            {
+              "height": 180,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/320x180/catalog/music/ed6c3057396bc1983ad6e8bc3fa8fb5b.jpeg",
+              "type": "thumbnail",
+              "width": 320
+            },
+            {
+              "height": 338,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/600x338/catalog/music/ed6c3057396bc1983ad6e8bc3fa8fb5b.jpeg",
+              "type": "thumbnail",
+              "width": 600
+            },
+            {
+              "height": 360,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/640x360/catalog/music/ed6c3057396bc1983ad6e8bc3fa8fb5b.jpeg",
+              "type": "thumbnail",
+              "width": 640
+            },
+            {
+              "height": 450,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/800x450/catalog/music/ed6c3057396bc1983ad6e8bc3fa8fb5b.jpeg",
+              "type": "thumbnail",
+              "width": 800
+            },
+            {
+              "height": 675,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1200x675/catalog/music/ed6c3057396bc1983ad6e8bc3fa8fb5b.jpeg",
+              "type": "thumbnail",
+              "width": 1200
+            },
+            {
+              "height": 810,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1440x810/catalog/music/ed6c3057396bc1983ad6e8bc3fa8fb5b.jpeg",
+              "type": "thumbnail",
+              "width": 1440
+            },
+            {
+              "height": 900,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1600x900/catalog/music/ed6c3057396bc1983ad6e8bc3fa8fb5b.jpeg",
+              "type": "thumbnail",
+              "width": 1600
+            },
+            {
+              "height": 1080,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1920x1080/catalog/music/ed6c3057396bc1983ad6e8bc3fa8fb5b.jpeg",
+              "type": "thumbnail",
+              "width": 1920
+            }
+          ]
+        },
+        "sequence_number": 2,
+        "copyright": "(C) 2025 Sony Music Labels Inc.",
+        "display_artist_name": "ALI feat. eill",
+        "genres": [
+          {
+            "display_value": "J-Pop",
+            "id": "j-pop"
+          }
+        ],
+        "licensor": "Sony Music Labels Inc.",
+        "updated_at": "2026-08-03T17:17:55.537000Z",
+        "description": "",
+        "id": "MV5FFF77B",
+        "is_mature": false,
+        "maturity_ratings": {},
+        "artist": {
+          "id": "MA36EDC261",
+          "name": "ALI",
+          "slug": "ali"
+        },
+        "created_at": "2026-04-15T17:47:27.903000Z",
+        "display_artist_name_required": false,
+        "mature_blocked": false,
+        "publish_date": "2026-04-15T00:00:00Z",
+        "anime_ids": [],
+        "availability": {
+          "end_date": "2099-05-14T00:00:00Z",
+          "start_date": "2026-04-01T00:00:00Z"
+        },
+        "duration_ms": 215000,
+        "is_public": true,
+        "original_release": "2025-02-19T00:00:00Z",
+        "ready_to_publish": true,
+        "title": "LOVE IS KILLING ME",
+        "is_premium_only": true,
+        "hash": "1f7750d6-b39f-f85a-c942-993dca2ceab2",
+        "artists": {
+          "main_artist": [
+            {
+              "connector": "",
+              "id": "MA36EDC261",
+              "name": "ALI",
+              "roles": [
+                "MainArtist"
+              ],
+              "sequence_number": 1,
+              "slug": "ali"
+            }
+          ],
+          "featured_artist": [
+            {
+              "connector": "featuring",
+              "id": "MA5000F704",
+              "name": "eill",
+              "roles": [
+                "FeaturedArtist"
+              ],
+              "sequence_number": 2,
+              "slug": "eill"
+            }
+          ]
+        },
+        "slug": "love-is-killing-me",
+        "type": "musicVideo",
+        "streams_link": "/content/v2/music/MV5FFF77B/streams"
+      },
+      {
+        "images": {
+          "thumbnail": [
+            {
+              "height": 180,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/320x180/catalog/music/94fd4c995d29cd08caa0a6d6ad8af693.jpeg",
+              "type": "thumbnail",
+              "width": 320
+            },
+            {
+              "height": 338,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/600x338/catalog/music/94fd4c995d29cd08caa0a6d6ad8af693.jpeg",
+              "type": "thumbnail",
+              "width": 600
+            },
+            {
+              "height": 360,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/640x360/catalog/music/94fd4c995d29cd08caa0a6d6ad8af693.jpeg",
+              "type": "thumbnail",
+              "width": 640
+            },
+            {
+              "height": 450,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/800x450/catalog/music/94fd4c995d29cd08caa0a6d6ad8af693.jpeg",
+              "type": "thumbnail",
+              "width": 800
+            },
+            {
+              "height": 675,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1200x675/catalog/music/94fd4c995d29cd08caa0a6d6ad8af693.jpeg",
+              "type": "thumbnail",
+              "width": 1200
+            },
+            {
+              "height": 810,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1440x810/catalog/music/94fd4c995d29cd08caa0a6d6ad8af693.jpeg",
+              "type": "thumbnail",
+              "width": 1440
+            },
+            {
+              "height": 900,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1600x900/catalog/music/94fd4c995d29cd08caa0a6d6ad8af693.jpeg",
+              "type": "thumbnail",
+              "width": 1600
+            },
+            {
+              "height": 1080,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1920x1080/catalog/music/94fd4c995d29cd08caa0a6d6ad8af693.jpeg",
+              "type": "thumbnail",
+              "width": 1920
+            }
+          ]
+        },
+        "sequence_number": 3,
+        "copyright": "(C) 2025 Sony Music Labels Inc.",
+        "display_artist_name": "ALI",
+        "genres": [
+          {
+            "display_value": "J-Pop",
+            "id": "j-pop"
+          }
+        ],
+        "licensor": "Sony Music Labels Inc.",
+        "updated_at": "2026-07-31T14:15:10.570000Z",
+        "description": "",
+        "id": "MV5ADCC418",
+        "is_mature": false,
+        "maturity_ratings": {},
+        "artist": {
+          "id": "MA36EDC261",
+          "name": "ALI",
+          "slug": "ali"
+        },
+        "created_at": "2026-04-15T17:47:17.013000Z",
+        "display_artist_name_required": false,
+        "mature_blocked": false,
+        "publish_date": "2026-04-15T00:00:00Z",
+        "anime_ids": [
+          "GYEXQKJG6"
+        ],
+        "availability": {
+          "end_date": "2099-05-14T00:00:00Z",
+          "start_date": "2026-04-01T00:00:00Z"
+        },
+        "duration_ms": 242000,
+        "is_public": true,
+        "original_release": "2025-01-09T00:00:00Z",
+        "ready_to_publish": true,
+        "title": "CASANOVA POSSE",
+        "is_premium_only": true,
+        "hash": "997b0b31-56fd-d987-7573-d92d10e99c44",
+        "artists": {
+          "main_artist": [
+            {
+              "connector": "",
+              "id": "MA36EDC261",
+              "name": "ALI",
+              "roles": [
+                "MainArtist"
+              ],
+              "sequence_number": 1,
+              "slug": "ali"
+            }
+          ],
+          "featured_artist": null
+        },
+        "slug": "casanova-posse",
+        "type": "musicVideo",
+        "streams_link": "/content/v2/music/MV5ADCC418/streams"
+      },
+      {
+        "images": {
+          "thumbnail": [
+            {
+              "height": 180,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/320x180/catalog/music/3f82b43b6bc8c2c373861d83cb596a27.jpeg",
+              "type": "thumbnail",
+              "width": 320
+            },
+            {
+              "height": 338,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/600x338/catalog/music/3f82b43b6bc8c2c373861d83cb596a27.jpeg",
+              "type": "thumbnail",
+              "width": 600
+            },
+            {
+              "height": 360,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/640x360/catalog/music/3f82b43b6bc8c2c373861d83cb596a27.jpeg",
+              "type": "thumbnail",
+              "width": 640
+            },
+            {
+              "height": 450,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/800x450/catalog/music/3f82b43b6bc8c2c373861d83cb596a27.jpeg",
+              "type": "thumbnail",
+              "width": 800
+            },
+            {
+              "height": 675,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1200x675/catalog/music/3f82b43b6bc8c2c373861d83cb596a27.jpeg",
+              "type": "thumbnail",
+              "width": 1200
+            },
+            {
+              "height": 810,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1440x810/catalog/music/3f82b43b6bc8c2c373861d83cb596a27.jpeg",
+              "type": "thumbnail",
+              "width": 1440
+            },
+            {
+              "height": 900,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1600x900/catalog/music/3f82b43b6bc8c2c373861d83cb596a27.jpeg",
+              "type": "thumbnail",
+              "width": 1600
+            },
+            {
+              "height": 1080,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1920x1080/catalog/music/3f82b43b6bc8c2c373861d83cb596a27.jpeg",
+              "type": "thumbnail",
+              "width": 1920
+            }
+          ]
+        },
+        "sequence_number": 4,
+        "copyright": "(C) 2024 Sony Music Labels Inc.",
+        "display_artist_name": "ALI feat. The Crane",
+        "genres": [
+          {
+            "display_value": "J-Pop",
+            "id": "j-pop"
+          }
+        ],
+        "licensor": "Sony Music Labels Inc.",
+        "updated_at": "2026-07-31T14:13:40.006000Z",
+        "description": "",
+        "id": "MVA284C18",
+        "is_mature": false,
+        "maturity_ratings": {},
+        "artist": {
+          "id": "MA36EDC261",
+          "name": "ALI",
+          "slug": "ali"
+        },
+        "created_at": "2026-04-15T17:47:46.606000Z",
+        "display_artist_name_required": false,
+        "mature_blocked": false,
+        "publish_date": "2026-04-15T00:00:00Z",
+        "anime_ids": [],
+        "availability": {
+          "end_date": "2099-05-14T00:00:00Z",
+          "start_date": "2026-04-01T00:00:00Z"
+        },
+        "duration_ms": 319000,
+        "is_public": true,
+        "original_release": "2024-12-04T00:00:00Z",
+        "ready_to_publish": true,
+        "title": "NEON",
+        "is_premium_only": true,
+        "hash": "6a523a41-af4c-714e-f64d-314ceba42a9e",
+        "artists": {
+          "main_artist": [
+            {
+              "connector": "",
+              "id": "MA36EDC261",
+              "name": "ALI",
+              "roles": [
+                "MainArtist"
+              ],
+              "sequence_number": 1,
+              "slug": "ali"
+            }
+          ],
+          "featured_artist": [
+            {
+              "connector": "featuring",
+              "id": "MA4A8D1FC3",
+              "name": "The Crane",
+              "roles": [
+                "FeaturedArtist"
+              ],
+              "sequence_number": 2,
+              "slug": "the-crane"
+            }
+          ]
+        },
+        "slug": "neon",
+        "type": "musicVideo",
+        "streams_link": "/content/v2/music/MVA284C18/streams"
+      },
+      {
+        "images": {
+          "thumbnail": [
+            {
+              "height": 180,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/320x180/catalog/music/57878500dfdf742c1e42b3793772a732.jpeg",
+              "type": "thumbnail",
+              "width": 320
+            },
+            {
+              "height": 338,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/600x338/catalog/music/57878500dfdf742c1e42b3793772a732.jpeg",
+              "type": "thumbnail",
+              "width": 600
+            },
+            {
+              "height": 360,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/640x360/catalog/music/57878500dfdf742c1e42b3793772a732.jpeg",
+              "type": "thumbnail",
+              "width": 640
+            },
+            {
+              "height": 450,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/800x450/catalog/music/57878500dfdf742c1e42b3793772a732.jpeg",
+              "type": "thumbnail",
+              "width": 800
+            },
+            {
+              "height": 675,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1200x675/catalog/music/57878500dfdf742c1e42b3793772a732.jpeg",
+              "type": "thumbnail",
+              "width": 1200
+            },
+            {
+              "height": 810,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1440x810/catalog/music/57878500dfdf742c1e42b3793772a732.jpeg",
+              "type": "thumbnail",
+              "width": 1440
+            },
+            {
+              "height": 900,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1600x900/catalog/music/57878500dfdf742c1e42b3793772a732.jpeg",
+              "type": "thumbnail",
+              "width": 1600
+            },
+            {
+              "height": 1080,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1920x1080/catalog/music/57878500dfdf742c1e42b3793772a732.jpeg",
+              "type": "thumbnail",
+              "width": 1920
+            }
+          ]
+        },
+        "sequence_number": 5,
+        "copyright": "(C) 2024 Sony Music Labels Inc.",
+        "display_artist_name": "ALI feat. MaRI",
+        "genres": [
+          {
+            "display_value": "Reggae/Dub",
+            "id": "reggaedub"
+          }
+        ],
+        "licensor": "Sony Music Labels Inc.",
+        "updated_at": "2026-07-31T11:03:50.601000Z",
+        "description": "",
+        "id": "MV6304C0BC",
+        "is_mature": false,
+        "maturity_ratings": {},
+        "artist": {
+          "id": "MA36EDC261",
+          "name": "ALI",
+          "slug": "ali"
+        },
+        "created_at": "2026-04-15T17:47:06.880000Z",
+        "display_artist_name_required": false,
+        "mature_blocked": false,
+        "publish_date": "2026-04-15T00:00:00Z",
+        "anime_ids": [],
+        "availability": {
+          "end_date": "2099-05-14T00:00:00Z",
+          "start_date": "2026-04-01T00:00:00Z"
+        },
+        "duration_ms": 229000,
+        "is_public": true,
+        "original_release": "2024-07-06T00:00:00Z",
+        "ready_to_publish": true,
+        "title": "BEYOND",
+        "is_premium_only": true,
+        "hash": "f54d06bb-e918-ebb5-afaa-bfcf6b02d6cc",
+        "artists": {
+          "main_artist": [
+            {
+              "connector": "",
+              "id": "MA36EDC261",
+              "name": "ALI",
+              "roles": [
+                "MainArtist"
+              ],
+              "sequence_number": 1,
+              "slug": "ali"
+            }
+          ],
+          "featured_artist": [
+            {
+              "connector": "featuring",
+              "id": "MA5206A6FB",
+              "name": "MaRI",
+              "roles": [
+                "FeaturedArtist"
+              ],
+              "sequence_number": 2,
+              "slug": "mari"
+            }
+          ]
+        },
+        "slug": "beyond",
+        "type": "musicVideo",
+        "streams_link": "/content/v2/music/MV6304C0BC/streams"
+      },
+      {
+        "images": {
+          "thumbnail": [
+            {
+              "height": 180,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/320x180/catalog/music/1d88f6bbdb3dec91641db4b547a96a18.jpeg",
+              "type": "thumbnail",
+              "width": 320
+            },
+            {
+              "height": 338,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/600x338/catalog/music/1d88f6bbdb3dec91641db4b547a96a18.jpeg",
+              "type": "thumbnail",
+              "width": 600
+            },
+            {
+              "height": 360,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/640x360/catalog/music/1d88f6bbdb3dec91641db4b547a96a18.jpeg",
+              "type": "thumbnail",
+              "width": 640
+            },
+            {
+              "height": 450,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/800x450/catalog/music/1d88f6bbdb3dec91641db4b547a96a18.jpeg",
+              "type": "thumbnail",
+              "width": 800
+            },
+            {
+              "height": 675,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1200x675/catalog/music/1d88f6bbdb3dec91641db4b547a96a18.jpeg",
+              "type": "thumbnail",
+              "width": 1200
+            },
+            {
+              "height": 810,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1440x810/catalog/music/1d88f6bbdb3dec91641db4b547a96a18.jpeg",
+              "type": "thumbnail",
+              "width": 1440
+            },
+            {
+              "height": 900,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1600x900/catalog/music/1d88f6bbdb3dec91641db4b547a96a18.jpeg",
+              "type": "thumbnail",
+              "width": 1600
+            },
+            {
+              "height": 1080,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1920x1080/catalog/music/1d88f6bbdb3dec91641db4b547a96a18.jpeg",
+              "type": "thumbnail",
+              "width": 1920
+            }
+          ]
+        },
+        "sequence_number": 6,
+        "copyright": "(C) 2024 Sony Music Labels Inc.",
+        "display_artist_name": "ALI feat. LAZYLOXY",
+        "genres": [
+          {
+            "display_value": "Reggae/Dub",
+            "id": "reggaedub"
+          }
+        ],
+        "licensor": "Sony Music Labels Inc.",
+        "updated_at": "2026-07-31T14:23:06.237000Z",
+        "description": "",
+        "id": "MV540DF093",
+        "is_mature": false,
+        "maturity_ratings": {},
+        "artist": {
+          "id": "MA36EDC261",
+          "name": "ALI",
+          "slug": "ali"
+        },
+        "created_at": "2026-04-15T17:49:42.067000Z",
+        "display_artist_name_required": false,
+        "mature_blocked": false,
+        "publish_date": "2026-04-15T00:00:00Z",
+        "anime_ids": [],
+        "availability": {
+          "end_date": "2099-05-14T00:00:00Z",
+          "start_date": "2026-04-01T00:00:00Z"
+        },
+        "duration_ms": 248000,
+        "is_public": true,
+        "original_release": "2024-06-12T00:00:00Z",
+        "ready_to_publish": true,
+        "title": "MY LIFE. MY DESTINY",
+        "is_premium_only": true,
+        "hash": "6218e327-11ba-5529-e602-3cd865cacb3b",
+        "artists": {
+          "main_artist": [
+            {
+              "connector": "",
+              "id": "MA36EDC261",
+              "name": "ALI",
+              "roles": [
+                "MainArtist"
+              ],
+              "sequence_number": 1,
+              "slug": "ali"
+            }
+          ],
+          "featured_artist": [
+            {
+              "connector": "featuring",
+              "id": "MA452306B1",
+              "name": "LAZYLOXY",
+              "roles": [
+                "FeaturedArtist"
+              ],
+              "sequence_number": 2,
+              "slug": "lazyloxy"
+            }
+          ]
+        },
+        "slug": "my-life-my-destiny",
+        "type": "musicVideo",
+        "streams_link": "/content/v2/music/MV540DF093/streams"
+      },
+      {
+        "images": {
+          "thumbnail": [
+            {
+              "height": 180,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/320x180/catalog/music/e7ed88e05a103aec026f177489fa0484.jpeg",
+              "type": "thumbnail",
+              "width": 320
+            },
+            {
+              "height": 338,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/600x338/catalog/music/e7ed88e05a103aec026f177489fa0484.jpeg",
+              "type": "thumbnail",
+              "width": 600
+            },
+            {
+              "height": 360,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/640x360/catalog/music/e7ed88e05a103aec026f177489fa0484.jpeg",
+              "type": "thumbnail",
+              "width": 640
+            },
+            {
+              "height": 450,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/800x450/catalog/music/e7ed88e05a103aec026f177489fa0484.jpeg",
+              "type": "thumbnail",
+              "width": 800
+            },
+            {
+              "height": 675,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1200x675/catalog/music/e7ed88e05a103aec026f177489fa0484.jpeg",
+              "type": "thumbnail",
+              "width": 1200
+            },
+            {
+              "height": 810,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1440x810/catalog/music/e7ed88e05a103aec026f177489fa0484.jpeg",
+              "type": "thumbnail",
+              "width": 1440
+            },
+            {
+              "height": 900,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1600x900/catalog/music/e7ed88e05a103aec026f177489fa0484.jpeg",
+              "type": "thumbnail",
+              "width": 1600
+            },
+            {
+              "height": 1080,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1920x1080/catalog/music/e7ed88e05a103aec026f177489fa0484.jpeg",
+              "type": "thumbnail",
+              "width": 1920
+            }
+          ]
+        },
+        "sequence_number": 7,
+        "copyright": "(C) 2024 Sony Music Labels Inc.",
+        "display_artist_name": "ALI feat. Hannya",
+        "genres": [
+          {
+            "display_value": "Alternative",
+            "id": "alternative"
+          }
+        ],
+        "licensor": "Sony Music Labels Inc.",
+        "updated_at": "2026-07-31T12:39:35.577000Z",
+        "description": "",
+        "id": "MV2720688B",
+        "is_mature": false,
+        "maturity_ratings": {},
+        "artist": {
+          "id": "MA36EDC261",
+          "name": "ALI",
+          "slug": "ali"
+        },
+        "created_at": "2026-04-15T17:47:24.901000Z",
+        "display_artist_name_required": false,
+        "mature_blocked": false,
+        "publish_date": "2026-04-15T00:00:00Z",
+        "anime_ids": [],
+        "availability": {
+          "end_date": "2099-05-14T00:00:00Z",
+          "start_date": "2026-04-01T00:00:00Z"
+        },
+        "duration_ms": 294000,
+        "is_public": true,
+        "original_release": "2024-04-06T00:00:00Z",
+        "ready_to_publish": true,
+        "title": "Professionalism",
+        "is_premium_only": true,
+        "hash": "7b110a23-7d84-62c6-aa09-2f812a895646",
+        "artists": {
+          "main_artist": [
+            {
+              "connector": "",
+              "id": "MA36EDC261",
+              "name": "ALI",
+              "roles": [
+                "MainArtist"
+              ],
+              "sequence_number": 1,
+              "slug": "ali"
+            }
+          ],
+          "featured_artist": [
+            {
+              "connector": "featuring",
+              "id": "MA1C901708",
+              "name": "Hannya",
+              "roles": [
+                "FeaturedArtist"
+              ],
+              "sequence_number": 2,
+              "slug": "hannya"
+            }
+          ]
+        },
+        "slug": "professionalism",
+        "type": "musicVideo",
+        "streams_link": "/content/v2/music/MV2720688B/streams"
+      },
+      {
+        "images": {
+          "thumbnail": [
+            {
+              "height": 180,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/320x180/catalog/music/25a7226d14fc60f85cefaf5f8c020592.jpeg",
+              "type": "thumbnail",
+              "width": 320
+            },
+            {
+              "height": 338,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/600x338/catalog/music/25a7226d14fc60f85cefaf5f8c020592.jpeg",
+              "type": "thumbnail",
+              "width": 600
+            },
+            {
+              "height": 360,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/640x360/catalog/music/25a7226d14fc60f85cefaf5f8c020592.jpeg",
+              "type": "thumbnail",
+              "width": 640
+            },
+            {
+              "height": 450,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/800x450/catalog/music/25a7226d14fc60f85cefaf5f8c020592.jpeg",
+              "type": "thumbnail",
+              "width": 800
+            },
+            {
+              "height": 675,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1200x675/catalog/music/25a7226d14fc60f85cefaf5f8c020592.jpeg",
+              "type": "thumbnail",
+              "width": 1200
+            },
+            {
+              "height": 810,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1440x810/catalog/music/25a7226d14fc60f85cefaf5f8c020592.jpeg",
+              "type": "thumbnail",
+              "width": 1440
+            },
+            {
+              "height": 900,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1600x900/catalog/music/25a7226d14fc60f85cefaf5f8c020592.jpeg",
+              "type": "thumbnail",
+              "width": 1600
+            },
+            {
+              "height": 1080,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1920x1080/catalog/music/25a7226d14fc60f85cefaf5f8c020592.jpeg",
+              "type": "thumbnail",
+              "width": 1920
+            }
+          ]
+        },
+        "sequence_number": 8,
+        "copyright": "(C) 2023 Sony Music Labels Inc.",
+        "display_artist_name": "ALI",
+        "genres": [
+          {
+            "display_value": "Alternative",
+            "id": "alternative"
+          }
+        ],
+        "licensor": "Sony Music Labels Inc.",
+        "updated_at": "2026-07-31T12:59:34.106000Z",
+        "description": "",
+        "id": "MV3DB93C6D",
+        "is_mature": false,
+        "maturity_ratings": {},
+        "artist": {
+          "id": "MA36EDC261",
+          "name": "ALI",
+          "slug": "ali"
+        },
+        "created_at": "2024-05-31T22:00:41.278000Z",
+        "display_artist_name_required": false,
+        "mature_blocked": false,
+        "publish_date": "2024-06-05T19:00:00Z",
+        "anime_ids": [],
+        "availability": {
+          "end_date": "2099-05-14T00:00:00Z",
+          "start_date": "2024-05-22T00:00:00Z"
+        },
+        "duration_ms": 222000,
+        "is_public": true,
+        "original_release": "2023-08-16T00:00:00Z",
+        "ready_to_publish": true,
+        "title": "WILD ANGEL",
+        "is_premium_only": true,
+        "hash": "a72b7295-18de-d07b-6443-3ddd8ee314dd",
+        "artists": {
+          "main_artist": [
+            {
+              "connector": "",
+              "id": "MA36EDC261",
+              "name": "ALI",
+              "roles": [
+                "MainArtist"
+              ],
+              "sequence_number": 1,
+              "slug": "ali"
+            }
+          ],
+          "featured_artist": null
+        },
+        "slug": "wild-angel",
+        "type": "musicVideo",
+        "streams_link": "/content/v2/music/MV3DB93C6D/streams"
+      },
+      {
+        "images": {
+          "thumbnail": [
+            {
+              "height": 180,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/320x180/catalog/music/8eb1e503b96779b374d06091f37dbc9a.jpeg",
+              "type": "thumbnail",
+              "width": 320
+            },
+            {
+              "height": 338,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/600x338/catalog/music/8eb1e503b96779b374d06091f37dbc9a.jpeg",
+              "type": "thumbnail",
+              "width": 600
+            },
+            {
+              "height": 360,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/640x360/catalog/music/8eb1e503b96779b374d06091f37dbc9a.jpeg",
+              "type": "thumbnail",
+              "width": 640
+            },
+            {
+              "height": 450,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/800x450/catalog/music/8eb1e503b96779b374d06091f37dbc9a.jpeg",
+              "type": "thumbnail",
+              "width": 800
+            },
+            {
+              "height": 675,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1200x675/catalog/music/8eb1e503b96779b374d06091f37dbc9a.jpeg",
+              "type": "thumbnail",
+              "width": 1200
+            },
+            {
+              "height": 810,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1440x810/catalog/music/8eb1e503b96779b374d06091f37dbc9a.jpeg",
+              "type": "thumbnail",
+              "width": 1440
+            },
+            {
+              "height": 900,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1600x900/catalog/music/8eb1e503b96779b374d06091f37dbc9a.jpeg",
+              "type": "thumbnail",
+              "width": 1600
+            },
+            {
+              "height": 1080,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1920x1080/catalog/music/8eb1e503b96779b374d06091f37dbc9a.jpeg",
+              "type": "thumbnail",
+              "width": 1920
+            }
+          ]
+        },
+        "sequence_number": 9,
+        "copyright": "(C) 2023 Sony Music Labels Inc.",
+        "display_artist_name": "ALI",
+        "genres": [
+          {
+            "display_value": "Alternative",
+            "id": "alternative"
+          }
+        ],
+        "licensor": "Sony Music Labels Inc.",
+        "updated_at": "2026-08-03T16:18:05.500000Z",
+        "description": "",
+        "id": "MV661D0B94",
+        "is_mature": false,
+        "maturity_ratings": {},
+        "artist": {
+          "id": "MA36EDC261",
+          "name": "ALI",
+          "slug": "ali"
+        },
+        "created_at": "2024-05-31T22:00:50.421000Z",
+        "display_artist_name_required": false,
+        "mature_blocked": false,
+        "publish_date": "2024-06-05T19:00:00Z",
+        "anime_ids": [],
+        "availability": {
+          "end_date": "2099-05-14T00:00:00Z",
+          "start_date": "2024-05-22T00:00:00Z"
+        },
+        "duration_ms": 280000,
+        "is_public": true,
+        "original_release": "2023-03-11T00:00:00Z",
+        "ready_to_publish": true,
+        "title": "LONELY LONELY",
+        "is_premium_only": true,
+        "hash": "bdcdf0a0-4dd1-e029-aff1-65067f08591b",
+        "artists": {
+          "main_artist": [
+            {
+              "connector": "",
+              "id": "MA36EDC261",
+              "name": "ALI",
+              "roles": [
+                "MainArtist"
+              ],
+              "sequence_number": 1,
+              "slug": "ali"
+            }
+          ],
+          "featured_artist": null
+        },
+        "slug": "lonely-lonely",
+        "type": "musicVideo",
+        "streams_link": "/content/v2/music/MV661D0B94/streams"
+      },
+      {
+        "images": {
+          "thumbnail": [
+            {
+              "height": 180,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/320x180/catalog/music/080610928623145e8636d38b81be94e0.jpeg",
+              "type": "thumbnail",
+              "width": 320
+            },
+            {
+              "height": 338,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/600x338/catalog/music/080610928623145e8636d38b81be94e0.jpeg",
+              "type": "thumbnail",
+              "width": 600
+            },
+            {
+              "height": 360,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/640x360/catalog/music/080610928623145e8636d38b81be94e0.jpeg",
+              "type": "thumbnail",
+              "width": 640
+            },
+            {
+              "height": 450,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/800x450/catalog/music/080610928623145e8636d38b81be94e0.jpeg",
+              "type": "thumbnail",
+              "width": 800
+            },
+            {
+              "height": 675,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1200x675/catalog/music/080610928623145e8636d38b81be94e0.jpeg",
+              "type": "thumbnail",
+              "width": 1200
+            },
+            {
+              "height": 810,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1440x810/catalog/music/080610928623145e8636d38b81be94e0.jpeg",
+              "type": "thumbnail",
+              "width": 1440
+            },
+            {
+              "height": 900,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1600x900/catalog/music/080610928623145e8636d38b81be94e0.jpeg",
+              "type": "thumbnail",
+              "width": 1600
+            },
+            {
+              "height": 1080,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1920x1080/catalog/music/080610928623145e8636d38b81be94e0.jpeg",
+              "type": "thumbnail",
+              "width": 1920
+            }
+          ]
+        },
+        "sequence_number": 10,
+        "copyright": "(C) 2023 Sony Music Labels Inc.",
+        "display_artist_name": "ALI feat. MFS",
+        "genres": [
+          {
+            "display_value": "Alternative",
+            "id": "alternative"
+          }
+        ],
+        "licensor": "Sony Music Labels Inc.",
+        "updated_at": "2026-07-31T14:07:42.414000Z",
+        "description": "",
+        "id": "MV5E398916",
+        "is_mature": false,
+        "maturity_ratings": {},
+        "artist": {
+          "id": "MA36EDC261",
+          "name": "ALI",
+          "slug": "ali"
+        },
+        "created_at": "2024-05-31T21:41:51.874000Z",
+        "display_artist_name_required": false,
+        "mature_blocked": false,
+        "publish_date": "2024-06-05T19:00:00Z",
+        "anime_ids": [],
+        "availability": {
+          "end_date": "2099-05-14T00:00:00Z",
+          "start_date": "2024-05-22T00:00:00Z"
+        },
+        "duration_ms": 215000,
+        "is_public": true,
+        "original_release": "2023-01-25T00:00:00Z",
+        "ready_to_publish": true,
+        "title": "EL MARIACHI",
+        "is_premium_only": true,
+        "hash": "1d9ff3f5-cea0-1bea-88a0-3a3e040bb144",
+        "artists": {
+          "main_artist": [
+            {
+              "connector": "",
+              "id": "MA36EDC261",
+              "name": "ALI",
+              "roles": [
+                "MainArtist"
+              ],
+              "sequence_number": 1,
+              "slug": "ali"
+            }
+          ],
+          "featured_artist": [
+            {
+              "connector": "featuring",
+              "id": "MA449EE9D1",
+              "name": "MFS",
+              "roles": [
+                "FeaturedArtist"
+              ],
+              "sequence_number": 2,
+              "slug": "mfs"
+            }
+          ]
+        },
+        "slug": "el-mariachi",
+        "type": "musicVideo",
+        "streams_link": "/content/v2/music/MV5E398916/streams"
+      },
+      {
+        "images": {
+          "thumbnail": [
+            {
+              "height": 180,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/320x180/catalog/music/15865b01935643f07cb5b45eee8bac49.jpeg",
+              "type": "thumbnail",
+              "width": 320
+            },
+            {
+              "height": 338,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/600x338/catalog/music/15865b01935643f07cb5b45eee8bac49.jpeg",
+              "type": "thumbnail",
+              "width": 600
+            },
+            {
+              "height": 360,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/640x360/catalog/music/15865b01935643f07cb5b45eee8bac49.jpeg",
+              "type": "thumbnail",
+              "width": 640
+            },
+            {
+              "height": 450,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/800x450/catalog/music/15865b01935643f07cb5b45eee8bac49.jpeg",
+              "type": "thumbnail",
+              "width": 800
+            },
+            {
+              "height": 675,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1200x675/catalog/music/15865b01935643f07cb5b45eee8bac49.jpeg",
+              "type": "thumbnail",
+              "width": 1200
+            },
+            {
+              "height": 810,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1440x810/catalog/music/15865b01935643f07cb5b45eee8bac49.jpeg",
+              "type": "thumbnail",
+              "width": 1440
+            },
+            {
+              "height": 900,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1600x900/catalog/music/15865b01935643f07cb5b45eee8bac49.jpeg",
+              "type": "thumbnail",
+              "width": 1600
+            },
+            {
+              "height": 1080,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1920x1080/catalog/music/15865b01935643f07cb5b45eee8bac49.jpeg",
+              "type": "thumbnail",
+              "width": 1920
+            }
+          ]
+        },
+        "sequence_number": 11,
+        "copyright": "(C) 2022 Sony Music Labels Inc.",
+        "display_artist_name": "ALI feat. Mummy-D",
+        "genres": [
+          {
+            "display_value": "Alternative",
+            "id": "alternative"
+          }
+        ],
+        "licensor": "Sony Music Labels Inc.",
+        "updated_at": "2026-07-31T13:55:27.529000Z",
+        "description": "",
+        "id": "MV4CC3C793",
+        "is_mature": false,
+        "maturity_ratings": {},
+        "artist": {
+          "id": "MA36EDC261",
+          "name": "ALI",
+          "slug": "ali"
+        },
+        "created_at": "2024-05-31T22:01:11.298000Z",
+        "display_artist_name_required": false,
+        "mature_blocked": false,
+        "publish_date": "2024-06-05T19:00:00Z",
+        "anime_ids": [
+          "GY8DWQN5Y"
+        ],
+        "availability": {
+          "end_date": "2099-05-14T00:00:00Z",
+          "start_date": "2024-05-22T00:00:00Z"
+        },
+        "duration_ms": 294000,
+        "is_public": true,
+        "original_release": "2022-10-17T00:00:00Z",
+        "ready_to_publish": true,
+        "title": "NEVER SAY GOODBYE",
+        "is_premium_only": true,
+        "hash": "61ce7577-bd48-916a-a2a0-dfca925077a4",
+        "artists": {
+          "main_artist": [
+            {
+              "connector": "",
+              "id": "MA36EDC261",
+              "name": "ALI",
+              "roles": [
+                "MainArtist"
+              ],
+              "sequence_number": 1,
+              "slug": "ali"
+            }
+          ],
+          "featured_artist": [
+            {
+              "connector": "featuring",
+              "id": "MA7D8B8EF3",
+              "name": "Mummy-D",
+              "roles": [
+                "FeaturedArtist"
+              ],
+              "sequence_number": 2,
+              "slug": "mummy-d"
+            }
+          ]
+        },
+        "slug": "never-say-goodbye",
+        "type": "musicVideo",
+        "streams_link": "/content/v2/music/MV4CC3C793/streams"
+      },
+      {
+        "images": {
+          "thumbnail": [
+            {
+              "height": 180,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/320x180/catalog/music/e3d88477dfaec70748b9dc708eedf7cc.jpeg",
+              "type": "thumbnail",
+              "width": 320
+            },
+            {
+              "height": 338,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/600x338/catalog/music/e3d88477dfaec70748b9dc708eedf7cc.jpeg",
+              "type": "thumbnail",
+              "width": 600
+            },
+            {
+              "height": 360,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/640x360/catalog/music/e3d88477dfaec70748b9dc708eedf7cc.jpeg",
+              "type": "thumbnail",
+              "width": 640
+            },
+            {
+              "height": 450,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/800x450/catalog/music/e3d88477dfaec70748b9dc708eedf7cc.jpeg",
+              "type": "thumbnail",
+              "width": 800
+            },
+            {
+              "height": 675,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1200x675/catalog/music/e3d88477dfaec70748b9dc708eedf7cc.jpeg",
+              "type": "thumbnail",
+              "width": 1200
+            },
+            {
+              "height": 810,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1440x810/catalog/music/e3d88477dfaec70748b9dc708eedf7cc.jpeg",
+              "type": "thumbnail",
+              "width": 1440
+            },
+            {
+              "height": 900,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1600x900/catalog/music/e3d88477dfaec70748b9dc708eedf7cc.jpeg",
+              "type": "thumbnail",
+              "width": 1600
+            },
+            {
+              "height": 1080,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1920x1080/catalog/music/e3d88477dfaec70748b9dc708eedf7cc.jpeg",
+              "type": "thumbnail",
+              "width": 1920
+            }
+          ]
+        },
+        "sequence_number": 12,
+        "copyright": "(C) 2022 Sony Music Labels Inc.",
+        "display_artist_name": "ALI",
+        "genres": [
+          {
+            "display_value": "Alternative",
+            "id": "alternative"
+          }
+        ],
+        "licensor": "Sony Music Labels Inc.",
+        "updated_at": "2026-07-31T13:48:02.409000Z",
+        "description": "",
+        "id": "MVA022CC63",
+        "is_mature": false,
+        "maturity_ratings": {},
+        "artist": {
+          "id": "MA36EDC261",
+          "name": "ALI",
+          "slug": "ali"
+        },
+        "created_at": "2024-05-31T22:01:14.233000Z",
+        "display_artist_name_required": false,
+        "mature_blocked": false,
+        "publish_date": "2024-06-05T19:00:00Z",
+        "anime_ids": [],
+        "availability": {
+          "end_date": "2099-05-14T00:00:00Z",
+          "start_date": "2024-05-22T00:00:00Z"
+        },
+        "duration_ms": 351000,
+        "is_public": true,
+        "original_release": "2022-06-29T00:00:00Z",
+        "ready_to_publish": true,
+        "title": "VIM",
+        "is_premium_only": true,
+        "hash": "064d973c-1dd2-6e5c-0176-49ab66c7c790",
+        "artists": {
+          "main_artist": [
+            {
+              "connector": "",
+              "id": "MA36EDC261",
+              "name": "ALI",
+              "roles": [
+                "MainArtist"
+              ],
+              "sequence_number": 1,
+              "slug": "ali"
+            }
+          ],
+          "featured_artist": null
+        },
+        "slug": "vim",
+        "type": "musicVideo",
+        "streams_link": "/content/v2/music/MVA022CC63/streams"
+      },
+      {
+        "images": {
+          "thumbnail": [
+            {
+              "height": 180,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/320x180/catalog/music/695ad5fbbf7ec40fad430f23d59d7a20.jpeg",
+              "type": "thumbnail",
+              "width": 320
+            },
+            {
+              "height": 338,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/600x338/catalog/music/695ad5fbbf7ec40fad430f23d59d7a20.jpeg",
+              "type": "thumbnail",
+              "width": 600
+            },
+            {
+              "height": 360,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/640x360/catalog/music/695ad5fbbf7ec40fad430f23d59d7a20.jpeg",
+              "type": "thumbnail",
+              "width": 640
+            },
+            {
+              "height": 450,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/800x450/catalog/music/695ad5fbbf7ec40fad430f23d59d7a20.jpeg",
+              "type": "thumbnail",
+              "width": 800
+            },
+            {
+              "height": 675,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1200x675/catalog/music/695ad5fbbf7ec40fad430f23d59d7a20.jpeg",
+              "type": "thumbnail",
+              "width": 1200
+            },
+            {
+              "height": 810,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1440x810/catalog/music/695ad5fbbf7ec40fad430f23d59d7a20.jpeg",
+              "type": "thumbnail",
+              "width": 1440
+            },
+            {
+              "height": 900,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1600x900/catalog/music/695ad5fbbf7ec40fad430f23d59d7a20.jpeg",
+              "type": "thumbnail",
+              "width": 1600
+            },
+            {
+              "height": 1080,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1920x1080/catalog/music/695ad5fbbf7ec40fad430f23d59d7a20.jpeg",
+              "type": "thumbnail",
+              "width": 1920
+            }
+          ]
+        },
+        "sequence_number": 14,
+        "copyright": "(C) 2022 Sony Music Labels Inc.",
+        "display_artist_name": "ALI",
+        "genres": [
+          {
+            "display_value": "Alternative",
+            "id": "alternative"
+          }
+        ],
+        "licensor": "Sony Music Labels Inc.",
+        "updated_at": "2026-07-31T13:41:38.351000Z",
+        "description": "",
+        "id": "MV49661057",
+        "is_mature": false,
+        "maturity_ratings": {},
+        "artist": {
+          "id": "MA36EDC261",
+          "name": "ALI",
+          "slug": "ali"
+        },
+        "created_at": "2024-05-31T21:41:31.204000Z",
+        "display_artist_name_required": false,
+        "mature_blocked": false,
+        "publish_date": "2024-06-05T19:00:00Z",
+        "anime_ids": [],
+        "availability": {
+          "end_date": "2099-05-14T00:00:00Z",
+          "start_date": "2024-05-22T00:00:00Z"
+        },
+        "duration_ms": 221000,
+        "is_public": true,
+        "original_release": "2022-06-29T00:00:00Z",
+        "ready_to_publish": true,
+        "title": "Tokyo Pharaoh",
+        "is_premium_only": true,
+        "hash": "2e1e44da-deea-aefb-db4f-29f0b5a16b33",
+        "artists": {
+          "main_artist": [
+            {
+              "connector": "",
+              "id": "MA36EDC261",
+              "name": "ALI",
+              "roles": [
+                "MainArtist"
+              ],
+              "sequence_number": 1,
+              "slug": "ali"
+            }
+          ],
+          "featured_artist": null
+        },
+        "slug": "tokyo-pharaoh",
+        "type": "musicVideo",
+        "streams_link": "/content/v2/music/MV49661057/streams"
+      },
+      {
+        "images": {
+          "thumbnail": [
+            {
+              "height": 180,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/320x180/catalog/music/d35c9bb71a7e1b430c95f86e86c8d703.jpeg",
+              "type": "thumbnail",
+              "width": 320
+            },
+            {
+              "height": 338,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/600x338/catalog/music/d35c9bb71a7e1b430c95f86e86c8d703.jpeg",
+              "type": "thumbnail",
+              "width": 600
+            },
+            {
+              "height": 360,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/640x360/catalog/music/d35c9bb71a7e1b430c95f86e86c8d703.jpeg",
+              "type": "thumbnail",
+              "width": 640
+            },
+            {
+              "height": 450,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/800x450/catalog/music/d35c9bb71a7e1b430c95f86e86c8d703.jpeg",
+              "type": "thumbnail",
+              "width": 800
+            },
+            {
+              "height": 675,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1200x675/catalog/music/d35c9bb71a7e1b430c95f86e86c8d703.jpeg",
+              "type": "thumbnail",
+              "width": 1200
+            },
+            {
+              "height": 810,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1440x810/catalog/music/d35c9bb71a7e1b430c95f86e86c8d703.jpeg",
+              "type": "thumbnail",
+              "width": 1440
+            },
+            {
+              "height": 900,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1600x900/catalog/music/d35c9bb71a7e1b430c95f86e86c8d703.jpeg",
+              "type": "thumbnail",
+              "width": 1600
+            },
+            {
+              "height": 1080,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1920x1080/catalog/music/d35c9bb71a7e1b430c95f86e86c8d703.jpeg",
+              "type": "thumbnail",
+              "width": 1920
+            }
+          ]
+        },
+        "sequence_number": 15,
+        "copyright": "(C) 2022 Sony Music Labels Inc.",
+        "display_artist_name": "ALI feat. J-REXXX, RUEED",
+        "genres": [
+          {
+            "display_value": "Alternative",
+            "id": "alternative"
+          }
+        ],
+        "licensor": "Sony Music Labels Inc.",
+        "updated_at": "2026-08-03T16:04:22.607000Z",
+        "description": "",
+        "id": "MVB7D76CEA",
+        "is_mature": false,
+        "maturity_ratings": {},
+        "artist": {
+          "id": "MA36EDC261",
+          "name": "ALI",
+          "slug": "ali"
+        },
+        "created_at": "2024-05-31T22:00:54.301000Z",
+        "display_artist_name_required": false,
+        "mature_blocked": false,
+        "publish_date": "2024-06-05T19:00:00Z",
+        "anime_ids": [],
+        "availability": {
+          "end_date": "2099-05-14T00:00:00Z",
+          "start_date": "2024-05-22T00:00:00Z"
+        },
+        "duration_ms": 250000,
+        "is_public": true,
+        "original_release": "2022-03-11T00:00:00Z",
+        "ready_to_publish": true,
+        "title": "FIGHT DUB CLUB",
+        "is_premium_only": true,
+        "hash": "8dfb8d47-7df5-50a6-9ec8-14e8c899adc3",
+        "artists": {
+          "main_artist": [
+            {
+              "connector": "",
+              "id": "MA36EDC261",
+              "name": "ALI",
+              "roles": [
+                "MainArtist"
+              ],
+              "sequence_number": 1,
+              "slug": "ali"
+            }
+          ],
+          "featured_artist": [
+            {
+              "connector": "featuring",
+              "id": "MA46D68BEC",
+              "name": "J-REXXX",
+              "roles": [
+                "FeaturedArtist"
+              ],
+              "sequence_number": 2,
+              "slug": "j-rexxx"
+            },
+            {
+              "connector": "featuring",
+              "id": "MAA77AEA3B",
+              "name": "RUEED",
+              "roles": [
+                "FeaturedArtist"
+              ],
+              "sequence_number": 3,
+              "slug": "rueed"
+            }
+          ]
+        },
+        "slug": "fight-dub-club",
+        "type": "musicVideo",
+        "streams_link": "/content/v2/music/MVB7D76CEA/streams"
+      },
+      {
+        "images": {
+          "thumbnail": [
+            {
+              "height": 180,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/320x180/catalog/music/2bb139e512111c1bb27bc8cf0614f87f.jpeg",
+              "type": "thumbnail",
+              "width": 320
+            },
+            {
+              "height": 338,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/600x338/catalog/music/2bb139e512111c1bb27bc8cf0614f87f.jpeg",
+              "type": "thumbnail",
+              "width": 600
+            },
+            {
+              "height": 360,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/640x360/catalog/music/2bb139e512111c1bb27bc8cf0614f87f.jpeg",
+              "type": "thumbnail",
+              "width": 640
+            },
+            {
+              "height": 450,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/800x450/catalog/music/2bb139e512111c1bb27bc8cf0614f87f.jpeg",
+              "type": "thumbnail",
+              "width": 800
+            },
+            {
+              "height": 675,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1200x675/catalog/music/2bb139e512111c1bb27bc8cf0614f87f.jpeg",
+              "type": "thumbnail",
+              "width": 1200
+            },
+            {
+              "height": 810,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1440x810/catalog/music/2bb139e512111c1bb27bc8cf0614f87f.jpeg",
+              "type": "thumbnail",
+              "width": 1440
+            },
+            {
+              "height": 900,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1600x900/catalog/music/2bb139e512111c1bb27bc8cf0614f87f.jpeg",
+              "type": "thumbnail",
+              "width": 1600
+            },
+            {
+              "height": 1080,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1920x1080/catalog/music/2bb139e512111c1bb27bc8cf0614f87f.jpeg",
+              "type": "thumbnail",
+              "width": 1920
+            }
+          ]
+        },
+        "sequence_number": 16,
+        "copyright": "(C) 2022 Sony Music Labels Inc.",
+        "display_artist_name": "ALI feat. Umedacypher",
+        "genres": [
+          {
+            "display_value": "Alternative",
+            "id": "alternative"
+          }
+        ],
+        "licensor": "Sony Music Labels Inc.",
+        "updated_at": "2026-07-31T13:40:48.789000Z",
+        "description": "",
+        "id": "MV59D90DC6",
+        "is_mature": false,
+        "maturity_ratings": {},
+        "artist": {
+          "id": "MA36EDC261",
+          "name": "ALI",
+          "slug": "ali"
+        },
+        "created_at": "2024-05-31T21:42:03.846000Z",
+        "display_artist_name_required": false,
+        "mature_blocked": false,
+        "publish_date": "2024-06-05T19:00:00Z",
+        "anime_ids": [],
+        "availability": {
+          "end_date": "2099-05-14T00:00:00Z",
+          "start_date": "2024-05-22T00:00:00Z"
+        },
+        "duration_ms": 299000,
+        "is_public": true,
+        "original_release": "2022-03-11T00:00:00Z",
+        "ready_to_publish": true,
+        "title": "FEELIN' GOOD",
+        "is_premium_only": true,
+        "hash": "ad9dfe0d-db17-bd1c-7517-c54bee418d56",
+        "artists": {
+          "main_artist": [
+            {
+              "connector": "",
+              "id": "MA36EDC261",
+              "name": "ALI",
+              "roles": [
+                "MainArtist"
+              ],
+              "sequence_number": 1,
+              "slug": "ali"
+            }
+          ],
+          "featured_artist": [
+            {
+              "connector": "featuring",
+              "id": "MA1B5044D9",
+              "name": "UMEDA CYPHER",
+              "roles": [
+                "FeaturedArtist"
+              ],
+              "sequence_number": 2,
+              "slug": "umeda-cypher"
+            }
+          ]
+        },
+        "slug": "feelin-good",
+        "type": "musicVideo",
+        "streams_link": "/content/v2/music/MV59D90DC6/streams"
+      },
+      {
+        "images": {
+          "thumbnail": [
+            {
+              "height": 180,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/320x180/catalog/music/125db9d0c9ef72f8fc6bdcb161ad776d.jpeg",
+              "type": "thumbnail",
+              "width": 320
+            },
+            {
+              "height": 338,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/600x338/catalog/music/125db9d0c9ef72f8fc6bdcb161ad776d.jpeg",
+              "type": "thumbnail",
+              "width": 600
+            },
+            {
+              "height": 360,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/640x360/catalog/music/125db9d0c9ef72f8fc6bdcb161ad776d.jpeg",
+              "type": "thumbnail",
+              "width": 640
+            },
+            {
+              "height": 450,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/800x450/catalog/music/125db9d0c9ef72f8fc6bdcb161ad776d.jpeg",
+              "type": "thumbnail",
+              "width": 800
+            },
+            {
+              "height": 675,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1200x675/catalog/music/125db9d0c9ef72f8fc6bdcb161ad776d.jpeg",
+              "type": "thumbnail",
+              "width": 1200
+            },
+            {
+              "height": 810,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1440x810/catalog/music/125db9d0c9ef72f8fc6bdcb161ad776d.jpeg",
+              "type": "thumbnail",
+              "width": 1440
+            },
+            {
+              "height": 900,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1600x900/catalog/music/125db9d0c9ef72f8fc6bdcb161ad776d.jpeg",
+              "type": "thumbnail",
+              "width": 1600
+            },
+            {
+              "height": 1080,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1920x1080/catalog/music/125db9d0c9ef72f8fc6bdcb161ad776d.jpeg",
+              "type": "thumbnail",
+              "width": 1920
+            }
+          ]
+        },
+        "sequence_number": 17,
+        "copyright": "(C) 2022 Sony Music Labels Inc.",
+        "display_artist_name": "ALI feat. Namichie, Alonzo, 6B",
+        "genres": [
+          {
+            "display_value": "Alternative",
+            "id": "alternative"
+          }
+        ],
+        "licensor": "Sony Music Labels Inc.",
+        "updated_at": "2026-08-03T16:05:41.277000Z",
+        "description": "",
+        "id": "MV2EDE3D50",
+        "is_mature": false,
+        "maturity_ratings": {},
+        "artist": {
+          "id": "MA36EDC261",
+          "name": "ALI",
+          "slug": "ali"
+        },
+        "created_at": "2024-05-31T22:00:26.522000Z",
+        "display_artist_name_required": false,
+        "mature_blocked": false,
+        "publish_date": "2024-06-05T19:00:00Z",
+        "anime_ids": [],
+        "availability": {
+          "end_date": "2099-05-14T00:00:00Z",
+          "start_date": "2024-05-22T00:00:00Z"
+        },
+        "duration_ms": 252000,
+        "is_public": true,
+        "original_release": "2022-03-11T00:00:00Z",
+        "ready_to_publish": true,
+        "title": "MUZIK CITY",
+        "is_premium_only": true,
+        "hash": "01255774-ff55-9281-2253-4949fe4f539c",
+        "artists": {
+          "main_artist": [
+            {
+              "connector": "",
+              "id": "MA36EDC261",
+              "name": "ALI",
+              "roles": [
+                "MainArtist"
+              ],
+              "sequence_number": 1,
+              "slug": "ali"
+            }
+          ],
+          "featured_artist": [
+            {
+              "connector": "featuring",
+              "id": "MA643EF40C",
+              "name": "Namichie",
+              "roles": [
+                "FeaturedArtist"
+              ],
+              "sequence_number": 2,
+              "slug": "namichie"
+            },
+            {
+              "connector": "featuring",
+              "id": "MAA223D21",
+              "name": "6B",
+              "roles": [
+                "FeaturedArtist"
+              ],
+              "sequence_number": 4,
+              "slug": "6b"
+            },
+            {
+              "connector": "featuring",
+              "id": "MA75E9BA62",
+              "name": "Alonzo",
+              "roles": [
+                "FeaturedArtist"
+              ],
+              "sequence_number": 3,
+              "slug": "alonzo"
+            }
+          ]
+        },
+        "slug": "muzik-city",
+        "type": "musicVideo",
+        "streams_link": "/content/v2/music/MV2EDE3D50/streams"
+      },
+      {
+        "images": {
+          "thumbnail": [
+            {
+              "height": 180,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/320x180/catalog/music/39ece53ebe453b7f54b644e50c7c6d74.jpeg",
+              "type": "thumbnail",
+              "width": 320
+            },
+            {
+              "height": 338,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/600x338/catalog/music/39ece53ebe453b7f54b644e50c7c6d74.jpeg",
+              "type": "thumbnail",
+              "width": 600
+            },
+            {
+              "height": 360,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/640x360/catalog/music/39ece53ebe453b7f54b644e50c7c6d74.jpeg",
+              "type": "thumbnail",
+              "width": 640
+            },
+            {
+              "height": 450,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/800x450/catalog/music/39ece53ebe453b7f54b644e50c7c6d74.jpeg",
+              "type": "thumbnail",
+              "width": 800
+            },
+            {
+              "height": 675,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1200x675/catalog/music/39ece53ebe453b7f54b644e50c7c6d74.jpeg",
+              "type": "thumbnail",
+              "width": 1200
+            },
+            {
+              "height": 810,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1440x810/catalog/music/39ece53ebe453b7f54b644e50c7c6d74.jpeg",
+              "type": "thumbnail",
+              "width": 1440
+            },
+            {
+              "height": 900,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1600x900/catalog/music/39ece53ebe453b7f54b644e50c7c6d74.jpeg",
+              "type": "thumbnail",
+              "width": 1600
+            },
+            {
+              "height": 1080,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1920x1080/catalog/music/39ece53ebe453b7f54b644e50c7c6d74.jpeg",
+              "type": "thumbnail",
+              "width": 1920
+            }
+          ]
+        },
+        "sequence_number": 18,
+        "copyright": "(C) 2022 Sony Music Labels Inc.",
+        "display_artist_name": "ALI feat. R-Shitei",
+        "genres": [
+          {
+            "display_value": "Alternative",
+            "id": "alternative"
+          }
+        ],
+        "licensor": "Sony Music Labels Inc.",
+        "updated_at": "2026-07-31T13:39:07.551000Z",
+        "description": "",
+        "id": "MV517EC35F",
+        "is_mature": false,
+        "maturity_ratings": {},
+        "artist": {
+          "id": "MA36EDC261",
+          "name": "ALI",
+          "slug": "ali"
+        },
+        "created_at": "2024-05-31T22:00:29.299000Z",
+        "display_artist_name_required": false,
+        "mature_blocked": false,
+        "publish_date": "2024-06-05T19:00:00Z",
+        "anime_ids": [],
+        "availability": {
+          "end_date": "2099-05-14T00:00:00Z",
+          "start_date": "2024-05-22T00:00:00Z"
+        },
+        "duration_ms": 219000,
+        "is_public": true,
+        "original_release": "2022-02-23T00:00:00Z",
+        "ready_to_publish": true,
+        "title": "TEENAGE CITY RIOT",
+        "is_premium_only": true,
+        "hash": "6cef4ab7-909e-d2ea-6bfe-16e4783691c2",
+        "artists": {
+          "main_artist": [
+            {
+              "connector": "",
+              "id": "MA36EDC261",
+              "name": "ALI",
+              "roles": [
+                "MainArtist"
+              ],
+              "sequence_number": 1,
+              "slug": "ali"
+            }
+          ],
+          "featured_artist": [
+            {
+              "connector": "featuring",
+              "id": "MA926EBEA",
+              "name": "R-Shitei",
+              "roles": [
+                "FeaturedArtist"
+              ],
+              "sequence_number": 2,
+              "slug": "r-shitei"
+            }
+          ]
+        },
+        "slug": "teenage-city-riot",
+        "type": "musicVideo",
+        "streams_link": "/content/v2/music/MV517EC35F/streams"
+      },
+      {
+        "images": {
+          "thumbnail": [
+            {
+              "height": 180,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/320x180/catalog/music/881099f436030aeb542eeac87ab8dfff.jpeg",
+              "type": "thumbnail",
+              "width": 320
+            },
+            {
+              "height": 338,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/600x338/catalog/music/881099f436030aeb542eeac87ab8dfff.jpeg",
+              "type": "thumbnail",
+              "width": 600
+            },
+            {
+              "height": 360,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/640x360/catalog/music/881099f436030aeb542eeac87ab8dfff.jpeg",
+              "type": "thumbnail",
+              "width": 640
+            },
+            {
+              "height": 450,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/800x450/catalog/music/881099f436030aeb542eeac87ab8dfff.jpeg",
+              "type": "thumbnail",
+              "width": 800
+            },
+            {
+              "height": 675,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1200x675/catalog/music/881099f436030aeb542eeac87ab8dfff.jpeg",
+              "type": "thumbnail",
+              "width": 1200
+            },
+            {
+              "height": 810,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1440x810/catalog/music/881099f436030aeb542eeac87ab8dfff.jpeg",
+              "type": "thumbnail",
+              "width": 1440
+            },
+            {
+              "height": 900,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1600x900/catalog/music/881099f436030aeb542eeac87ab8dfff.jpeg",
+              "type": "thumbnail",
+              "width": 1600
+            },
+            {
+              "height": 1080,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1920x1080/catalog/music/881099f436030aeb542eeac87ab8dfff.jpeg",
+              "type": "thumbnail",
+              "width": 1920
+            }
+          ]
+        },
+        "sequence_number": 19,
+        "copyright": "(C) 2021 Sony Music Labels Inc.",
+        "display_artist_name": "ALI feat. AKLO",
+        "genres": [
+          {
+            "display_value": "Alternative",
+            "id": "alternative"
+          }
+        ],
+        "licensor": "Sony Music Labels Inc.",
+        "updated_at": "2026-07-31T13:30:03.775000Z",
+        "description": "",
+        "id": "MV9F6F37AA",
+        "is_mature": false,
+        "maturity_ratings": {},
+        "artist": {
+          "id": "MA36EDC261",
+          "name": "ALI",
+          "slug": "ali"
+        },
+        "created_at": "2024-04-10T16:59:05.637000Z",
+        "display_artist_name_required": false,
+        "mature_blocked": false,
+        "publish_date": "2024-04-17T19:00:00Z",
+        "anime_ids": [
+          "GRDV0019R"
+        ],
+        "availability": {
+          "end_date": "2099-05-14T00:00:00Z",
+          "start_date": "2024-04-01T00:00:00Z"
+        },
+        "duration_ms": 328000,
+        "is_public": true,
+        "original_release": "2021-11-19T00:00:00Z",
+        "ready_to_publish": true,
+        "title": "LOST IN PARADISE",
+        "is_premium_only": true,
+        "hash": "6cc0d45d-4e10-3e82-a9f8-73e9d1d724b3",
+        "artists": {
+          "main_artist": [
+            {
+              "connector": "",
+              "id": "MA36EDC261",
+              "name": "ALI",
+              "roles": [
+                "MainArtist"
+              ],
+              "sequence_number": 1,
+              "slug": "ali"
+            }
+          ],
+          "featured_artist": [
+            {
+              "connector": "featuring",
+              "id": "MA91CFD8D",
+              "name": "AKLO",
+              "roles": [
+                "FeaturedArtist"
+              ],
+              "sequence_number": 2,
+              "slug": "aklo"
+            }
+          ]
+        },
+        "slug": "lost-in-paradise",
+        "type": "musicVideo",
+        "streams_link": "/content/v2/music/MV9F6F37AA/streams"
+      }
+    ],
+    "meta": {}
+  }
+]

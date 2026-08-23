@@ -3,11 +3,15 @@
 from __future__ import annotations
 
 from chirashi.search.base import BaseSearch
-from chirashi.search.movie_listing.models import SearchMovieListingModel
+from chirashi.search.movie_listing.models import (
+    SearchMovieListingModel,
+    model_validate_json,
+)
 
 
 class SearchMovieListing(BaseSearch[SearchMovieListingModel]):
     """Manage the search movie listing file."""
 
     search_type = "movie_listing"
-    _response_model = SearchMovieListingModel
+    MODEL = SearchMovieListingModel
+    LOAD = staticmethod(model_validate_json)

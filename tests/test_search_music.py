@@ -1,28 +1,31 @@
+# TODO: Validate
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
 import pytest
 
-from tests.utils import download_and_save, parsed_json
+from chirashi.search.music.models import SearchMusicModel
+from tests.utils import RecordedEndpoint
 
 if TYPE_CHECKING:
     from chirashi import Chirashi
-    from chirashi.search.music import SearchMusic
 
-QUERY = "CASANOVA POSSE"
-
-
-@pytest.fixture(scope="session")
-def client(client: Chirashi) -> SearchMusic:
-    return client.search_music
+QUERIES = [pytest.param("CASANOVA POSSE", id="casanova posse music")]
 
 
-def test_download(client: SearchMusic) -> None:
-    download_and_save(client, QUERY, lambda: client.download(QUERY))
+# TODO: Validate
+class SearchMusicTest(RecordedEndpoint):
+    MODEL = SearchMusicModel
 
 
-def test_parse(client: SearchMusic) -> None:
-    data = parsed_json(client, QUERY)
-    # Ads are sometimes injected directly into search results.
-    assert QUERY in [item.title for item in data.data[0].items]
+# TODO: Validate
+@pytest.mark.parametrize("query", QUERIES)
+def test_download(client: Chirashi, query: str) -> None:
+    SearchMusicTest.download_test(query, lambda: client.search_music.download(query))
+
+
+# TODO: Validate
+@pytest.mark.parametrize("query", QUERIES)
+def test_parse(query: str) -> None:
+    SearchMusicTest.parse_test(query)

@@ -1,3 +1,4 @@
+# TODO: Validate
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
@@ -5,35 +6,40 @@ from typing import TYPE_CHECKING
 import pytest
 
 from chirashi.exceptions import SeriesNotFoundError
-from tests.utils import assert_error, download_and_save, parsed_json
+from chirashi.seasons.models import SeasonsModel
+from tests.utils import RecordedEndpoint
 
 if TYPE_CHECKING:
     from chirashi import Chirashi
-    from chirashi.seasons import Seasons
 
-SERIES_ID = "GEXH3W29Z"
-INVALID_SERIES_ID = "GGGGGGGGG"
+SERIES_IDS = [pytest.param("GEXH3W29Z", id="#compass2.0 animation project")]
 
 
-@pytest.fixture(scope="session")
-def client(client: Chirashi) -> Seasons:
-    return client.seasons
+# TODO: Validate
+class SeasonsTest(RecordedEndpoint):
+    MODEL = SeasonsModel
 
 
-def test_download(client: Seasons) -> None:
-    download_and_save(client, SERIES_ID, lambda: client.download(SERIES_ID))
+# TODO: Validate
+@pytest.mark.parametrize("series_id", SERIES_IDS)
+def test_download(client: Chirashi, series_id: str) -> None:
+    SeasonsTest.download_test(series_id, lambda: client.seasons.download(series_id))
 
 
-def test_parse(client: Seasons) -> None:
-    data = parsed_json(client, SERIES_ID)
-    assert data.data
-    assert all(season.series_id == SERIES_ID for season in data.data)
+# TODO: Validate
+@pytest.mark.parametrize("series_id", SERIES_IDS)
+def test_parse(series_id: str) -> None:
+    SeasonsTest.parse_test(series_id)
 
 
-def test_download_invalid(client: Seasons) -> None:
-    assert_error(
-        client,
-        INVALID_SERIES_ID,
-        lambda: client.download(INVALID_SERIES_ID),
+# TODO: Validate
+@pytest.mark.parametrize(
+    "series_id",
+    [pytest.param("GGGGGGGGG", id="series that does not exist")],
+)
+def test_download_invalid(client: Chirashi, series_id: str) -> None:
+    SeasonsTest.error_test(
+        series_id,
+        lambda: client.seasons.download(series_id),
         SeriesNotFoundError,
     )

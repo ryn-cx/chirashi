@@ -3,17 +3,16 @@
 from __future__ import annotations
 
 from logging import NullHandler, getLogger
-from typing import Any, override
 
 from chirashi.base_api_endpoint import BaseEndpoint
 from chirashi.exceptions import ResourceNotFoundError, SeriesNotFoundError
-from chirashi.series.models import SeriesModel
+from chirashi.series.models import SeriesModel, model_validate_json
 
 logger = getLogger(__name__)
 logger.addHandler(NullHandler())
 
 
-class Series(BaseEndpoint[SeriesModel]):
+class Series(BaseEndpoint):
     """Manage the series file.
 
     Source: https://www.crunchyroll.com/series/{series_id}/{slug}
@@ -38,15 +37,25 @@ class Series(BaseEndpoint[SeriesModel]):
         - TE: trailers
     """
 
-    _response_model = SeriesModel
+    # TODO: Validate
+    def __call__(
+        self,
+        series_id: str,
+        *,
+        locale: str | None = None,
+    ) -> SeriesModel:
+        """Look the series up and return the model it is read into."""
+        log_id = self.get_log_id(self.__call__, locals())
+        return self.load(self.download(series_id, locale=locale), log_id)
 
-    @override
+    # TODO: Validate
     def download(
         self,
         series_id: str,
         *,
         locale: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> str:
+        """Download the series file."""
         log_id = self.get_log_id(self.download, locals())
         try:
             return self._client.download(
@@ -62,11 +71,7 @@ class Series(BaseEndpoint[SeriesModel]):
                 err.response,
             ) from err
 
-    @override
-    def download_and_parse(
-        self,
-        series_id: str,
-        *,
-        locale: str | None = None,
-    ) -> SeriesModel:
-        return self.parse(self.download(series_id, locale=locale))
+    # TODO: Validate
+    def load(self, data: str, log_id: str = "") -> SeriesModel:
+        """Read a downloaded series file into its model."""
+        return model_validate_json(data, log_id or type(self).__name__)

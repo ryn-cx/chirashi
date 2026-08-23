@@ -1,81 +1,57 @@
-from pydantic import AwareDatetime, ConfigDict, Field
-from good_ass_pydantic_integrator import GAPIBaseModel
-from uuid import UUID
-from typing import Any
+"""ArtistConcertsModel, strict to a type checker, all-optional at runtime.
 
-class MainArtistItem(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    connector: str
-    id: str
-    name: str
-    roles: list[str]
-    sequence_number: int = Field(..., alias='sequenceNumber')
-    slug: str
+A type checker reads the strict model, so every field carries the type and
+the requiredness the schema recorded. At runtime the all-optional copy is imported
+instead, so a response that has drifted still parses and a field the data is
+missing is None despite what its type hint says.
+"""
 
-class Artists(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    main_artist: list[MainArtistItem] = Field(..., alias='MainArtist')
+from typing import TYPE_CHECKING
 
-class Availability(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    end_date: AwareDatetime = Field(..., alias='endDate')
-    start_date: AwareDatetime = Field(..., alias='startDate')
+from good_ass_pydantic_integrator import load
 
-class ThumbnailItem(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    height: int
-    source: str
-    type: str
-    width: int
+from .optional_models import ArtistConcertsModel as OptionalModel
+from .strict_models import ArtistConcertsModel as StrictModel
 
-class Images(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    thumbnail: list[ThumbnailItem]
+if TYPE_CHECKING:
+    from .strict_models import (
+        Artist,
+        ArtistConcertsModel,
+        Artists,
+        Availability,
+        Datum,
+        Genre,
+        Images,
+        MainArtistItem,
+        ThumbnailItem,
+    )
+else:
+    from .optional_models import (
+        Artist,
+        ArtistConcertsModel,
+        Artists,
+        Availability,
+        Datum,
+        Genre,
+        Images,
+        MainArtistItem,
+        ThumbnailItem,
+    )
 
-class Artist(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    id: str
-    name: str
-    slug: str
+__all__ = [
+    "Artist",
+    "ArtistConcertsModel",
+    "Artists",
+    "Availability",
+    "Datum",
+    "Genre",
+    "Images",
+    "MainArtistItem",
+    "ThumbnailItem",
+    "model_validate_json",
+]
 
-class Genre(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    display_value: str = Field(..., alias='displayValue')
-    id: str
 
-class Datum(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    slug: str
-    streams_link: str
-    artists: Artists
-    created_at: AwareDatetime = Field(..., alias='createdAt')
-    display_artist_name_required: bool = Field(..., alias='displayArtistNameRequired')
-    is_public: bool = Field(..., alias='isPublic')
-    original_release: AwareDatetime = Field(..., alias='originalRelease')
-    publish_date: AwareDatetime = Field(..., alias='publishDate')
-    title: str
-    updated_at: AwareDatetime = Field(..., alias='updatedAt')
-    availability: Availability
-    description: str
-    duration_ms: int = Field(..., alias='durationMs')
-    id: str
-    is_premium_only: bool = Field(..., alias='isPremiumOnly')
-    licensor: str
-    ready_to_publish: bool = Field(..., alias='readyToPublish')
-    sequence_number: int = Field(..., alias='sequenceNumber')
-    copyright: str
-    display_artist_name: str = Field(..., alias='displayArtistName')
-    hash: UUID
-    images: Images
-    maturity_ratings: dict[str, Any] = Field(..., alias='maturityRatings')
-    type: str
-    artist: Artist
-    genres: list[Genre]
-    is_mature: bool = Field(..., alias='isMature')
-    mature_blocked: bool = Field(..., alias='matureBlocked')
-
-class ArtistConcertsModel(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    total: int
-    data: list[Datum]
-    meta: dict[str, Any]
+def model_validate_json(data: str | bytes | object, log_id: str) -> ArtistConcertsModel:
+    """Read a downloaded file into ArtistConcertsModel."""
+    return load.model_validate_json(StrictModel, OptionalModel, data, log_id)

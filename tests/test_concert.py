@@ -1,39 +1,48 @@
+# TODO: Validate
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
 import pytest
 
+from chirashi.concert.models import ConcertModel
 from chirashi.exceptions import ConcertNotFoundError
-from tests.utils import assert_error, download_and_save, parsed_json
+from tests.utils import RecordedEndpoint
 
 if TYPE_CHECKING:
     from chirashi import Chirashi
-    from chirashi.concert import Concert
 
-# https://www.crunchyroll.com/watch/concert/MC51D55EA6
-CONCERT_ID = "MC51D55EA6"
-INVALID_CONCERT_ID = "MC00000000"
-
-
-@pytest.fixture(scope="session")
-def client(client: Chirashi) -> Concert:
-    return client.concert
+CONCERT_IDS = [
+    # https://www.crunchyroll.com/watch/concert/MC51D55EA6
+    pytest.param("MC51D55EA6", id="shoko nakagawa first concert - donyoku matsuri"),
+]
 
 
-def test_download(client: Concert) -> None:
-    download_and_save(client, CONCERT_ID, lambda: client.download(CONCERT_ID))
+# TODO: Validate
+class ConcertTest(RecordedEndpoint):
+    MODEL = ConcertModel
 
 
-def test_parse(client: Concert) -> None:
-    data = parsed_json(client, CONCERT_ID)
-    assert data.data[0].id == CONCERT_ID
+# TODO: Validate
+@pytest.mark.parametrize("concert_id", CONCERT_IDS)
+def test_download(client: Chirashi, concert_id: str) -> None:
+    ConcertTest.download_test(concert_id, lambda: client.concert.download(concert_id))
 
 
-def test_download_invalid(client: Concert) -> None:
-    assert_error(
-        client,
-        INVALID_CONCERT_ID,
-        lambda: client.download(INVALID_CONCERT_ID),
+# TODO: Validate
+@pytest.mark.parametrize("concert_id", CONCERT_IDS)
+def test_parse(concert_id: str) -> None:
+    ConcertTest.parse_test(concert_id)
+
+
+# TODO: Validate
+@pytest.mark.parametrize(
+    "concert_id",
+    [pytest.param("MC00000000", id="concert that does not exist")],
+)
+def test_download_invalid(client: Chirashi, concert_id: str) -> None:
+    ConcertTest.error_test(
+        concert_id,
+        lambda: client.concert.download(concert_id),
         ConcertNotFoundError,
     )

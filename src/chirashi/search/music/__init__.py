@@ -3,11 +3,12 @@
 from __future__ import annotations
 
 from chirashi.search.base import BaseSearch
-from chirashi.search.music.models import SearchMusicModel
+from chirashi.search.music.models import SearchMusicModel, model_validate_json
 
 
 class SearchMusic(BaseSearch[SearchMusicModel]):
     """Manage the search music file."""
 
     search_type = "music"
-    _response_model = SearchMusicModel
+    MODEL = SearchMusicModel
+    LOAD = staticmethod(model_validate_json)

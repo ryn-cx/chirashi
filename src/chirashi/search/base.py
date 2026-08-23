@@ -3,17 +3,20 @@
 from __future__ import annotations
 
 from logging import NullHandler, getLogger
-from typing import Any, override
+from typing import TYPE_CHECKING
 
 from pydantic import BaseModel
 
 from chirashi.base_api_endpoint import BaseEndpoint
 
+if TYPE_CHECKING:
+    from collections.abc import Callable
+
 logger = getLogger(__name__)
 logger.addHandler(NullHandler())
 
 
-class BaseSearch[T: BaseModel](BaseEndpoint[T]):
+class BaseSearch[T: BaseModel](BaseEndpoint):
     """Base class to manage a search file with a specific type.
 
     Source: https://www.crunchyroll.com/search?f={type}&q={query}
@@ -42,6 +45,12 @@ class BaseSearch[T: BaseModel](BaseEndpoint[T]):
         - TE: trailers
     """
 
+    MODEL: type[T]
+    """The model this search reads its responses with."""
+
+    LOAD: Callable[[str | bytes | object, str], T]
+    """The `model_validate_json` its model's module generates."""
+
     search_type: str
     n: int = 100
 
@@ -53,7 +62,7 @@ class BaseSearch[T: BaseModel](BaseEndpoint[T]):
         search_type: str | None,
         ratings: bool,
         locale: str | None,
-    ) -> dict[str, Any]:
+    ) -> str:
         log_id = self.get_log_id(self.download, locals())
         return self._client.download(
             "content/v2/discover/search",
@@ -68,7 +77,20 @@ class BaseSearch[T: BaseModel](BaseEndpoint[T]):
             log_id=log_id,
         )
 
-    @override
+    # TODO: Validate
+    def __call__(
+        self,
+        q: str,
+        *,
+        n: int | None = None,
+        ratings: bool = True,
+        locale: str | None = None,
+    ) -> T:
+        """Run the search and return the model it is read into."""
+        log_id = self.get_log_id(self.__call__, locals())
+        return self.load(self.download(q, n=n, ratings=ratings, locale=locale), log_id)
+
+    # TODO: Validate
     def download(
         self,
         q: str,
@@ -76,7 +98,8 @@ class BaseSearch[T: BaseModel](BaseEndpoint[T]):
         n: int | None = None,
         ratings: bool = True,
         locale: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> str:
+        """Download the search file."""
         return self._download(
             q,
             n=n,
@@ -85,13 +108,7 @@ class BaseSearch[T: BaseModel](BaseEndpoint[T]):
             locale=locale,
         )
 
-    @override
-    def download_and_parse(
-        self,
-        q: str,
-        *,
-        n: int | None = None,
-        ratings: bool = True,
-        locale: str | None = None,
-    ) -> T:
-        return self.parse(self.download(q, n=n, ratings=ratings, locale=locale))
+    # TODO: Validate
+    def load(self, data: str, log_id: str = "") -> T:
+        """Read a downloaded search file into its model."""
+        return type(self).LOAD(data, log_id or type(self).__name__)

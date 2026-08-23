@@ -1,0 +1,82 @@
+[
+  {
+    "data": [
+      {
+        "id": "G68VCP0VQ",
+        "channel_id": "crunchyroll",
+        "title": "Season 1",
+        "slug_title": "season-1",
+        "series_id": "GEXH3W29Z",
+        "season_display_number": "",
+        "season_sequence_number": 1,
+        "season_number": 1,
+        "is_complete": false,
+        "description": "In the combat providence analysis system, \u201cCOMPASS2.0,\u201d heroes gather alongside human partners in a dreamlike space. The heroes have to keep fighting to produce enough energy to keep the system running. One hero named 13 is a troublemaker who refuses to find a partner. When 13 is nearly kicked out, a new player named Jin agrees to join him. Can they bring peace to the world of #COMPASS2.0?",
+        "keywords": [
+          "spring-2025"
+        ],
+        "season_tags": [
+          "spring-2025"
+        ],
+        "images": {},
+        "extended_maturity_rating": {
+          "system": "cr-tv",
+          "rating": "14",
+          "level": "M2"
+        },
+        "maturity_ratings": [
+          "TV-14"
+        ],
+        "content_descriptors": [
+          "Violence",
+          "Profanity"
+        ],
+        "content_descriptors_with_symbol": [
+          {
+            "label": "Violence"
+          },
+          {
+            "label": "Profanity"
+          }
+        ],
+        "is_mature": false,
+        "mature_blocked": false,
+        "is_subbed": false,
+        "is_dubbed": false,
+        "is_simulcast": false,
+        "seo_title": "",
+        "seo_description": "",
+        "availability_notes": "",
+        "audio_locales": [
+          "ja-JP"
+        ],
+        "subtitle_locales": [
+          "de-DE",
+          "es-419",
+          "fr-FR",
+          "es-ES",
+          "ar-SA",
+          "pt-BR",
+          "en-US",
+          "ru-RU",
+          "it-IT"
+        ],
+        "audio_locale": "ja-JP",
+        "versions": [
+          {
+            "audio_locale": "ja-JP",
+            "guid": "G68VCP0VQ",
+            "original": true,
+            "variant": ""
+          }
+        ],
+        "identifier": "GEXH3W29Z|S00349761",
+        "number_of_episodes": 12
+      }
+    ],
+    "meta": {
+      "versions_considered": true
+    },
+    "total": 1
+  }
+]

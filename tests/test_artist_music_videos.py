@@ -5,36 +5,47 @@ from typing import TYPE_CHECKING
 
 import pytest
 
+from chirashi.artist_music_videos.models import ArtistMusicVideosModel
 from chirashi.exceptions import ArtistNotFoundError
-from tests.utils import assert_error, download_and_save, parsed_json
+from tests.utils import RecordedEndpoint
 
 if TYPE_CHECKING:
     from chirashi import Chirashi
-    from chirashi.artist_music_videos import ArtistMusicVideos
 
-# https://www.crunchyroll.com/artist/MA36EDC261/ali
-ARTIST_ID = "MA36EDC261"
-INVALID_ARTIST_ID = "MA00000000"
-
-
-@pytest.fixture(scope="session")
-def client(client: Chirashi) -> ArtistMusicVideos:
-    return client.artist_music_videos
+ARTIST_IDS = [
+    # https://www.crunchyroll.com/artist/MA36EDC261/ali
+    pytest.param("MA36EDC261", id="ali"),
+]
 
 
-def test_download(client: ArtistMusicVideos) -> None:
-    download_and_save(client, ARTIST_ID, lambda: client.download(ARTIST_ID))
+# TODO: Validate
+class ArtistMusicVideosTest(RecordedEndpoint):
+    MODEL = ArtistMusicVideosModel
 
 
-def test_parse(client: ArtistMusicVideos) -> None:
-    data = parsed_json(client, ARTIST_ID)
-    assert data.total == len(data.data)
+# TODO: Validate
+@pytest.mark.parametrize("artist_id", ARTIST_IDS)
+def test_download(client: Chirashi, artist_id: str) -> None:
+    ArtistMusicVideosTest.download_test(
+        artist_id,
+        lambda: client.artist_music_videos.download(artist_id),
+    )
 
 
-def test_download_invalid(client: ArtistMusicVideos) -> None:
-    assert_error(
-        client,
-        INVALID_ARTIST_ID,
-        lambda: client.download(INVALID_ARTIST_ID),
+# TODO: Validate
+@pytest.mark.parametrize("artist_id", ARTIST_IDS)
+def test_parse(artist_id: str) -> None:
+    ArtistMusicVideosTest.parse_test(artist_id)
+
+
+# TODO: Validate
+@pytest.mark.parametrize(
+    "artist_id",
+    [pytest.param("MA00000000", id="artist that does not exist")],
+)
+def test_download_invalid(client: Chirashi, artist_id: str) -> None:
+    ArtistMusicVideosTest.error_test(
+        artist_id,
+        lambda: client.artist_music_videos.download(artist_id),
         ArtistNotFoundError,
     )

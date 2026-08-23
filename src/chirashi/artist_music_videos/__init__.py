@@ -4,9 +4,11 @@
 from __future__ import annotations
 
 from logging import NullHandler, getLogger
-from typing import Any, override
 
-from chirashi.artist_music_videos.models import ArtistMusicVideosModel
+from chirashi.artist_music_videos.models import (
+    ArtistMusicVideosModel,
+    model_validate_json,
+)
 from chirashi.base_api_endpoint import BaseEndpoint
 from chirashi.exceptions import ArtistNotFoundError, ResourceNotFoundError
 
@@ -14,7 +16,7 @@ logger = getLogger(__name__)
 logger.addHandler(NullHandler())
 
 
-class ArtistMusicVideos(BaseEndpoint[ArtistMusicVideosModel]):
+class ArtistMusicVideos(BaseEndpoint):
     """Manage the artist music videos file.
 
     Every music video by an artist, which is the list the artist page renders
@@ -42,15 +44,25 @@ class ArtistMusicVideos(BaseEndpoint[ArtistMusicVideosModel]):
         - TE: trailers
     """
 
-    _response_model = ArtistMusicVideosModel
+    # TODO: Validate
+    def __call__(
+        self,
+        artist_id: str,
+        *,
+        locale: str | None = None,
+    ) -> ArtistMusicVideosModel:
+        """Look the artist music videos up and return the model it is read into."""
+        log_id = self.get_log_id(self.__call__, locals())
+        return self.load(self.download(artist_id, locale=locale), log_id)
 
-    @override
+    # TODO: Validate
     def download(
         self,
         artist_id: str,
         *,
         locale: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> str:
+        """Download the artist music videos file."""
         log_id = self.get_log_id(self.download, locals())
         try:
             return self._client.download(
@@ -66,11 +78,7 @@ class ArtistMusicVideos(BaseEndpoint[ArtistMusicVideosModel]):
                 err.response,
             ) from err
 
-    @override
-    def download_and_parse(
-        self,
-        artist_id: str,
-        *,
-        locale: str | None = None,
-    ) -> ArtistMusicVideosModel:
-        return self.parse(self.download(artist_id, locale=locale))
+    # TODO: Validate
+    def load(self, data: str, log_id: str = "") -> ArtistMusicVideosModel:
+        """Read a downloaded artist music videos file into its model."""
+        return model_validate_json(data, log_id or type(self).__name__)

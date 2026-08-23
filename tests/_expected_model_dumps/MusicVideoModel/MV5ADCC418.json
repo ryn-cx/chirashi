@@ -1,0 +1,117 @@
+[
+  {
+    "total": 1,
+    "data": [
+      {
+        "id": "MV5ADCC418",
+        "artist": {
+          "id": "MA36EDC261",
+          "name": "ALI",
+          "slug": "ali"
+        },
+        "is_premium_only": true,
+        "licensor": "Sony Music Labels Inc.",
+        "is_mature": false,
+        "sequence_number": 1,
+        "streams_link": "/content/v2/music/MV5ADCC418/streams",
+        "created_at": "2026-04-15T17:47:17.013000Z",
+        "original_release": "2025-01-09T00:00:00Z",
+        "type": "musicVideo",
+        "title": "CASANOVA POSSE",
+        "hash": "997b0b31-56fd-d987-7573-d92d10e99c44",
+        "anime_ids": [
+          "GYEXQKJG6"
+        ],
+        "availability": {
+          "end_date": "2099-05-14T00:00:00Z",
+          "start_date": "2026-04-01T00:00:00Z"
+        },
+        "display_artist_name": "ALI",
+        "display_artist_name_required": false,
+        "maturity_ratings": {},
+        "ready_to_publish": true,
+        "updated_at": "2026-07-31T14:15:10.570000Z",
+        "artists": {
+          "main_artist": [
+            {
+              "connector": "",
+              "id": "MA36EDC261",
+              "name": "ALI",
+              "roles": [
+                "MainArtist"
+              ],
+              "sequence_number": 1,
+              "slug": "ali"
+            }
+          ]
+        },
+        "copyright": "(C) 2025 Sony Music Labels Inc.",
+        "genres": [
+          {
+            "display_value": "J-Pop",
+            "id": "j-pop"
+          }
+        ],
+        "publish_date": "2026-04-15T00:00:00Z",
+        "images": {
+          "thumbnail": [
+            {
+              "height": 180,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/320x180/catalog/music/94fd4c995d29cd08caa0a6d6ad8af693.jpeg",
+              "type": "thumbnail",
+              "width": 320
+            },
+            {
+              "height": 338,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/600x338/catalog/music/94fd4c995d29cd08caa0a6d6ad8af693.jpeg",
+              "type": "thumbnail",
+              "width": 600
+            },
+            {
+              "height": 360,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/640x360/catalog/music/94fd4c995d29cd08caa0a6d6ad8af693.jpeg",
+              "type": "thumbnail",
+              "width": 640
+            },
+            {
+              "height": 450,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/800x450/catalog/music/94fd4c995d29cd08caa0a6d6ad8af693.jpeg",
+              "type": "thumbnail",
+              "width": 800
+            },
+            {
+              "height": 675,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1200x675/catalog/music/94fd4c995d29cd08caa0a6d6ad8af693.jpeg",
+              "type": "thumbnail",
+              "width": 1200
+            },
+            {
+              "height": 810,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1440x810/catalog/music/94fd4c995d29cd08caa0a6d6ad8af693.jpeg",
+              "type": "thumbnail",
+              "width": 1440
+            },
+            {
+              "height": 900,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1600x900/catalog/music/94fd4c995d29cd08caa0a6d6ad8af693.jpeg",
+              "type": "thumbnail",
+              "width": 1600
+            },
+            {
+              "height": 1080,
+              "source": "https://www.crunchyroll.com/imgsrv/display/thumbnail/1920x1080/catalog/music/94fd4c995d29cd08caa0a6d6ad8af693.jpeg",
+              "type": "thumbnail",
+              "width": 1920
+            }
+          ]
+        },
+        "description": "",
+        "duration_ms": 242000,
+        "is_public": true,
+        "mature_blocked": false,
+        "slug": "casanova-posse"
+      }
+    ],
+    "meta": {}
+  }
+]

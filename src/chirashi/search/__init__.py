@@ -3,16 +3,10 @@
 from __future__ import annotations
 
 from logging import NullHandler, getLogger
-from typing import Any, override
-
-from good_ass_pydantic_integrator import GAPIBaseModel
+from typing import override
 
 from chirashi.search.base import BaseSearch
-from chirashi.search.episode.models import Item as EpisodeItem
-from chirashi.search.models import Item, SearchModel
-from chirashi.search.movie_listing.models import Item as MovieListingItem
-from chirashi.search.music.models import Item as MusicItem
-from chirashi.search.series.models import Item as SeriesItem
+from chirashi.search.models import Item, SearchModel, model_validate_json
 
 logger = getLogger(__name__)
 logger.addHandler(NullHandler())
@@ -48,10 +42,36 @@ class Search(BaseSearch[SearchModel]):
         - TE: trailers
     """
 
-    _response_model = SearchModel
+    MODEL = SearchModel
+    LOAD = staticmethod(model_validate_json)
     search_type = DEFAULT_TYPE
     n = 6
 
+    # TODO: Validate
+    @override
+    def __call__(
+        self,
+        q: str,
+        *,
+        n: int | None = None,
+        search_type: str | None = None,
+        ratings: bool = True,
+        locale: str | None = None,
+    ) -> SearchModel:
+        """Run the search and return the model it is read into."""
+        log_id = self.get_log_id(self.__call__, locals())
+        return self.load(
+            self.download(
+                q,
+                n=n,
+                search_type=search_type,
+                ratings=ratings,
+                locale=locale,
+            ),
+            log_id,
+        )
+
+    # TODO: Validate
     @override
     def download(
         self,
@@ -61,7 +81,8 @@ class Search(BaseSearch[SearchModel]):
         search_type: str | None = None,
         ratings: bool = True,
         locale: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> str:
+        """Download the search file."""
         return self._download(
             q,
             n=n,
@@ -70,57 +91,36 @@ class Search(BaseSearch[SearchModel]):
             locale=locale,
         )
 
-    @override
-    def download_and_parse(
-        self,
-        q: str,
-        *,
-        n: int | None = None,
-        search_type: str | None = None,
-        ratings: bool = True,
-        locale: str | None = None,
-    ) -> SearchModel:
-        return self.parse(
-            self.download(
-                q,
-                n=n,
-                search_type=search_type,
-                ratings=ratings,
-                locale=locale,
-            ),
-        )
-
-    def _extract_category[U: GAPIBaseModel](
-        self,
-        data: SearchModel,
-        field_type: str,
-        model: type[U],
-    ) -> list[U]:
+    # TODO: Validate
+    def _extract_category(self, data: SearchModel, field_type: str) -> list[Item]:
+        """Return the items a search answered for one of the types it was asked."""
         for datum in data.data:
             if datum.type == field_type:
-                return [
-                    model.model_validate(item)
-                    for item in self.original_input(datum.items)
-                ]
+                return datum.items
         msg = f"No data found for field type '{field_type}' in search results."
         raise ValueError(msg)
 
+    # TODO: Validate
     def extract_top_results(self, data: SearchModel) -> list[Item]:
         """Extract the top results from Search."""
-        return self._extract_category(data, "top_results", Item)
+        return self._extract_category(data, "top_results")
 
-    def extract_series(self, data: SearchModel) -> list[SeriesItem]:
+    # TODO: Validate
+    def extract_series(self, data: SearchModel) -> list[Item]:
         """Extract the series from Search."""
-        return self._extract_category(data, "series", SeriesItem)
+        return self._extract_category(data, "series")
 
-    def extract_episode(self, data: SearchModel) -> list[EpisodeItem]:
+    # TODO: Validate
+    def extract_episode(self, data: SearchModel) -> list[Item]:
         """Extract the episodes from Search."""
-        return self._extract_category(data, "episode", EpisodeItem)
+        return self._extract_category(data, "episode")
 
-    def extract_music(self, data: SearchModel) -> list[MusicItem]:
+    # TODO: Validate
+    def extract_music(self, data: SearchModel) -> list[Item]:
         """Extract the music from Search."""
-        return self._extract_category(data, "music", MusicItem)
+        return self._extract_category(data, "music")
 
-    def extract_movie_listing(self, data: SearchModel) -> list[MovieListingItem]:
+    # TODO: Validate
+    def extract_movie_listing(self, data: SearchModel) -> list[Item]:
         """Extract the movie listings from Search."""
-        return self._extract_category(data, "movie_listing", MovieListingItem)
+        return self._extract_category(data, "movie_listing")

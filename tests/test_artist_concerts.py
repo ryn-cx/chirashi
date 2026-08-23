@@ -1,55 +1,51 @@
+# TODO: Validate
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
 import pytest
 
+from chirashi.artist_concerts.models import ArtistConcertsModel
 from chirashi.exceptions import ArtistNotFoundError
-from tests.utils import assert_error, download_and_save, parsed_json
+from tests.utils import RecordedEndpoint
 
 if TYPE_CHECKING:
     from chirashi import Chirashi
-    from chirashi.artist_concerts import ArtistConcerts
 
-# https://www.crunchyroll.com/artist/MA6480DAB5/shoko-nakagawa
-ARTIST_ID = "MA6480DAB5"
-# https://www.crunchyroll.com/artist/MA36EDC261/ali
-ARTIST_ID_WITHOUT_CONCERTS = "MA36EDC261"
-INVALID_ARTIST_ID = "MA00000000"
+ARTIST_IDS = [
+    pytest.param("MA6480DAB5", id="shoko nakagawa"),
+    pytest.param("MA36EDC261", id="ali, who has no concerts"),
+]
 
 
-@pytest.fixture(scope="session")
-def client(client: Chirashi) -> ArtistConcerts:
-    return client.artist_concerts
+# TODO: Validate
+class ArtistConcertsTest(RecordedEndpoint):
+    MODEL = ArtistConcertsModel
 
 
-def test_download(client: ArtistConcerts) -> None:
-    download_and_save(client, ARTIST_ID, lambda: client.download(ARTIST_ID))
-
-
-def test_download_without_concerts(client: ArtistConcerts) -> None:
-    download_and_save(
-        client,
-        ARTIST_ID_WITHOUT_CONCERTS,
-        lambda: client.download(ARTIST_ID_WITHOUT_CONCERTS),
+# TODO: Validate
+@pytest.mark.parametrize("artist_id", ARTIST_IDS)
+def test_download(client: Chirashi, artist_id: str) -> None:
+    ArtistConcertsTest.download_test(
+        artist_id,
+        lambda: client.artist_concerts.download(artist_id),
     )
 
 
-def test_parse(client: ArtistConcerts) -> None:
-    data = parsed_json(client, ARTIST_ID)
-    assert data.total == len(data.data)
+# TODO: Validate
+@pytest.mark.parametrize("artist_id", ARTIST_IDS)
+def test_parse(artist_id: str) -> None:
+    ArtistConcertsTest.parse_test(artist_id)
 
 
-def test_parse_without_concerts(client: ArtistConcerts) -> None:
-    data = parsed_json(client, ARTIST_ID_WITHOUT_CONCERTS)
-    assert data.total == 0
-    assert data.data == []
-
-
-def test_download_invalid(client: ArtistConcerts) -> None:
-    assert_error(
-        client,
-        INVALID_ARTIST_ID,
-        lambda: client.download(INVALID_ARTIST_ID),
+# TODO: Validate
+@pytest.mark.parametrize(
+    "artist_id",
+    [pytest.param("MA00000000", id="artist that does not exist")],
+)
+def test_download_invalid(client: Chirashi, artist_id: str) -> None:
+    ArtistConcertsTest.error_test(
+        artist_id,
+        lambda: client.artist_concerts.download(artist_id),
         ArtistNotFoundError,
     )
