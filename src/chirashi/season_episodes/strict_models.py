@@ -48,8 +48,8 @@ class LanguagePresentation(BaseModel):
     model_config = ConfigDict(defer_build=True)
     audio_notation: str
     text_notation: str
-    text_locale: str
-    text_notation_reason: str
+    text_locale: str | None = None
+    text_notation_reason: str | None = None
 
 class Datum(BaseModel):
     model_config = ConfigDict(defer_build=True)
