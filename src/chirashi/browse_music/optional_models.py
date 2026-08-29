@@ -4,31 +4,31 @@ from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
 from typing import Any
 
 class PosterTallItem(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     height: int | None = None
     source: str | None = None
     type: str | None = None
     width: int | None = None
 
 class PosterWideItem(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     height: int | None = None
     source: str | None = None
     type: str | None = None
     width: int | None = None
 
 class Images(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     poster_tall: list[PosterTallItem] | None = None
     poster_wide: list[PosterWideItem] | None = None
 
 class Genre(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     display_value: str | None = Field(None, alias='displayValue')
     id: str | None = None
 
 class Datum(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     images: Images | None = None
     is_public: bool | None = Field(None, alias='isPublic')
     ready_to_publish: bool | None = Field(None, alias='readyToPublish')
@@ -47,7 +47,7 @@ class Datum(BaseModel):
     name: str | None = None
 
 class BrowseMusicModel(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     total: int | None = None
     data: list[Datum] | None = None
     meta: dict[str, Any] | None = None

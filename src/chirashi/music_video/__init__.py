@@ -76,4 +76,4 @@ class MusicVideo(BaseEndpoint):
     # TODO: Validate
     def load(self, data: str, log_id: str = "") -> MusicVideoModel:
         """Read a downloaded music video file into its model."""
-        return model_validate_json(data, log_id or type(self).__name__)
+        return model_validate_json(data, log_id or self.default_log_id)

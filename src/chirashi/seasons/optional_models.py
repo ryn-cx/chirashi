@@ -4,24 +4,24 @@ from pydantic import BaseModel, ConfigDict
 from typing import Any
 
 class ExtendedMaturityRating(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     system: str | None = None
     rating: str | None = None
     level: str | None = None
 
 class ContentDescriptorsWithSymbolItem(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     label: str | None = None
 
 class Version(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     audio_locale: str | None = None
     guid: str | None = None
     original: bool | None = None
     variant: str | None = None
 
 class Datum(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     id: str | None = None
     channel_id: str | None = None
     title: str | None = None
@@ -55,11 +55,11 @@ class Datum(BaseModel):
     number_of_episodes: int | None = None
 
 class Meta(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     versions_considered: bool | None = None
 
 class SeasonsModel(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     data: list[Datum] | None = None
     meta: Meta | None = None
     total: int | None = None

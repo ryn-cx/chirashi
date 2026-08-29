@@ -4,37 +4,37 @@ from pydantic import AwareDatetime, BaseModel, ConfigDict
 from typing import Any
 
 class ThumbnailItem(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     width: int | None = None
     height: int | None = None
     type: str | None = None
     source: str | None = None
 
 class Images(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     thumbnail: list[list[ThumbnailItem]] | None = None
 
 class LocalizedImages(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     thumbnail: str | None = None
 
 class AdBreak(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     type: str | None = None
     offset_ms: int | None = None
 
 class ExtendedMaturityRating(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     system: str | None = None
     rating: str | None = None
     level: str | None = None
 
 class ContentDescriptorsWithSymbolItem(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     label: str | None = None
 
 class Version(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     audio_locale: str | None = None
     guid: str | None = None
     original: bool | None = None
@@ -45,7 +45,7 @@ class Version(BaseModel):
     roles: list[str] | None = None
 
 class EpisodeMetadata(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     series_id: str | None = None
     series_title: str | None = None
     series_slug_title: str | None = None
@@ -91,23 +91,23 @@ class EpisodeMetadata(BaseModel):
     roles: list[str] | None = None
 
 class Up(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     displayed: str | None = None
     unit: str | None = None
 
 class Down(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     displayed: str | None = None
     unit: str | None = None
 
 class Rating(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     up: Up | None = None
     down: Down | None = None
     total: int | None = None
 
 class LanguagePresentation(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     audio_notation: str | None = None
     text_notation: str | None = None
     is_original_audio: bool | None = None
@@ -117,7 +117,7 @@ class LanguagePresentation(BaseModel):
     text_notation_reason: str | None = None
 
 class Datum(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     id: str | None = None
     external_id: str | None = None
     channel_id: str | None = None
@@ -134,7 +134,7 @@ class Datum(BaseModel):
     language_presentation: LanguagePresentation | None = None
 
 class ObjectsModel(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     data: list[Datum] | None = None
     total: int | None = None
     meta: dict[str, Any] | None = None

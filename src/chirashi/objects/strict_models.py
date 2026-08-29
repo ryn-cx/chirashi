@@ -1,33 +1,41 @@
 from typing import Self
 from pydantic import ModelWrapValidatorHandler, PrivateAttr, model_validator
+from pydantic import ConfigDict
 from pydantic import AwareDatetime, BaseModel
 from typing import Any
 
 class ThumbnailItem(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     width: int
     height: int
     type: str
     source: str
 
 class Images(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     thumbnail: list[list[ThumbnailItem]]
 
 class LocalizedImages(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     thumbnail: str
 
 class AdBreak(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     type: str
     offset_ms: int
 
 class ExtendedMaturityRating(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     system: str
     rating: str
     level: str
 
 class ContentDescriptorsWithSymbolItem(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     label: str
 
 class Version(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     audio_locale: str
     guid: str
     original: bool
@@ -38,6 +46,7 @@ class Version(BaseModel):
     roles: list[str]
 
 class EpisodeMetadata(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     series_id: str
     series_title: str
     series_slug_title: str
@@ -83,19 +92,23 @@ class EpisodeMetadata(BaseModel):
     roles: list[str]
 
 class Up(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     displayed: str
     unit: str
 
 class Down(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     displayed: str
     unit: str
 
 class Rating(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     up: Up
     down: Down
     total: int
 
 class LanguagePresentation(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     audio_notation: str
     text_notation: str
     is_original_audio: bool | None = None
@@ -105,6 +118,7 @@ class LanguagePresentation(BaseModel):
     text_notation_reason: str | None = None
 
 class Datum(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     id: str
     external_id: str
     channel_id: str
@@ -121,6 +135,7 @@ class Datum(BaseModel):
     language_presentation: LanguagePresentation
 
 class ObjectsModel(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     data: list[Datum]
     total: int
     meta: dict[str, Any]

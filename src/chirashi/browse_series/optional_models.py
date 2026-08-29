@@ -4,50 +4,50 @@ from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
 from typing import Any
 
 class PosterTallItem(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     width: int | None = None
     height: int | None = None
     type: str | None = None
     source: str | None = None
 
 class PosterWideItem(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     width: int | None = None
     height: int | None = None
     type: str | None = None
     source: str | None = None
 
 class PromoImageItem(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     width: int | None = None
     height: int | None = None
     type: str | None = None
     source: str | None = None
 
 class Images(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     poster_tall: list[list[PosterTallItem]] | None = None
     poster_wide: list[list[PosterWideItem]] | None = None
     promo_image: list[list[PromoImageItem]] | None = None
 
 class LocalizedImages(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     poster_tall: str | None = None
     poster_wide: str | None = None
 
 class ExtendedMaturityRating(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     system: str | None = None
     rating: str | None = None
     level: str | None = None
     advisories: list[Any] | None = None
 
 class ContentDescriptorsWithSymbolItem(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     label: str | None = None
 
 class LanguagePresentation(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     audio_notation: str | None = None
     text_notation: str | None = None
     is_original_audio: bool | None = None
@@ -57,14 +57,14 @@ class LanguagePresentation(BaseModel):
     audio_notation_reason: str | None = None
 
 class Award(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     text: str | None = None
     icon_url: str | None = None
     is_current_award: bool | None = None
     is_winner: bool | None = None
 
 class SeriesMetadata(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     availability_status: str | None = None
     extended_description: str | None = None
     episode_count: int | None = None
@@ -88,37 +88,37 @@ class SeriesMetadata(BaseModel):
     awards: list[Award] | None = None
 
 class Field1s(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     displayed: str | None = None
     unit: str | None = None
     percentage: int | None = None
 
 class Field2s(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     displayed: str | None = None
     unit: str | None = None
     percentage: int | None = None
 
 class Field3s(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     displayed: str | None = None
     unit: str | None = None
     percentage: int | None = None
 
 class Field4s(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     displayed: str | None = None
     unit: str | None = None
     percentage: int | None = None
 
 class Field5s(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     displayed: str | None = None
     unit: str | None = None
     percentage: int | None = None
 
 class Rating(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field_1s: Field1s | None = Field(None, alias='1s')
     field_2s: Field2s | None = Field(None, alias='2s')
     field_3s: Field3s | None = Field(None, alias='3s')
@@ -128,7 +128,7 @@ class Rating(BaseModel):
     total: int | None = None
 
 class Datum(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     id: str | None = None
     external_id: str | None = None
     channel_id: str | None = None
@@ -149,7 +149,7 @@ class Datum(BaseModel):
     rating: Rating | None = None
 
 class BrowseSeriesModel(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     data: list[Datum] | None = None
     total: int | None = None
     _raw_input: Any = PrivateAttr(default=None)

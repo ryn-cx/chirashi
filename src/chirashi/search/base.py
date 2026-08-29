@@ -111,4 +111,4 @@ class BaseSearch[T: BaseModel](BaseEndpoint):
     # TODO: Validate
     def load(self, data: str, log_id: str = "") -> T:
         """Read a downloaded search file into its model."""
-        return type(self).LOAD(data, log_id or type(self).__name__)
+        return type(self).LOAD(data, log_id or self.default_log_id)

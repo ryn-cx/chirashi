@@ -1,60 +1,71 @@
 from typing import Self
 from pydantic import ModelWrapValidatorHandler, PrivateAttr, model_validator
+from pydantic import ConfigDict
 from pydantic import AwareDatetime, BaseModel, Field
 from typing import Any
 from uuid import UUID
 
 class PosterWideItem(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     width: int
     height: int
     type: str
     source: str
 
 class PosterTallItem(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     width: int
     height: int
     type: str
     source: str
 
 class PromoImageItem(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     width: int
     height: int
     type: str
     source: str
 
 class ThumbnailItem(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     width: int
     height: int
     type: str
     source: str
 
 class Thumbnail(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     width: int
     height: int
     type: str
     source: str
 
 class Images(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     poster_wide: list[list[PosterWideItem]] | None = None
     poster_tall: list[list[PosterTallItem]] | None = None
     promo_image: list[list[PromoImageItem]] | None = None
     thumbnail: list[list[ThumbnailItem] | Thumbnail] | None = None
 
 class LocalizedImages(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     poster_wide: str | None = None
     poster_tall: str | None = None
     thumbnail: str | None = None
 
 class ExtendedMaturityRating(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     system: str
     rating: str
     level: str
     advisories: list[None]
 
 class ContentDescriptorsWithSymbolItem(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     label: str
 
 class LanguagePresentation(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     audio_notation: str
     text_notation: str
     is_original_audio: bool | None = None
@@ -64,12 +75,14 @@ class LanguagePresentation(BaseModel):
     text_notation_reason: str | None = None
 
 class Award(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     text: str
     icon_url: str
     is_current_award: bool
     is_winner: bool
 
 class SeriesMetadata(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     availability_status: str
     extended_description: str
     episode_count: int
@@ -93,44 +106,53 @@ class SeriesMetadata(BaseModel):
     awards: list[Award] | None = None
 
 class SearchMetadata(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     score: float
     rank: int | None = None
     popularity_score: int | float | None = None
 
 class Field1s(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     displayed: str
     unit: str
     percentage: int
 
 class Field2s(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     displayed: str
     unit: str
     percentage: int
 
 class Field3s(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     displayed: str
     unit: str
     percentage: int
 
 class Field4s(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     displayed: str
     unit: str
     percentage: int
 
 class Field5s(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     displayed: str
     unit: str
     percentage: int
 
 class Up(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     displayed: str
     unit: str
 
 class Down(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     displayed: str
     unit: str
 
 class Rating(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field_1s: Field1s | None = Field(None, alias='1s')
     field_2s: Field2s | None = Field(None, alias='2s')
     field_3s: Field3s | None = Field(None, alias='3s')
@@ -142,10 +164,12 @@ class Rating(BaseModel):
     down: Down | None = None
 
 class AdBreak(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     type: str
     offset_ms: int
 
 class Version(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     audio_locale: str
     guid: str
     original: bool
@@ -156,6 +180,7 @@ class Version(BaseModel):
     roles: list[str]
 
 class LanguagePresentation2(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     audio_notation: str
     text_notation: str
     is_original_audio: bool | None = None
@@ -165,6 +190,7 @@ class LanguagePresentation2(BaseModel):
     audio_notation_reason: str | None = None
 
 class EpisodeMetadata(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     series_id: str
     series_title: str
     series_slug_title: str
@@ -212,19 +238,23 @@ class EpisodeMetadata(BaseModel):
     language_presentation: LanguagePresentation2
 
 class Availability(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     end_date: AwareDatetime = Field(..., alias='endDate')
     start_date: AwareDatetime = Field(..., alias='startDate')
 
 class Artist(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     id: str
     name: str
     slug: str
 
 class Genre(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     display_value: str = Field(..., alias='displayValue')
     id: str
 
 class MainArtistItem(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     connector: str
     id: str
     name: str
@@ -233,9 +263,11 @@ class MainArtistItem(BaseModel):
     slug: str
 
 class Artists(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     main_artist: list[MainArtistItem] = Field(..., alias='MainArtist')
 
 class Item(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     id: str
     external_id: str | None = None
     channel_id: str | None = None
@@ -281,11 +313,13 @@ class Item(BaseModel):
     anime_ids: list[str] | None = Field(None, alias='animeIds')
 
 class Datum(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     type: str
     items: list[Item]
     count: int
 
 class SearchModel(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     data: list[Datum]
     total: int
     meta: dict[str, Any]

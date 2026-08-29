@@ -1,32 +1,39 @@
 from typing import Self
 from pydantic import ModelWrapValidatorHandler, PrivateAttr, model_validator
+from pydantic import ConfigDict
 from pydantic import AwareDatetime, BaseModel, Field
 from typing import Any
 from uuid import UUID
 
 class ThumbnailItem(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     height: int
     source: str
     type: str
     width: int
 
 class Images(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     thumbnail: list[ThumbnailItem]
 
 class Genre(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     display_value: str = Field(..., alias='displayValue')
     id: str
 
 class Artist(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     id: str
     name: str
     slug: str
 
 class Availability(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     end_date: AwareDatetime = Field(..., alias='endDate')
     start_date: AwareDatetime = Field(..., alias='startDate')
 
 class MainArtistItem(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     connector: str
     id: str
     name: str
@@ -35,6 +42,7 @@ class MainArtistItem(BaseModel):
     slug: str
 
 class FeaturedArtistItem(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     connector: str
     id: str
     name: str
@@ -43,10 +51,12 @@ class FeaturedArtistItem(BaseModel):
     slug: str
 
 class Artists(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     main_artist: list[MainArtistItem] = Field(..., alias='MainArtist')
     featured_artist: list[FeaturedArtistItem] | None = Field(None, alias='FeaturedArtist')
 
 class Datum(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     images: Images
     sequence_number: int = Field(..., alias='sequenceNumber')
     copyright: str
@@ -78,6 +88,7 @@ class Datum(BaseModel):
     streams_link: str
 
 class ArtistMusicVideosModel(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     total: int
     data: list[Datum]
     meta: dict[str, Any]

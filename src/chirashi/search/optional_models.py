@@ -5,66 +5,66 @@ from typing import Any
 from uuid import UUID
 
 class PosterWideItem(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     width: int | None = None
     height: int | None = None
     type: str | None = None
     source: str | None = None
 
 class PosterTallItem(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     width: int | None = None
     height: int | None = None
     type: str | None = None
     source: str | None = None
 
 class PromoImageItem(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     width: int | None = None
     height: int | None = None
     type: str | None = None
     source: str | None = None
 
 class ThumbnailItem(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     width: int | None = None
     height: int | None = None
     type: str | None = None
     source: str | None = None
 
 class Thumbnail(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     width: int | None = None
     height: int | None = None
     type: str | None = None
     source: str | None = None
 
 class Images(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     poster_wide: list[list[PosterWideItem]] | None = None
     poster_tall: list[list[PosterTallItem]] | None = None
     promo_image: list[list[PromoImageItem]] | None = None
     thumbnail: list[list[ThumbnailItem] | Thumbnail] | None = None
 
 class LocalizedImages(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     poster_wide: str | None = None
     poster_tall: str | None = None
     thumbnail: str | None = None
 
 class ExtendedMaturityRating(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     system: str | None = None
     rating: str | None = None
     level: str | None = None
     advisories: list[Any] | None = None
 
 class ContentDescriptorsWithSymbolItem(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     label: str | None = None
 
 class LanguagePresentation(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     audio_notation: str | None = None
     text_notation: str | None = None
     is_original_audio: bool | None = None
@@ -74,14 +74,14 @@ class LanguagePresentation(BaseModel):
     text_notation_reason: str | None = None
 
 class Award(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     text: str | None = None
     icon_url: str | None = None
     is_current_award: bool | None = None
     is_winner: bool | None = None
 
 class SeriesMetadata(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     availability_status: str | None = None
     extended_description: str | None = None
     episode_count: int | None = None
@@ -105,53 +105,53 @@ class SeriesMetadata(BaseModel):
     awards: list[Award] | None = None
 
 class SearchMetadata(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     score: float | None = None
     rank: int | None = None
     popularity_score: int | float | None = None
 
 class Field1s(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     displayed: str | None = None
     unit: str | None = None
     percentage: int | None = None
 
 class Field2s(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     displayed: str | None = None
     unit: str | None = None
     percentage: int | None = None
 
 class Field3s(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     displayed: str | None = None
     unit: str | None = None
     percentage: int | None = None
 
 class Field4s(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     displayed: str | None = None
     unit: str | None = None
     percentage: int | None = None
 
 class Field5s(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     displayed: str | None = None
     unit: str | None = None
     percentage: int | None = None
 
 class Up(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     displayed: str | None = None
     unit: str | None = None
 
 class Down(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     displayed: str | None = None
     unit: str | None = None
 
 class Rating(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field_1s: Field1s | None = Field(None, alias='1s')
     field_2s: Field2s | None = Field(None, alias='2s')
     field_3s: Field3s | None = Field(None, alias='3s')
@@ -163,12 +163,12 @@ class Rating(BaseModel):
     down: Down | None = None
 
 class AdBreak(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     type: str | None = None
     offset_ms: int | None = None
 
 class Version(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     audio_locale: str | None = None
     guid: str | None = None
     original: bool | None = None
@@ -179,7 +179,7 @@ class Version(BaseModel):
     roles: list[str] | None = None
 
 class LanguagePresentation2(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     audio_notation: str | None = None
     text_notation: str | None = None
     is_original_audio: bool | None = None
@@ -189,7 +189,7 @@ class LanguagePresentation2(BaseModel):
     audio_notation_reason: str | None = None
 
 class EpisodeMetadata(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     series_id: str | None = None
     series_title: str | None = None
     series_slug_title: str | None = None
@@ -237,23 +237,23 @@ class EpisodeMetadata(BaseModel):
     language_presentation: LanguagePresentation2 | None = None
 
 class Availability(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     end_date: AwareDatetime | None = Field(None, alias='endDate')
     start_date: AwareDatetime | None = Field(None, alias='startDate')
 
 class Artist(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     id: str | None = None
     name: str | None = None
     slug: str | None = None
 
 class Genre(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     display_value: str | None = Field(None, alias='displayValue')
     id: str | None = None
 
 class MainArtistItem(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     connector: str | None = None
     id: str | None = None
     name: str | None = None
@@ -262,11 +262,11 @@ class MainArtistItem(BaseModel):
     slug: str | None = None
 
 class Artists(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     main_artist: list[MainArtistItem] | None = Field(None, alias='MainArtist')
 
 class Item(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     id: str | None = None
     external_id: str | None = None
     channel_id: str | None = None
@@ -312,13 +312,13 @@ class Item(BaseModel):
     anime_ids: list[str] | None = Field(None, alias='animeIds')
 
 class Datum(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     type: str | None = None
     items: list[Item] | None = None
     count: int | None = None
 
 class SearchModel(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     data: list[Datum] | None = None
     total: int | None = None
     meta: dict[str, Any] | None = None

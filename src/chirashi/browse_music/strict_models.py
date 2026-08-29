@@ -1,29 +1,35 @@
 from typing import Self
 from pydantic import ModelWrapValidatorHandler, PrivateAttr, model_validator
+from pydantic import ConfigDict
 from pydantic import AwareDatetime, BaseModel, Field
 from typing import Any
 
 class PosterTallItem(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     height: int
     source: str
     type: str
     width: int
 
 class PosterWideItem(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     height: int
     source: str
     type: str
     width: int
 
 class Images(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     poster_tall: list[PosterTallItem]
     poster_wide: list[PosterWideItem]
 
 class Genre(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     display_value: str = Field(..., alias='displayValue')
     id: str
 
 class Datum(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     images: Images
     is_public: bool = Field(..., alias='isPublic')
     ready_to_publish: bool = Field(..., alias='readyToPublish')
@@ -42,6 +48,7 @@ class Datum(BaseModel):
     name: str
 
 class BrowseMusicModel(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     total: int
     data: list[Datum]
     meta: dict[str, Any]

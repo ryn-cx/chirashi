@@ -5,29 +5,29 @@ from uuid import UUID
 from typing import Any
 
 class Availability(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     end_date: AwareDatetime | None = Field(None, alias='endDate')
     start_date: AwareDatetime | None = Field(None, alias='startDate')
 
 class ThumbnailItem(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     height: int | None = None
     source: str | None = None
     type: str | None = None
     width: int | None = None
 
 class Images(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     thumbnail: list[ThumbnailItem] | None = None
 
 class Artist(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     id: str | None = None
     name: str | None = None
     slug: str | None = None
 
 class MainArtistItem(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     connector: str | None = None
     id: str | None = None
     name: str | None = None
@@ -36,16 +36,16 @@ class MainArtistItem(BaseModel):
     slug: str | None = None
 
 class Artists(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     main_artist: list[MainArtistItem] | None = Field(None, alias='MainArtist')
 
 class Genre(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     display_value: str | None = Field(None, alias='displayValue')
     id: str | None = None
 
 class Datum(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     availability: Availability | None = None
     copyright: str | None = None
     created_at: AwareDatetime | None = Field(None, alias='createdAt')
@@ -76,7 +76,7 @@ class Datum(BaseModel):
     updated_at: AwareDatetime | None = Field(None, alias='updatedAt')
 
 class ConcertModel(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     total: int | None = None
     data: list[Datum] | None = None
     meta: dict[str, Any] | None = None

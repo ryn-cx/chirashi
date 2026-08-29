@@ -1,28 +1,34 @@
 from typing import Self
 from pydantic import ModelWrapValidatorHandler, PrivateAttr, model_validator
+from pydantic import ConfigDict
 from pydantic import AwareDatetime, BaseModel, Field
 from uuid import UUID
 from typing import Any
 
 class Availability(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     end_date: AwareDatetime = Field(..., alias='endDate')
     start_date: AwareDatetime = Field(..., alias='startDate')
 
 class ThumbnailItem(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     height: int
     source: str
     type: str
     width: int
 
 class Images(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     thumbnail: list[ThumbnailItem]
 
 class Artist(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     id: str
     name: str
     slug: str
 
 class MainArtistItem(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     connector: str
     id: str
     name: str
@@ -31,13 +37,16 @@ class MainArtistItem(BaseModel):
     slug: str
 
 class Artists(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     main_artist: list[MainArtistItem] = Field(..., alias='MainArtist')
 
 class Genre(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     display_value: str = Field(..., alias='displayValue')
     id: str
 
 class Datum(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     availability: Availability
     copyright: str
     created_at: AwareDatetime = Field(..., alias='createdAt')
@@ -68,6 +77,7 @@ class Datum(BaseModel):
     updated_at: AwareDatetime = Field(..., alias='updatedAt')
 
 class ConcertModel(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     total: int
     data: list[Datum]
     meta: dict[str, Any]

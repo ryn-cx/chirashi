@@ -1,31 +1,38 @@
 from typing import Self
 from pydantic import ModelWrapValidatorHandler, PrivateAttr, model_validator
+from pydantic import ConfigDict
 from pydantic import AwareDatetime, BaseModel, Field
 from typing import Any
 from uuid import UUID
 
 class ThumbnailItem(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     width: int
     height: int
     type: str
     source: str
 
 class Images(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     thumbnail: list[ThumbnailItem]
 
 class SearchMetadata(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     score: float
 
 class Genre(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     display_value: str = Field(..., alias='displayValue')
     id: str
 
 class Artist(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     id: str
     name: str
     slug: str
 
 class MainArtistItem(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     connector: str
     id: str
     name: str
@@ -34,13 +41,16 @@ class MainArtistItem(BaseModel):
     slug: str
 
 class Artists(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     main_artist: list[MainArtistItem] = Field(..., alias='MainArtist')
 
 class Availability(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     end_date: AwareDatetime = Field(..., alias='endDate')
     start_date: AwareDatetime = Field(..., alias='startDate')
 
 class Item(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     id: str
     type: str
     title: str
@@ -74,11 +84,13 @@ class Item(BaseModel):
     display_artist_name_required: bool = Field(..., alias='displayArtistNameRequired')
 
 class Datum(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     type: str
     items: list[Item]
     count: int
 
 class SearchMusicModel(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     data: list[Datum]
     total: int
     meta: dict[str, Any]

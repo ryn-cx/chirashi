@@ -4,48 +4,48 @@ from pydantic import BaseModel, ConfigDict
 from typing import Any
 
 class PosterWideItem(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     width: int | None = None
     height: int | None = None
     type: str | None = None
     source: str | None = None
 
 class PosterTallItem(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     width: int | None = None
     height: int | None = None
     type: str | None = None
     source: str | None = None
 
 class Images(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     poster_wide: list[list[PosterWideItem]] | None = None
     poster_tall: list[list[PosterTallItem]] | None = None
 
 class LocalizedImages(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     poster_wide: str | None = None
     poster_tall: str | None = None
 
 class ExtendedMaturityRating(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     system: str | None = None
     rating: str | None = None
     level: str | None = None
 
 class Award(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     text: str | None = None
     icon_url: str | None = None
     is_current_award: bool | None = None
     is_winner: bool | None = None
 
 class ContentDescriptorsWithSymbolItem(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     label: str | None = None
 
 class LanguagePresentation(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     audio_notation: str | None = None
     text_notation: str | None = None
     is_original_audio: bool | None = None
@@ -55,7 +55,7 @@ class LanguagePresentation(BaseModel):
     text_notation_reason: str | None = None
 
 class Datum(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     id: str | None = None
     channel_id: str | None = None
     title: str | None = None
@@ -91,7 +91,7 @@ class Datum(BaseModel):
     language_presentation: LanguagePresentation | None = None
 
 class SeriesModel(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     total: int | None = None
     data: list[Datum] | None = None
     meta: dict[str, Any] | None = None

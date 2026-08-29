@@ -1,14 +1,17 @@
 from typing import Self
 from pydantic import ModelWrapValidatorHandler, PrivateAttr, model_validator
+from pydantic import ConfigDict
 from pydantic import AwareDatetime, BaseModel
 from typing import Any
 
 class ExtendedMaturityRating(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     system: str
     rating: str
     level: str
 
 class Version(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     audio_locale: str
     guid: str
     original: bool
@@ -19,31 +22,38 @@ class Version(BaseModel):
     roles: list[str]
 
 class ContentDescriptorsWithSymbolItem(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     label: str
 
 class ThumbnailItem(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     width: int
     height: int
     type: str
     source: str
 
 class Images(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     thumbnail: list[list[ThumbnailItem]]
 
 class LocalizedImages(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     thumbnail: str
 
 class AdBreak(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     type: str
     offset_ms: int
 
 class LanguagePresentation(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     audio_notation: str
     text_notation: str
     text_locale: str
     text_notation_reason: str
 
 class Datum(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     id: str
     channel_id: str
     series_id: str
@@ -108,9 +118,11 @@ class Datum(BaseModel):
     roles: list[str]
 
 class Meta(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     versions_considered: bool | None = None
 
 class SeasonEpisodesModel(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     data: list[Datum]
     total: int
     meta: Meta

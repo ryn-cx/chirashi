@@ -1,23 +1,28 @@
 from typing import Self
 from pydantic import ModelWrapValidatorHandler, PrivateAttr, model_validator
+from pydantic import ConfigDict
 from pydantic import BaseModel
 from typing import Any
 
 class ExtendedMaturityRating(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     system: str
     rating: str
     level: str
 
 class ContentDescriptorsWithSymbolItem(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     label: str
 
 class Version(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     audio_locale: str
     guid: str
     original: bool
     variant: str
 
 class Datum(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     id: str
     channel_id: str
     title: str
@@ -51,9 +56,11 @@ class Datum(BaseModel):
     number_of_episodes: int
 
 class Meta(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     versions_considered: bool | None = None
 
 class SeasonsModel(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     data: list[Datum]
     meta: Meta
     total: int

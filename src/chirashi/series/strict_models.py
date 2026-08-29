@@ -1,43 +1,52 @@
 from typing import Self
 from pydantic import ModelWrapValidatorHandler, PrivateAttr, model_validator
+from pydantic import ConfigDict
 from pydantic import BaseModel
 from typing import Any
 
 class PosterWideItem(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     width: int
     height: int
     type: str
     source: str
 
 class PosterTallItem(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     width: int
     height: int
     type: str
     source: str
 
 class Images(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     poster_wide: list[list[PosterWideItem]]
     poster_tall: list[list[PosterTallItem]]
 
 class LocalizedImages(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     poster_wide: str
     poster_tall: str
 
 class ExtendedMaturityRating(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     system: str
     rating: str
     level: str
 
 class Award(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     text: str
     icon_url: str
     is_current_award: bool
     is_winner: bool
 
 class ContentDescriptorsWithSymbolItem(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     label: str
 
 class LanguagePresentation(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     audio_notation: str
     text_notation: str
     is_original_audio: bool
@@ -47,6 +56,7 @@ class LanguagePresentation(BaseModel):
     text_notation_reason: str
 
 class Datum(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     id: str
     channel_id: str
     title: str
@@ -82,6 +92,7 @@ class Datum(BaseModel):
     language_presentation: LanguagePresentation
 
 class SeriesModel(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     total: int
     data: list[Datum]
     meta: dict[str, Any]
