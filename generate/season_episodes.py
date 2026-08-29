@@ -6,16 +6,12 @@ from __future__ import annotations
 import logging
 
 from get_around import build_client_automatically
-from good_ass_pydantic_integrator import generate_model
 
 from chirashi import Chirashi
 from generate.constants import CHIRASHI_PATH, FILES_PATH
-from generate.utils import download_if_missing
+from generate.utils import download_if_missing, load_ids, rebuild_model
 
-SEASON_IDS = [
-    "G68VCP0VQ",
-    "GRJQC18W2",
-]
+SEASON_IDS = load_ids("SeasonEpisodesModel")
 
 
 # TODO: Validate
@@ -28,7 +24,7 @@ def generate_season_episodes(client: Chirashi) -> None:
             season_id,
             lambda season_id=season_id: client.season_episodes.download(season_id),
         )
-    generate_model(FILES_PATH, CHIRASHI_PATH, "SeasonEpisodesModel")
+    rebuild_model(FILES_PATH, CHIRASHI_PATH, "SeasonEpisodesModel")
 
 
 if __name__ == "__main__":

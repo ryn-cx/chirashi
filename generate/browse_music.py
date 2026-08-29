@@ -6,32 +6,12 @@ from __future__ import annotations
 import logging
 
 from get_around import build_client_automatically
-from good_ass_pydantic_integrator import generate_model
 
 from chirashi import Chirashi
 from generate.constants import CHIRASHI_PATH, FILES_PATH
-from generate.utils import download_if_missing
+from generate.utils import download_if_missing, load_ids, rebuild_model
 
-STARTS = [
-    0,
-    36,
-    72,
-    108,
-    144,
-    180,
-    216,
-    252,
-    288,
-    324,
-    360,
-    396,
-    432,
-    468,
-    504,
-    540,
-    576,
-    612,
-]
+STARTS = load_ids("BrowseMusicModel")
 """Where each recorded page of the catalogue starts."""
 
 
@@ -45,7 +25,7 @@ def generate_browse_music(client: Chirashi) -> None:
             start,
             lambda start=start: client.browse_music.download(start=start),
         )
-    generate_model(FILES_PATH, CHIRASHI_PATH, "BrowseMusicModel")
+    rebuild_model(FILES_PATH, CHIRASHI_PATH, "BrowseMusicModel")
 
 
 if __name__ == "__main__":

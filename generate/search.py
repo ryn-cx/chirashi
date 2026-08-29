@@ -6,19 +6,12 @@ from __future__ import annotations
 import logging
 
 from get_around import build_client_automatically
-from good_ass_pydantic_integrator import generate_model
 
 from chirashi import Chirashi
 from generate.constants import CHIRASHI_PATH, FILES_PATH
-from generate.utils import download_if_missing
+from generate.utils import download_if_missing, load_ids, rebuild_model
 
-QUERIES = [
-    "#COMPASS2.0 ANIMATION PROJECT",
-    "009-1: The End of the Beginning",
-    "CASANOVA POSSE",
-    "This Is #COMPASS2.0",
-    "zzzzzzzzzzzzzzzzzzzz",
-]
+QUERIES = load_ids("SearchModel")
 
 
 # TODO: Validate
@@ -31,7 +24,7 @@ def generate_search(client: Chirashi) -> None:
             query,
             lambda query=query: client.search.download(query),
         )
-    generate_model(FILES_PATH, CHIRASHI_PATH, "SearchModel")
+    rebuild_model(FILES_PATH, CHIRASHI_PATH, "SearchModel")
 
 
 if __name__ == "__main__":

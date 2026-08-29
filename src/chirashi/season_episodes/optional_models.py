@@ -64,7 +64,7 @@ class Datum(BaseModel):
     season_number: int | None = None
     episode: str | None = None
     episode_number: int | None = None
-    sequence_number: int | None = None
+    sequence_number: int | float | None = None
     season_display_number: str | None = None
     season_sequence_number: int | None = None
     production_episode_id: str | None = None
@@ -92,7 +92,7 @@ class Datum(BaseModel):
     is_clip: bool | None = None
     seo_title: str | None = None
     seo_description: str | None = None
-    season_tags: list[Any] | None = None
+    season_tags: list[str] | None = None
     available_offline: bool | None = None
     subtitle_locales: list[str] | None = None
     availability_notes: str | None = None

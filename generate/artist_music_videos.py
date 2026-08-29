@@ -6,13 +6,12 @@ from __future__ import annotations
 import logging
 
 from get_around import build_client_automatically
-from good_ass_pydantic_integrator import generate_model
 
 from chirashi import Chirashi
 from generate.constants import CHIRASHI_PATH, FILES_PATH
-from generate.utils import download_if_missing
+from generate.utils import download_if_missing, load_ids, rebuild_model
 
-ARTIST_IDS = ["MA36EDC261"]
+ARTIST_IDS = load_ids("ArtistMusicVideosModel")
 
 
 # TODO: Validate
@@ -25,7 +24,7 @@ def generate_artist_music_videos(client: Chirashi) -> None:
             artist_id,
             lambda artist_id=artist_id: client.artist_music_videos.download(artist_id),
         )
-    generate_model(FILES_PATH, CHIRASHI_PATH, "ArtistMusicVideosModel")
+    rebuild_model(FILES_PATH, CHIRASHI_PATH, "ArtistMusicVideosModel")
 
 
 if __name__ == "__main__":

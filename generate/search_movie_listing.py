@@ -6,13 +6,12 @@ from __future__ import annotations
 import logging
 
 from get_around import build_client_automatically
-from good_ass_pydantic_integrator import generate_model
 
 from chirashi import Chirashi
 from generate.constants import CHIRASHI_PATH, FILES_PATH
-from generate.utils import download_if_missing
+from generate.utils import download_if_missing, load_ids, rebuild_model
 
-QUERIES = ["009-1: The End of the Beginning"]
+QUERIES = load_ids("SearchMovieListingModel")
 
 
 # TODO: Validate
@@ -25,7 +24,7 @@ def generate_search_movie_listing(client: Chirashi) -> None:
             query,
             lambda query=query: client.search_movie_listing.download(query),
         )
-    generate_model(FILES_PATH, CHIRASHI_PATH, "SearchMovieListingModel")
+    rebuild_model(FILES_PATH, CHIRASHI_PATH, "SearchMovieListingModel")
 
 
 if __name__ == "__main__":

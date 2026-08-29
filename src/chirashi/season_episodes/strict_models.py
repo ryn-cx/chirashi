@@ -1,8 +1,7 @@
-from typing import Self
+from typing import Any, Self
 from pydantic import ModelWrapValidatorHandler, PrivateAttr, model_validator
 from pydantic import ConfigDict
 from pydantic import AwareDatetime, BaseModel
-from typing import Any
 
 class ExtendedMaturityRating(BaseModel):
     model_config = ConfigDict(defer_build=True)
@@ -65,7 +64,7 @@ class Datum(BaseModel):
     season_number: int
     episode: str
     episode_number: int | None
-    sequence_number: int
+    sequence_number: int | float
     season_display_number: str
     season_sequence_number: int
     production_episode_id: str
@@ -93,7 +92,7 @@ class Datum(BaseModel):
     is_clip: bool
     seo_title: str
     seo_description: str
-    season_tags: list[None]
+    season_tags: list[str]
     available_offline: bool
     subtitle_locales: list[str]
     availability_notes: str

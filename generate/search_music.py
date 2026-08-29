@@ -6,13 +6,12 @@ from __future__ import annotations
 import logging
 
 from get_around import build_client_automatically
-from good_ass_pydantic_integrator import generate_model
 
 from chirashi import Chirashi
 from generate.constants import CHIRASHI_PATH, FILES_PATH
-from generate.utils import download_if_missing
+from generate.utils import download_if_missing, load_ids, rebuild_model
 
-QUERIES = ["CASANOVA POSSE"]
+QUERIES = load_ids("SearchMusicModel")
 
 
 # TODO: Validate
@@ -25,7 +24,7 @@ def generate_search_music(client: Chirashi) -> None:
             query,
             lambda query=query: client.search_music.download(query),
         )
-    generate_model(FILES_PATH, CHIRASHI_PATH, "SearchMusicModel")
+    rebuild_model(FILES_PATH, CHIRASHI_PATH, "SearchMusicModel")
 
 
 if __name__ == "__main__":
