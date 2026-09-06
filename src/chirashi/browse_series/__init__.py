@@ -74,7 +74,7 @@ class Browse(BaseEndpoint):
         )
 
     # TODO: Validate
-    def download(
+    def download(  # noqa: PLR0913 - Required to match API.
         self,
         *,
         start: int = 0,
@@ -82,6 +82,7 @@ class Browse(BaseEndpoint):
         sort_by: str = "newly_added",
         ratings: str = "true",
         locale: str | None = None,
+        referer: str | None = None,
     ) -> str:
         """Download the browse file."""
         log_id = self.get_log_id(self.download, locals())
@@ -98,7 +99,7 @@ class Browse(BaseEndpoint):
         response = self._client.download(
             "content/v2/discover/browse",
             params=params,
-            headers={"referer": "https://www.crunchyroll.com/videos/new"},
+            headers={"referer": referer or "https://www.crunchyroll.com/videos/new"},
             log_id=log_id,
         )
         return self._validate_download(response, start)
@@ -110,6 +111,7 @@ class Browse(BaseEndpoint):
             raise StartOutOfRangeError(start, total, response)
         return response
 
+    # TODO: Validate
     def download_until_datetime(  # noqa: PLR0913 - Required to match API.
         self,
         end_datetime: datetime | None = None,
@@ -119,6 +121,7 @@ class Browse(BaseEndpoint):
         locale: str | None = None,
         sort_by: str = "newly_added",
         ratings: str = "true",
+        referer: str | None = None,
     ) -> list[str]:
         """Downloads all files until end_datetime is reached."""
         results: list[str] = []
@@ -131,6 +134,7 @@ class Browse(BaseEndpoint):
                 start=start,
                 sort_by=sort_by,
                 ratings=ratings,
+                referer=referer,
             )
             results.append(page)
             start += n
