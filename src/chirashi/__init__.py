@@ -15,6 +15,7 @@ from chirashi.artist_concerts import ArtistConcerts
 from chirashi.artist_music_videos import ArtistMusicVideos
 from chirashi.browse_music import BrowseMusic
 from chirashi.browse_series import Browse
+from chirashi.categories import Categories
 from chirashi.concert import Concert
 from chirashi.exceptions import HTTPError, ResourceNotFoundError
 from chirashi.music_video import MusicVideo
@@ -62,6 +63,7 @@ class Chirashi:
         self.browse_series = Browse(self)
         self.series = Series(self)
         self.seasons = Seasons(self)
+        self.categories = Categories(self)
         self.season_episodes = SeasonEpisodes(self)
         self.objects = Objects(self)
         self.search = Search(self)
