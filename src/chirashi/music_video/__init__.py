@@ -3,14 +3,30 @@
 
 from __future__ import annotations
 
+import json
 from logging import NullHandler, getLogger
+from typing import Any
 
 from chirashi.base_api_endpoint import BaseEndpoint
-from chirashi.exceptions import MusicVideoNotFoundError, ResourceNotFoundError
+from chirashi.exceptions import (
+    ChirashiError,
+    MusicVideoNotFoundError,
+    ResourceNotFoundError,
+)
 from chirashi.music_video.models import MusicVideoModel, model_validate_json
 
 logger = getLogger(__name__)
 logger.addHandler(NullHandler())
+
+
+# TODO: Validate
+def extract_music_video(response: str) -> dict[str, Any]:
+    """Extract the music video from the MusicVideo response."""
+    if data := json.loads(response)["data"]:
+        return data[0]
+
+    msg = "The response has no music video in it"
+    raise ChirashiError(msg)
 
 
 class MusicVideo(BaseEndpoint):
@@ -45,7 +61,7 @@ class MusicVideo(BaseEndpoint):
         *,
         locale: str | None = None,
     ) -> MusicVideoModel:
-        """Look the music video up and return the model it is read into."""
+        """Download and parse the music video file."""
         log_id = self.get_log_id(self.__call__, locals())
         return self.load(self.download(music_video_id, locale=locale), log_id)
 
@@ -75,5 +91,8 @@ class MusicVideo(BaseEndpoint):
 
     # TODO: Validate
     def load(self, data: str, log_id: str = "") -> MusicVideoModel:
-        """Read a downloaded music video file into its model."""
-        return model_validate_json(data, log_id or self.default_log_id)
+        """Load a music video file into its model."""
+        return model_validate_json(
+            extract_music_video(data),
+            log_id or self.default_log_id,
+        )

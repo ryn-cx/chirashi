@@ -156,17 +156,11 @@ class Item(BaseModel):
     language_presentation: LanguagePresentation
     rating: Rating
 
-class Datum(BaseModel):
+class SearchMovieListingModel(BaseModel):
     model_config = ConfigDict(defer_build=True)
     type: str
     items: list[Item]
     count: int
-
-class SearchMovieListingModel(BaseModel):
-    model_config = ConfigDict(defer_build=True)
-    data: list[Datum]
-    total: int
-    meta: dict[str, Any]
     _raw_input: Any = PrivateAttr(default=None)
 
     @model_validator(mode='wrap')

@@ -45,7 +45,7 @@ class Images(BaseModel):
     model_config = ConfigDict(defer_build=True)
     thumbnail: list[ThumbnailItem]
 
-class Datum(BaseModel):
+class MusicVideoModel(BaseModel):
     model_config = ConfigDict(defer_build=True)
     id: str
     artist: Artist
@@ -76,12 +76,6 @@ class Datum(BaseModel):
     is_public: bool = Field(..., alias='isPublic')
     mature_blocked: bool = Field(..., alias='matureBlocked')
     slug: str
-
-class MusicVideoModel(BaseModel):
-    model_config = ConfigDict(defer_build=True)
-    total: int
-    data: list[Datum]
-    meta: dict[str, Any]
     _raw_input: Any = PrivateAttr(default=None)
 
     @model_validator(mode='wrap')

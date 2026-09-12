@@ -17,7 +17,6 @@ if TYPE_CHECKING:
     from .strict_models import (
         AdBreak,
         ContentDescriptorsWithSymbolItem,
-        Datum,
         Down,
         EpisodeMetadata,
         ExtendedMaturityRating,
@@ -36,7 +35,6 @@ else:
     from .optional_models import (
         AdBreak,
         ContentDescriptorsWithSymbolItem,
-        Datum,
         Down,
         EpisodeMetadata,
         ExtendedMaturityRating,
@@ -55,7 +53,6 @@ else:
 __all__ = [
     "AdBreak",
     "ContentDescriptorsWithSymbolItem",
-    "Datum",
     "Down",
     "EpisodeMetadata",
     "ExtendedMaturityRating",

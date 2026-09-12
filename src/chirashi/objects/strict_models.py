@@ -1,8 +1,7 @@
-from typing import Self
+from typing import Any, Self
 from pydantic import ModelWrapValidatorHandler, PrivateAttr, model_validator
 from pydantic import ConfigDict
 from pydantic import AwareDatetime, BaseModel
-from typing import Any
 
 class ThumbnailItem(BaseModel):
     model_config = ConfigDict(defer_build=True)
@@ -117,7 +116,7 @@ class LanguagePresentation(BaseModel):
     audio_notation_reason: str | None = None
     text_notation_reason: str | None = None
 
-class Datum(BaseModel):
+class ObjectsModel(BaseModel):
     model_config = ConfigDict(defer_build=True)
     id: str
     external_id: str
@@ -133,12 +132,6 @@ class Datum(BaseModel):
     rating: Rating
     linked_resource_key: str
     language_presentation: LanguagePresentation
-
-class ObjectsModel(BaseModel):
-    model_config = ConfigDict(defer_build=True)
-    data: list[Datum]
-    total: int
-    meta: dict[str, Any]
     _raw_input: Any = PrivateAttr(default=None)
 
     @model_validator(mode='wrap')

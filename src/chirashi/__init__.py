@@ -28,6 +28,7 @@ from chirashi.search.series import SearchSeries
 from chirashi.season_episodes import SeasonEpisodes
 from chirashi.seasons import Seasons
 from chirashi.series import Series
+from chirashi.similar_to import SimilarTo
 
 logger = getLogger(__name__)
 logger.addHandler(NullHandler())
@@ -77,6 +78,7 @@ class Chirashi:
         self.artist = Artist(self)
         self.artist_music_videos = ArtistMusicVideos(self)
         self.artist_concerts = ArtistConcerts(self)
+        self.similar_to = SimilarTo(self)
 
     @property
     def _access_token(self) -> str:

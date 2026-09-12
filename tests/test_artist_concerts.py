@@ -5,47 +5,26 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from chirashi.artist_concerts.models import ArtistConcertsModel
 from chirashi.exceptions import ArtistNotFoundError
-from tests.utils import RecordedEndpoint
 
 if TYPE_CHECKING:
     from chirashi import Chirashi
 
-ARTIST_IDS = [
-    pytest.param("MA6480DAB5", id="shoko nakagawa"),
-    pytest.param("MA36EDC261", id="ali, who has no concerts"),
+ARTISTS = [
+    pytest.param("MA6480DAB5", 1, id="shoko nakagawa"),
+    pytest.param("MA36EDC261", 0, id="ali, who has no concerts"),
 ]
 
 
 # TODO: Validate
-class ArtistConcertsTest(RecordedEndpoint):
-    MODEL = ArtistConcertsModel
+@pytest.mark.parametrize(("artist_id", "least_concerts"), ARTISTS)
+def test_download(client: Chirashi, artist_id: str, least_concerts: int) -> None:
+    concerts = client.artist_concerts(artist_id)
+    assert concerts.total == len(concerts.data)
+    assert concerts.total >= least_concerts
 
 
 # TODO: Validate
-@pytest.mark.parametrize("artist_id", ARTIST_IDS)
-def test_download(client: Chirashi, artist_id: str) -> None:
-    ArtistConcertsTest.download_test(
-        artist_id,
-        lambda: client.artist_concerts.download(artist_id),
-    )
-
-
-# TODO: Validate
-@pytest.mark.parametrize("artist_id", ARTIST_IDS)
-def test_parse(artist_id: str) -> None:
-    ArtistConcertsTest.parse_test(artist_id)
-
-
-# TODO: Validate
-@pytest.mark.parametrize(
-    "artist_id",
-    [pytest.param("MA00000000", id="artist that does not exist")],
-)
-def test_download_invalid(client: Chirashi, artist_id: str) -> None:
-    ArtistConcertsTest.error_test(
-        artist_id,
-        lambda: client.artist_concerts.download(artist_id),
-        ArtistNotFoundError,
-    )
+def test_download_invalid(client: Chirashi) -> None:
+    with pytest.raises(ArtistNotFoundError):
+        client.artist_concerts.download("MA00000000")

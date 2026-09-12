@@ -83,17 +83,11 @@ class Item(BaseModel):
     streams_link: str
     display_artist_name_required: bool = Field(..., alias='displayArtistNameRequired')
 
-class Datum(BaseModel):
+class SearchMusicModel(BaseModel):
     model_config = ConfigDict(defer_build=True)
     type: str
     items: list[Item]
     count: int
-
-class SearchMusicModel(BaseModel):
-    model_config = ConfigDict(defer_build=True)
-    data: list[Datum]
-    total: int
-    meta: dict[str, Any]
     _raw_input: Any = PrivateAttr(default=None)
 
     @model_validator(mode='wrap')

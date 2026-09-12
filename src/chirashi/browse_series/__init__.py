@@ -60,7 +60,7 @@ class Browse(BaseEndpoint):
         ratings: str = "true",
         locale: str | None = None,
     ) -> BrowseSeriesModel:
-        """Look the browse series up and return the model it is read into."""
+        """Download and parse the browse series file."""
         log_id = self.get_log_id(self.__call__, locals())
         return self.load(
             self.download(
@@ -123,7 +123,7 @@ class Browse(BaseEndpoint):
         ratings: str = "true",
         referer: str | None = None,
     ) -> list[str]:
-        """Downloads all files until end_datetime is reached."""
+        """Download every page down to `end_datetime`."""
         results: list[str] = []
         end_datetime = end_datetime or datetime.now().astimezone()
 
@@ -174,7 +174,7 @@ class Browse(BaseEndpoint):
 
     # TODO: Validate
     def load(self, data: str, log_id: str = "") -> BrowseSeriesModel:
-        """Read a downloaded browse file into its model."""
+        """Load a browse file into its model."""
         return model_validate_json(data, log_id or self.default_log_id)
 
     # TODO: Validate
@@ -186,7 +186,7 @@ class Browse(BaseEndpoint):
         self,
         input_data: BrowseSeriesModel | str | Sequence[BrowseSeriesModel | str],
     ) -> list[Datum]:
-        """Extracts data entries from one or more files."""
+        """Return the data entries of one or more files."""
         # A single file is text, which is itself a Sequence, so it is held apart
         # from a sequence of files.
         responses = (

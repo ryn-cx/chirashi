@@ -45,7 +45,7 @@ class Genre(BaseModel):
     display_value: str = Field(..., alias='displayValue')
     id: str
 
-class Datum(BaseModel):
+class ConcertModel(BaseModel):
     model_config = ConfigDict(defer_build=True)
     availability: Availability
     copyright: str
@@ -75,12 +75,6 @@ class Datum(BaseModel):
     sequence_number: int = Field(..., alias='sequenceNumber')
     title: str
     updated_at: AwareDatetime = Field(..., alias='updatedAt')
-
-class ConcertModel(BaseModel):
-    model_config = ConfigDict(defer_build=True)
-    total: int
-    data: list[Datum]
-    meta: dict[str, Any]
     _raw_input: Any = PrivateAttr(default=None)
 
     @model_validator(mode='wrap')

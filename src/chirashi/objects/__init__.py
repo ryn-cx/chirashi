@@ -2,14 +2,30 @@
 
 from __future__ import annotations
 
+import json
 from logging import NullHandler, getLogger
+from typing import Any
 
 from chirashi.base_api_endpoint import BaseEndpoint
-from chirashi.exceptions import EpisodeNotFoundError, ResourceNotFoundError
+from chirashi.exceptions import (
+    ChirashiError,
+    EpisodeNotFoundError,
+    ResourceNotFoundError,
+)
 from chirashi.objects.models import ObjectsModel, model_validate_json
 
 logger = getLogger(__name__)
 logger.addHandler(NullHandler())
+
+
+# TODO: Validate
+def extract_object(response: str) -> dict[str, Any]:
+    """Extract the object from the Objects response."""
+    if data := json.loads(response)["data"]:
+        return data[0]
+
+    msg = "The response has no object in it"
+    raise ChirashiError(msg)
 
 
 class Objects(BaseEndpoint):
@@ -44,7 +60,7 @@ class Objects(BaseEndpoint):
         *,
         locale: str | None = None,
     ) -> ObjectsModel:
-        """Look the objects up and return the model it is read into."""
+        """Download and parse the objects file."""
         log_id = self.get_log_id(self.__call__, locals())
         return self.load(self.download(object_id, locale=locale), log_id)
 
@@ -76,5 +92,8 @@ class Objects(BaseEndpoint):
 
     # TODO: Validate
     def load(self, data: str, log_id: str = "") -> ObjectsModel:
-        """Read a downloaded objects file into its model."""
-        return model_validate_json(data, log_id or self.default_log_id)
+        """Load a objects file into its model."""
+        return model_validate_json(
+            extract_object(data),
+            log_id or self.default_log_id,
+        )

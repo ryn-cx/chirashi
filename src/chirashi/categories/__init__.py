@@ -50,7 +50,7 @@ class Categories(BaseEndpoint):
         preferred_audio_language: str = "ja-JP",
         locale: str | None = None,
     ) -> CategoriesModel:
-        """Look the series categories up and return the model they are read into."""
+        """Download and parse the series categories file."""
         log_id = self.get_log_id(self.__call__, locals())
         return self.load(
             self.download(
@@ -103,5 +103,5 @@ class Categories(BaseEndpoint):
 
     # TODO: Validate
     def load(self, data: str, log_id: str = "") -> CategoriesModel:
-        """Read a downloaded series categories file into its model."""
+        """Load a series categories file into its model."""
         return model_validate_json(data, log_id or self.default_log_id)

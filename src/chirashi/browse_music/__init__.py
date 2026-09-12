@@ -36,7 +36,7 @@ class BrowseMusic(BaseEndpoint):
         n: int = N,
         locale: str | None = None,
     ) -> BrowseMusicModel:
-        """Look the browse music up and return the model it is read into."""
+        """Download and parse the browse music file."""
         log_id = self.get_log_id(self.__call__, locals())
         return self.load(self.download(start=start, n=n, locale=locale), log_id)
 
@@ -81,7 +81,7 @@ class BrowseMusic(BaseEndpoint):
         n: int = N,
         locale: str | None = None,
     ) -> list[str]:
-        """Downloads every page of the music catalogue."""
+        """Download every page of the music catalogue."""
         results: list[str] = []
         start = 0
 
@@ -109,7 +109,7 @@ class BrowseMusic(BaseEndpoint):
 
     # TODO: Validate
     def load(self, data: str, log_id: str = "") -> BrowseMusicModel:
-        """Read a downloaded music catalogue file into its model."""
+        """Load a music catalogue file into its model."""
         return model_validate_json(data, log_id or self.default_log_id)
 
     # TODO: Validate
@@ -121,7 +121,7 @@ class BrowseMusic(BaseEndpoint):
         self,
         input_data: BrowseMusicModel | str | Sequence[BrowseMusicModel | str],
     ) -> list[Datum]:
-        """Extracts data entries from one or more files."""
+        """Return the data entries of one or more files."""
         # A single file is text, which is itself a Sequence, so it is held apart
         # from a sequence of files.
         responses = (

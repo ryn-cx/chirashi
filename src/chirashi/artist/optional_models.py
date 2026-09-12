@@ -27,7 +27,7 @@ class Genre(BaseModel):
     display_value: str | None = Field(None, alias='displayValue')
     id: str | None = None
 
-class Datum(BaseModel):
+class ArtistModel(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
     images: Images | None = None
     publish_date: AwareDatetime | None = Field(None, alias='publishDate')
@@ -45,12 +45,6 @@ class Datum(BaseModel):
     created_at: AwareDatetime | None = Field(None, alias='createdAt')
     description: str | None = None
     id: str | None = None
-
-class ArtistModel(BaseModel):
-    model_config = ConfigDict(extra='ignore', defer_build=True)
-    total: int | None = None
-    data: list[Datum] | None = None
-    meta: dict[str, Any] | None = None
     _raw_input: Any = PrivateAttr(default=None)
 
     @model_validator(mode='wrap')

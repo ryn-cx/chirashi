@@ -17,7 +17,6 @@ if TYPE_CHECKING:
     from .strict_models import (
         Award,
         ContentDescriptorsWithSymbolItem,
-        Datum,
         ExtendedMaturityRating,
         Images,
         LanguagePresentation,
@@ -30,7 +29,6 @@ else:
     from .optional_models import (
         Award,
         ContentDescriptorsWithSymbolItem,
-        Datum,
         ExtendedMaturityRating,
         Images,
         LanguagePresentation,
@@ -43,7 +41,6 @@ else:
 __all__ = [
     "Award",
     "ContentDescriptorsWithSymbolItem",
-    "Datum",
     "ExtendedMaturityRating",
     "Images",
     "LanguagePresentation",

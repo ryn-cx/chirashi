@@ -116,7 +116,7 @@ class LanguagePresentation(BaseModel):
     audio_notation_reason: str | None = None
     text_notation_reason: str | None = None
 
-class Datum(BaseModel):
+class ObjectsModel(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
     id: str | None = None
     external_id: str | None = None
@@ -132,12 +132,6 @@ class Datum(BaseModel):
     rating: Rating | None = None
     linked_resource_key: str | None = None
     language_presentation: LanguagePresentation | None = None
-
-class ObjectsModel(BaseModel):
-    model_config = ConfigDict(extra='ignore', defer_build=True)
-    data: list[Datum] | None = None
-    total: int | None = None
-    meta: dict[str, Any] | None = None
     _raw_input: Any = PrivateAttr(default=None)
 
     @model_validator(mode='wrap')

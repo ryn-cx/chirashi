@@ -146,17 +146,11 @@ class Item(BaseModel):
     language_presentation: LanguagePresentation | None = None
     rating: Rating | None = None
 
-class Datum(BaseModel):
+class SearchEpisodeModel(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
     type: str | None = None
     items: list[Item] | None = None
     count: int | None = None
-
-class SearchEpisodeModel(BaseModel):
-    model_config = ConfigDict(extra='ignore', defer_build=True)
-    data: list[Datum] | None = None
-    total: int | None = None
-    meta: dict[str, Any] | None = None
     _raw_input: Any = PrivateAttr(default=None)
 
     @model_validator(mode='wrap')

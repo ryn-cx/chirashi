@@ -16,7 +16,6 @@ from .strict_models import ArtistModel as StrictModel
 if TYPE_CHECKING:
     from .strict_models import (
         ArtistModel,
-        Datum,
         Genre,
         Images,
         PosterTallItem,
@@ -25,7 +24,6 @@ if TYPE_CHECKING:
 else:
     from .optional_models import (
         ArtistModel,
-        Datum,
         Genre,
         Images,
         PosterTallItem,
@@ -34,7 +32,6 @@ else:
 
 __all__ = [
     "ArtistModel",
-    "Datum",
     "Genre",
     "Images",
     "PosterTallItem",

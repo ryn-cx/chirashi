@@ -48,7 +48,7 @@ class ArtistConcerts(BaseEndpoint):
         *,
         locale: str | None = None,
     ) -> ArtistConcertsModel:
-        """Look the artist concerts up and return the model it is read into."""
+        """Download and parse the artist concerts file."""
         log_id = self.get_log_id(self.__call__, locals())
         return self.load(self.download(artist_id, locale=locale), log_id)
 
@@ -77,5 +77,5 @@ class ArtistConcerts(BaseEndpoint):
 
     # TODO: Validate
     def load(self, data: str, log_id: str = "") -> ArtistConcertsModel:
-        """Read a downloaded artist concerts file into its model."""
+        """Load a artist concerts file into its model."""
         return model_validate_json(data, log_id or self.default_log_id)

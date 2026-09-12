@@ -3,14 +3,30 @@
 
 from __future__ import annotations
 
+import json
 from logging import NullHandler, getLogger
+from typing import Any
 
 from chirashi.base_api_endpoint import BaseEndpoint
 from chirashi.concert.models import ConcertModel, model_validate_json
-from chirashi.exceptions import ConcertNotFoundError, ResourceNotFoundError
+from chirashi.exceptions import (
+    ChirashiError,
+    ConcertNotFoundError,
+    ResourceNotFoundError,
+)
 
 logger = getLogger(__name__)
 logger.addHandler(NullHandler())
+
+
+# TODO: Validate
+def extract_concert(response: str) -> dict[str, Any]:
+    """Extract the concert from the Concert response."""
+    if data := json.loads(response)["data"]:
+        return data[0]
+
+    msg = "The response has no concert in it"
+    raise ChirashiError(msg)
 
 
 class Concert(BaseEndpoint):
@@ -45,7 +61,7 @@ class Concert(BaseEndpoint):
         *,
         locale: str | None = None,
     ) -> ConcertModel:
-        """Look the concert up and return the model it is read into."""
+        """Download and parse the concert file."""
         log_id = self.get_log_id(self.__call__, locals())
         return self.load(self.download(concert_id, locale=locale), log_id)
 
@@ -75,5 +91,8 @@ class Concert(BaseEndpoint):
 
     # TODO: Validate
     def load(self, data: str, log_id: str = "") -> ConcertModel:
-        """Read a downloaded concert file into its model."""
-        return model_validate_json(data, log_id or self.default_log_id)
+        """Load a concert file into its model."""
+        return model_validate_json(
+            extract_concert(data),
+            log_id or self.default_log_id,
+        )

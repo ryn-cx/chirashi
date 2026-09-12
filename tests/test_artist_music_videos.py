@@ -5,47 +5,24 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from chirashi.artist_music_videos.models import ArtistMusicVideosModel
 from chirashi.exceptions import ArtistNotFoundError
-from tests.utils import RecordedEndpoint
 
 if TYPE_CHECKING:
     from chirashi import Chirashi
 
-ARTIST_IDS = [
-    # https://www.crunchyroll.com/artist/MA36EDC261/ali
-    pytest.param("MA36EDC261", id="ali"),
-]
-
-
-# TODO: Validate
-class ArtistMusicVideosTest(RecordedEndpoint):
-    MODEL = ArtistMusicVideosModel
+# https://www.crunchyroll.com/artist/MA36EDC261/ali
+ARTIST_IDS = [pytest.param("MA36EDC261", id="ali")]
 
 
 # TODO: Validate
 @pytest.mark.parametrize("artist_id", ARTIST_IDS)
 def test_download(client: Chirashi, artist_id: str) -> None:
-    ArtistMusicVideosTest.download_test(
-        artist_id,
-        lambda: client.artist_music_videos.download(artist_id),
-    )
+    music_videos = client.artist_music_videos(artist_id)
+    assert music_videos.total == len(music_videos.data)
+    assert music_videos.data
 
 
 # TODO: Validate
-@pytest.mark.parametrize("artist_id", ARTIST_IDS)
-def test_parse(artist_id: str) -> None:
-    ArtistMusicVideosTest.parse_test(artist_id)
-
-
-# TODO: Validate
-@pytest.mark.parametrize(
-    "artist_id",
-    [pytest.param("MA00000000", id="artist that does not exist")],
-)
-def test_download_invalid(client: Chirashi, artist_id: str) -> None:
-    ArtistMusicVideosTest.error_test(
-        artist_id,
-        lambda: client.artist_music_videos.download(artist_id),
-        ArtistNotFoundError,
-    )
+def test_download_invalid(client: Chirashi) -> None:
+    with pytest.raises(ArtistNotFoundError):
+        client.artist_music_videos.download("MA00000000")

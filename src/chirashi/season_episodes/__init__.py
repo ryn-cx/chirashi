@@ -47,7 +47,7 @@ class SeasonEpisodes(BaseEndpoint):
         *,
         locale: str | None = None,
     ) -> SeasonEpisodesModel:
-        """Look the season episodes up and return the model it is read into."""
+        """Download and parse the season episodes file."""
         log_id = self.get_log_id(self.__call__, locals())
         return self.load(self.download(season_id, locale=locale), log_id)
 
@@ -83,5 +83,5 @@ class SeasonEpisodes(BaseEndpoint):
 
     # TODO: Validate
     def load(self, data: str, log_id: str = "") -> SeasonEpisodesModel:
-        """Read a downloaded season episodes file into its model."""
+        """Load a season episodes file into its model."""
         return model_validate_json(data, log_id or self.default_log_id)

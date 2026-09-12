@@ -2,18 +2,30 @@
 
 from __future__ import annotations
 
+import json
 from logging import NullHandler, getLogger
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from pydantic import BaseModel
 
 from chirashi.base_api_endpoint import BaseEndpoint
+from chirashi.exceptions import ChirashiError
 
 if TYPE_CHECKING:
     from collections.abc import Callable
 
 logger = getLogger(__name__)
 logger.addHandler(NullHandler())
+
+
+# TODO: Validate
+def extract_results(response: str) -> dict[str, Any]:
+    """Extract the results of the one type a search was asked for."""
+    if data := json.loads(response)["data"]:
+        return data[0]
+
+    msg = "The response has no search results in it"
+    raise ChirashiError(msg)
 
 
 class BaseSearch[T: BaseModel](BaseEndpoint):
@@ -110,5 +122,5 @@ class BaseSearch[T: BaseModel](BaseEndpoint):
 
     # TODO: Validate
     def load(self, data: str, log_id: str = "") -> T:
-        """Read a downloaded search file into its model."""
-        return type(self).LOAD(data, log_id or self.default_log_id)
+        """Load a search file into its model."""
+        return type(self).LOAD(extract_results(data), log_id or self.default_log_id)

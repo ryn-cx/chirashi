@@ -1,7 +1,6 @@
-from typing import Self
+from typing import Any, Self
 from pydantic import ModelWrapValidatorHandler, PrivateAttr, model_validator
 from pydantic import BaseModel, ConfigDict
-from typing import Any
 
 class PosterWideItem(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
@@ -54,7 +53,7 @@ class LanguagePresentation(BaseModel):
     audio_notation_reason: str | None = None
     text_notation_reason: str | None = None
 
-class Datum(BaseModel):
+class SeriesModel(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
     id: str | None = None
     channel_id: str | None = None
@@ -89,12 +88,6 @@ class Datum(BaseModel):
     content_descriptors: list[str] | None = None
     content_descriptors_with_symbol: list[ContentDescriptorsWithSymbolItem] | None = None
     language_presentation: LanguagePresentation | None = None
-
-class SeriesModel(BaseModel):
-    model_config = ConfigDict(extra='ignore', defer_build=True)
-    total: int | None = None
-    data: list[Datum] | None = None
-    meta: dict[str, Any] | None = None
     _raw_input: Any = PrivateAttr(default=None)
 
     @model_validator(mode='wrap')

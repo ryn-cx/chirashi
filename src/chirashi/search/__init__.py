@@ -58,7 +58,7 @@ class Search(BaseSearch[SearchModel]):
         ratings: bool = True,
         locale: str | None = None,
     ) -> SearchModel:
-        """Run the search and return the model it is read into."""
+        """Download and parse the search file."""
         log_id = self.get_log_id(self.__call__, locals())
         return self.load(
             self.download(
@@ -90,6 +90,16 @@ class Search(BaseSearch[SearchModel]):
             ratings=ratings,
             locale=locale,
         )
+
+    # TODO: Validate
+    @override
+    def load(self, data: str, log_id: str = "") -> SearchModel:
+        """Load a Search file into its model.
+
+        A search asks for several types at once, so the response holds one group
+        per type rather than one result to unwrap.
+        """
+        return model_validate_json(data, log_id or self.default_log_id)
 
     # TODO: Validate
     def _extract_category(self, data: SearchModel, field_type: str) -> list[Item]:

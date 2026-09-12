@@ -3,14 +3,30 @@
 
 from __future__ import annotations
 
+import json
 from logging import NullHandler, getLogger
+from typing import Any
 
 from chirashi.artist.models import ArtistModel, model_validate_json
 from chirashi.base_api_endpoint import BaseEndpoint
-from chirashi.exceptions import ArtistNotFoundError, ResourceNotFoundError
+from chirashi.exceptions import (
+    ArtistNotFoundError,
+    ChirashiError,
+    ResourceNotFoundError,
+)
 
 logger = getLogger(__name__)
 logger.addHandler(NullHandler())
+
+
+# TODO: Validate
+def extract_artist(response: str) -> dict[str, Any]:
+    """Extract the artist from the Artist response."""
+    if data := json.loads(response)["data"]:
+        return data[0]
+
+    msg = "The response has no artist in it"
+    raise ChirashiError(msg)
 
 
 class Artist(BaseEndpoint):
@@ -45,15 +61,7 @@ class Artist(BaseEndpoint):
         *,
         locale: str | None = None,
     ) -> ArtistModel:
-        """Look an artist up and return the model it is read into.
-
-        Args:
-            artist_id: The id of the artist to look up.
-            locale: The locale to ask for, defaulting to the client's.
-
-        Returns:
-            The artist, read from what the API answered.
-        """
+        """Download and parse the artist file."""
         log_id = self.get_log_id(self.__call__, locals())
         return self.load(self.download(artist_id, locale=locale), log_id)
 
@@ -82,5 +90,8 @@ class Artist(BaseEndpoint):
 
     # TODO: Validate
     def load(self, data: str, log_id: str = "") -> ArtistModel:
-        """Read a downloaded artist file into its model."""
-        return model_validate_json(data, log_id or self.default_log_id)
+        """Load a artist file into its model."""
+        return model_validate_json(
+            extract_artist(data),
+            log_id or self.default_log_id,
+        )

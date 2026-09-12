@@ -2,14 +2,30 @@
 
 from __future__ import annotations
 
+import json
 from logging import NullHandler, getLogger
+from typing import Any
 
 from chirashi.base_api_endpoint import BaseEndpoint
-from chirashi.exceptions import ResourceNotFoundError, SeriesNotFoundError
+from chirashi.exceptions import (
+    ChirashiError,
+    ResourceNotFoundError,
+    SeriesNotFoundError,
+)
 from chirashi.series.models import SeriesModel, model_validate_json
 
 logger = getLogger(__name__)
 logger.addHandler(NullHandler())
+
+
+# TODO: Validate
+def extract_series(response: str) -> dict[str, Any]:
+    """Extract the series from the Series response."""
+    if data := json.loads(response)["data"]:
+        return data[0]
+
+    msg = "The response has no series in it"
+    raise ChirashiError(msg)
 
 
 class Series(BaseEndpoint):
@@ -44,7 +60,7 @@ class Series(BaseEndpoint):
         *,
         locale: str | None = None,
     ) -> SeriesModel:
-        """Look the series up and return the model it is read into."""
+        """Download and parse the series file."""
         log_id = self.get_log_id(self.__call__, locals())
         return self.load(self.download(series_id, locale=locale), log_id)
 
@@ -73,5 +89,8 @@ class Series(BaseEndpoint):
 
     # TODO: Validate
     def load(self, data: str, log_id: str = "") -> SeriesModel:
-        """Read a downloaded series file into its model."""
-        return model_validate_json(data, log_id or self.default_log_id)
+        """Load a series file into its model."""
+        return model_validate_json(
+            extract_series(data),
+            log_id or self.default_log_id,
+        )
