@@ -5,8 +5,6 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from chirashi.exceptions import SeriesNotFoundError
-
 if TYPE_CHECKING:
     from chirashi import Chirashi
 
@@ -22,6 +20,7 @@ def test_download(client: Chirashi, series_id: str) -> None:
 
 
 # TODO: Validate
-def test_download_invalid(client: Chirashi) -> None:
-    with pytest.raises(SeriesNotFoundError):
-        client.categories.download("GGGGGGGGG")
+def test_download_without_categories(client: Chirashi) -> None:
+    categories = client.categories("GGGGGGGGG")
+    assert categories.total == 0
+    assert categories.data == []
