@@ -9,6 +9,10 @@ if TYPE_CHECKING:
     from chirashi import Chirashi
 
 SERIES_IDS = [pytest.param("GG5H5XQX4", id="frieren: beyond journey's end")]
+SERIES_IDS_WITHOUT_CATEGORIES = [
+    pytest.param("GGGGGGGGG", id="Series that does not exist"),
+    pytest.param("G649W7K0Y", id="Series without categories"),
+]
 
 
 # TODO: Validate
@@ -20,7 +24,8 @@ def test_download(client: Chirashi, series_id: str) -> None:
 
 
 # TODO: Validate
-def test_download_without_categories(client: Chirashi) -> None:
-    categories = client.categories("GGGGGGGGG")
+@pytest.mark.parametrize("series_id", SERIES_IDS_WITHOUT_CATEGORIES)
+def test_download_without_categories(client: Chirashi, series_id: str) -> None:
+    categories = client.categories(series_id)
     assert categories.total == 0
     assert categories.data == []

@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import json
-from http import HTTPStatus
 from logging import NullHandler, getLogger
 
 from chirashi.base_api_endpoint import BaseEndpoint
@@ -77,12 +75,6 @@ class Seasons(BaseEndpoint):
                 err.status_code,
                 err.response,
             ) from err
-        return self._validate_download(response, series_id)
-
-    # TODO: Validate
-    def _validate_download(self, response: str, series_id: str) -> str:
-        if not json.loads(response).get("data"):
-            raise SeriesNotFoundError(series_id, HTTPStatus.OK, response)
         return response
 
     # TODO: Validate
