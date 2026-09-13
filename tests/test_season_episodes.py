@@ -5,12 +5,14 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from chirashi.exceptions import SeasonNotFoundError
-
 if TYPE_CHECKING:
     from chirashi import Chirashi
 
 SEASON_IDS = [pytest.param("G68VCP0VQ", id="#compass2.0 animation project season 1")]
+SEASON_IDS_WITHOUT_EPISODES = [
+    pytest.param("GGGGGGGGG", id="Season that does not exist"),
+    pytest.param("GYJQC15DP", id="Season without episodes"),
+]
 
 
 # TODO: Validate
@@ -22,6 +24,8 @@ def test_download(client: Chirashi, season_id: str) -> None:
 
 
 # TODO: Validate
-def test_download_invalid(client: Chirashi) -> None:
-    with pytest.raises(SeasonNotFoundError):
-        client.season_episodes.download("GGGGGGGGG")
+@pytest.mark.parametrize("season_id", SEASON_IDS_WITHOUT_EPISODES)
+def test_download_without_episodes(client: Chirashi, season_id: str) -> None:
+    episodes = client.season_episodes(season_id)
+    assert episodes.total == 0
+    assert episodes.data == []
