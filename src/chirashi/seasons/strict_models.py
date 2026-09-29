@@ -10,16 +10,16 @@ class ExtendedMaturityRating(BaseModel):
     rating: str
     level: str
 
-class ContentDescriptorsWithSymbolItem(BaseModel):
-    model_config = ConfigDict(defer_build=True)
-    label: str
-
 class Version(BaseModel):
     model_config = ConfigDict(defer_build=True)
     audio_locale: str
     guid: str
     original: bool
     variant: str
+
+class ContentDescriptorsWithSymbolItem(BaseModel):
+    model_config = ConfigDict(defer_build=True)
+    label: str
 
 class Datum(BaseModel):
     model_config = ConfigDict(defer_build=True)
@@ -38,8 +38,6 @@ class Datum(BaseModel):
     images: dict[str, Any]
     extended_maturity_rating: ExtendedMaturityRating
     maturity_ratings: list[str]
-    content_descriptors: list[str]
-    content_descriptors_with_symbol: list[ContentDescriptorsWithSymbolItem]
     is_mature: bool
     mature_blocked: bool
     is_subbed: bool
@@ -51,13 +49,15 @@ class Datum(BaseModel):
     audio_locales: list[str]
     subtitle_locales: list[str]
     audio_locale: str
-    versions: list[Version]
+    versions: list[Version] | None
     identifier: str
     number_of_episodes: int
+    content_descriptors: list[str] | None = None
+    content_descriptors_with_symbol: list[ContentDescriptorsWithSymbolItem] | None = None
 
 class Meta(BaseModel):
     model_config = ConfigDict(defer_build=True)
-    versions_considered: bool | None = None
+    versions_considered: bool
 
 class SeasonsModel(BaseModel):
     model_config = ConfigDict(defer_build=True)

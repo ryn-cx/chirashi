@@ -1,8 +1,7 @@
-from typing import Self
+from typing import Any, Self
 from pydantic import ModelWrapValidatorHandler, PrivateAttr, model_validator
 from pydantic import ConfigDict
 from pydantic import AwareDatetime, BaseModel, Field
-from typing import Any
 
 class PosterTallItem(BaseModel):
     model_config = ConfigDict(defer_build=True)
@@ -42,7 +41,7 @@ class ArtistModel(BaseModel):
     total_concert_duration_ms: int = Field(..., alias='totalConcertDurationMs')
     updated_at: AwareDatetime = Field(..., alias='updatedAt')
     videos: list[str]
-    concerts: list[None]
+    concerts: list[str]
     created_at: AwareDatetime = Field(..., alias='createdAt')
     description: str
     id: str

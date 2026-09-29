@@ -3,14 +3,14 @@ from pydantic import ModelWrapValidatorHandler, PrivateAttr, model_validator
 from pydantic import ConfigDict
 from pydantic import BaseModel
 
-class PosterWideItem(BaseModel):
+class PosterTallItem(BaseModel):
     model_config = ConfigDict(defer_build=True)
     width: int
     height: int
     type: str
     source: str
 
-class PosterTallItem(BaseModel):
+class PosterWideItem(BaseModel):
     model_config = ConfigDict(defer_build=True)
     width: int
     height: int
@@ -19,26 +19,14 @@ class PosterTallItem(BaseModel):
 
 class Images(BaseModel):
     model_config = ConfigDict(defer_build=True)
-    poster_wide: list[list[PosterWideItem]]
     poster_tall: list[list[PosterTallItem]]
-
-class LocalizedImages(BaseModel):
-    model_config = ConfigDict(defer_build=True)
-    poster_wide: str
-    poster_tall: str
+    poster_wide: list[list[PosterWideItem]]
 
 class ExtendedMaturityRating(BaseModel):
     model_config = ConfigDict(defer_build=True)
     system: str
     rating: str
     level: str
-
-class Award(BaseModel):
-    model_config = ConfigDict(defer_build=True)
-    text: str
-    icon_url: str
-    is_current_award: bool
-    is_winner: bool
 
 class ContentDescriptorsWithSymbolItem(BaseModel):
     model_config = ConfigDict(defer_build=True)
@@ -48,11 +36,23 @@ class LanguagePresentation(BaseModel):
     model_config = ConfigDict(defer_build=True)
     audio_notation: str
     text_notation: str
-    is_original_audio: bool
-    audio_locale: str
     text_locale: str
-    audio_notation_reason: str
     text_notation_reason: str
+    is_original_audio: bool | None = None
+    audio_locale: str | None = None
+    audio_notation_reason: str | None = None
+
+class LocalizedImages(BaseModel):
+    model_config = ConfigDict(defer_build=True)
+    poster_wide: str
+    poster_tall: str
+
+class Award(BaseModel):
+    model_config = ConfigDict(defer_build=True)
+    text: str
+    icon_url: str
+    is_current_award: bool
+    is_winner: bool
 
 class SeriesModel(BaseModel):
     model_config = ConfigDict(defer_build=True)
@@ -66,7 +66,6 @@ class SeriesModel(BaseModel):
     keywords: list[str]
     season_tags: list[str]
     images: Images
-    localized_images: LocalizedImages
     episode_count: int
     season_count: int
     media_count: int
@@ -85,10 +84,11 @@ class SeriesModel(BaseModel):
     availability_status: str
     availability_notes: str
     series_launch_year: int
-    awards: list[Award] | None = None
-    content_descriptors: list[str]
-    content_descriptors_with_symbol: list[ContentDescriptorsWithSymbolItem]
+    content_descriptors: list[str] | None = None
+    content_descriptors_with_symbol: list[ContentDescriptorsWithSymbolItem] | None = None
     language_presentation: LanguagePresentation
+    localized_images: LocalizedImages | None = None
+    awards: list[Award] | None = None
     _raw_input: Any = PrivateAttr(default=None)
 
     @model_validator(mode='wrap')

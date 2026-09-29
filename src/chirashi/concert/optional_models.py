@@ -6,74 +6,74 @@ from typing import Any
 
 class Availability(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    end_date: AwareDatetime | None = Field(None, alias='endDate')
-    start_date: AwareDatetime | None = Field(None, alias='startDate')
+    end_date: AwareDatetime | Any = Field(None, alias='endDate', union_mode='left_to_right')
+    start_date: AwareDatetime | Any = Field(None, alias='startDate', union_mode='left_to_right')
 
 class ThumbnailItem(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    height: int | None = None
-    source: str | None = None
-    type: str | None = None
-    width: int | None = None
+    height: int | Any = Field(default=None, union_mode='left_to_right')
+    source: str | Any = Field(default=None, union_mode='left_to_right')
+    type: str | Any = Field(default=None, union_mode='left_to_right')
+    width: int | Any = Field(default=None, union_mode='left_to_right')
 
 class Images(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    thumbnail: list[ThumbnailItem] | None = None
+    thumbnail: list[ThumbnailItem] | Any = Field(default=None, union_mode='left_to_right')
 
 class Artist(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    id: str | None = None
-    name: str | None = None
-    slug: str | None = None
+    id: str | Any = Field(default=None, union_mode='left_to_right')
+    name: str | Any = Field(default=None, union_mode='left_to_right')
+    slug: str | Any = Field(default=None, union_mode='left_to_right')
 
 class MainArtistItem(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    connector: str | None = None
-    id: str | None = None
-    name: str | None = None
-    roles: list[str] | None = None
-    sequence_number: int | None = Field(None, alias='sequenceNumber')
-    slug: str | None = None
+    connector: str | Any = Field(default=None, union_mode='left_to_right')
+    id: str | Any = Field(default=None, union_mode='left_to_right')
+    name: str | Any = Field(default=None, union_mode='left_to_right')
+    roles: list[str] | Any = Field(default=None, union_mode='left_to_right')
+    sequence_number: int | Any = Field(None, alias='sequenceNumber', union_mode='left_to_right')
+    slug: str | Any = Field(default=None, union_mode='left_to_right')
 
 class Artists(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    main_artist: list[MainArtistItem] | None = Field(None, alias='MainArtist')
+    main_artist: list[MainArtistItem] | Any = Field(None, alias='MainArtist', union_mode='left_to_right')
 
 class Genre(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    display_value: str | None = Field(None, alias='displayValue')
-    id: str | None = None
+    display_value: str | Any = Field(None, alias='displayValue', union_mode='left_to_right')
+    id: str | Any = Field(default=None, union_mode='left_to_right')
 
 class ConcertModel(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    availability: Availability | None = None
-    copyright: str | None = None
-    created_at: AwareDatetime | None = Field(None, alias='createdAt')
-    display_artist_name_required: bool | None = Field(None, alias='displayArtistNameRequired')
-    duration_ms: int | None = Field(None, alias='durationMs')
-    images: Images | None = None
-    slug: str | None = None
-    description: str | None = None
-    hash: UUID | None = None
-    is_premium_only: bool | None = Field(None, alias='isPremiumOnly')
-    is_public: bool | None = Field(None, alias='isPublic')
-    licensor: str | None = None
-    ready_to_publish: bool | None = Field(None, alias='readyToPublish')
-    type: str | None = None
-    artist: Artist | None = None
-    artists: Artists | None = None
-    is_mature: bool | None = Field(None, alias='isMature')
-    mature_blocked: bool | None = Field(None, alias='matureBlocked')
-    maturity_ratings: dict[str, Any] | None = Field(None, alias='maturityRatings')
-    original_release: AwareDatetime | None = Field(None, alias='originalRelease')
-    publish_date: AwareDatetime | None = Field(None, alias='publishDate')
-    streams_link: str | None = None
-    display_artist_name: str | None = Field(None, alias='displayArtistName')
-    genres: list[Genre] | None = None
-    id: str | None = None
-    sequence_number: int | None = Field(None, alias='sequenceNumber')
-    title: str | None = None
-    updated_at: AwareDatetime | None = Field(None, alias='updatedAt')
+    availability: Availability | Any = Field(default=None, union_mode='left_to_right')
+    copyright: str | Any = Field(default=None, union_mode='left_to_right')
+    created_at: AwareDatetime | Any = Field(None, alias='createdAt', union_mode='left_to_right')
+    display_artist_name_required: bool | Any = Field(None, alias='displayArtistNameRequired', union_mode='left_to_right')
+    duration_ms: int | Any = Field(None, alias='durationMs', union_mode='left_to_right')
+    images: Images | Any = Field(default=None, union_mode='left_to_right')
+    slug: str | Any = Field(default=None, union_mode='left_to_right')
+    description: str | Any = Field(default=None, union_mode='left_to_right')
+    hash: UUID | Any = Field(default=None, union_mode='left_to_right')
+    is_premium_only: bool | Any = Field(None, alias='isPremiumOnly', union_mode='left_to_right')
+    is_public: bool | Any = Field(None, alias='isPublic', union_mode='left_to_right')
+    licensor: str | Any = Field(default=None, union_mode='left_to_right')
+    ready_to_publish: bool | Any = Field(None, alias='readyToPublish', union_mode='left_to_right')
+    type: str | Any = Field(default=None, union_mode='left_to_right')
+    artist: Artist | Any = Field(default=None, union_mode='left_to_right')
+    artists: Artists | Any = Field(default=None, union_mode='left_to_right')
+    is_mature: bool | Any = Field(None, alias='isMature', union_mode='left_to_right')
+    mature_blocked: bool | Any = Field(None, alias='matureBlocked', union_mode='left_to_right')
+    maturity_ratings: dict[str, Any] | Any = Field(None, alias='maturityRatings', union_mode='left_to_right')
+    original_release: AwareDatetime | Any = Field(None, alias='originalRelease', union_mode='left_to_right')
+    publish_date: AwareDatetime | Any = Field(None, alias='publishDate', union_mode='left_to_right')
+    streams_link: str | Any = Field(default=None, union_mode='left_to_right')
+    display_artist_name: str | Any = Field(None, alias='displayArtistName', union_mode='left_to_right')
+    genres: list[Genre] | Any = Field(default=None, union_mode='left_to_right')
+    id: str | Any = Field(default=None, union_mode='left_to_right')
+    sequence_number: int | Any = Field(None, alias='sequenceNumber', union_mode='left_to_right')
+    title: str | Any = Field(default=None, union_mode='left_to_right')
+    updated_at: AwareDatetime | Any = Field(None, alias='updatedAt', union_mode='left_to_right')
     _raw_input: Any = PrivateAttr(default=None)
 
     @model_validator(mode='wrap')

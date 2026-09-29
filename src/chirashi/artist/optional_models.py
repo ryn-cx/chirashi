@@ -1,50 +1,49 @@
-from typing import Self
+from typing import Any, Self
 from pydantic import ModelWrapValidatorHandler, PrivateAttr, model_validator
 from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
-from typing import Any
 
 class PosterTallItem(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    height: int | None = None
-    source: str | None = None
-    type: str | None = None
-    width: int | None = None
+    height: int | Any = Field(default=None, union_mode='left_to_right')
+    source: str | Any = Field(default=None, union_mode='left_to_right')
+    type: str | Any = Field(default=None, union_mode='left_to_right')
+    width: int | Any = Field(default=None, union_mode='left_to_right')
 
 class PosterWideItem(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    height: int | None = None
-    source: str | None = None
-    type: str | None = None
-    width: int | None = None
+    height: int | Any = Field(default=None, union_mode='left_to_right')
+    source: str | Any = Field(default=None, union_mode='left_to_right')
+    type: str | Any = Field(default=None, union_mode='left_to_right')
+    width: int | Any = Field(default=None, union_mode='left_to_right')
 
 class Images(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    poster_tall: list[PosterTallItem] | None = None
-    poster_wide: list[PosterWideItem] | None = None
+    poster_tall: list[PosterTallItem] | Any = Field(default=None, union_mode='left_to_right')
+    poster_wide: list[PosterWideItem] | Any = Field(default=None, union_mode='left_to_right')
 
 class Genre(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    display_value: str | None = Field(None, alias='displayValue')
-    id: str | None = None
+    display_value: str | Any = Field(None, alias='displayValue', union_mode='left_to_right')
+    id: str | Any = Field(default=None, union_mode='left_to_right')
 
 class ArtistModel(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    images: Images | None = None
-    publish_date: AwareDatetime | None = Field(None, alias='publishDate')
-    ready_to_publish: bool | None = Field(None, alias='readyToPublish')
-    total_video_duration_ms: int | None = Field(None, alias='totalVideoDurationMs')
-    type: str | None = None
-    genres: list[Genre] | None = None
-    slug: str | None = None
-    is_public: bool | None = Field(None, alias='isPublic')
-    name: str | None = None
-    total_concert_duration_ms: int | None = Field(None, alias='totalConcertDurationMs')
-    updated_at: AwareDatetime | None = Field(None, alias='updatedAt')
-    videos: list[str] | None = None
-    concerts: list[Any] | None = None
-    created_at: AwareDatetime | None = Field(None, alias='createdAt')
-    description: str | None = None
-    id: str | None = None
+    images: Images | Any = Field(default=None, union_mode='left_to_right')
+    publish_date: AwareDatetime | Any = Field(None, alias='publishDate', union_mode='left_to_right')
+    ready_to_publish: bool | Any = Field(None, alias='readyToPublish', union_mode='left_to_right')
+    total_video_duration_ms: int | Any = Field(None, alias='totalVideoDurationMs', union_mode='left_to_right')
+    type: str | Any = Field(default=None, union_mode='left_to_right')
+    genres: list[Genre] | Any = Field(default=None, union_mode='left_to_right')
+    slug: str | Any = Field(default=None, union_mode='left_to_right')
+    is_public: bool | Any = Field(None, alias='isPublic', union_mode='left_to_right')
+    name: str | Any = Field(default=None, union_mode='left_to_right')
+    total_concert_duration_ms: int | Any = Field(None, alias='totalConcertDurationMs', union_mode='left_to_right')
+    updated_at: AwareDatetime | Any = Field(None, alias='updatedAt', union_mode='left_to_right')
+    videos: list[str] | Any = Field(default=None, union_mode='left_to_right')
+    concerts: list[str] | Any = Field(default=None, union_mode='left_to_right')
+    created_at: AwareDatetime | Any = Field(None, alias='createdAt', union_mode='left_to_right')
+    description: str | Any = Field(default=None, union_mode='left_to_right')
+    id: str | Any = Field(default=None, union_mode='left_to_right')
     _raw_input: Any = PrivateAttr(default=None)
 
     @model_validator(mode='wrap')

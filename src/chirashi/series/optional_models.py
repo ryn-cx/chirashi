@@ -1,93 +1,94 @@
 from typing import Any, Self
 from pydantic import ModelWrapValidatorHandler, PrivateAttr, model_validator
+from pydantic import Field
 from pydantic import BaseModel, ConfigDict
-
-class PosterWideItem(BaseModel):
-    model_config = ConfigDict(extra='ignore', defer_build=True)
-    width: int | None = None
-    height: int | None = None
-    type: str | None = None
-    source: str | None = None
 
 class PosterTallItem(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    width: int | None = None
-    height: int | None = None
-    type: str | None = None
-    source: str | None = None
+    width: int | Any = Field(default=None, union_mode='left_to_right')
+    height: int | Any = Field(default=None, union_mode='left_to_right')
+    type: str | Any = Field(default=None, union_mode='left_to_right')
+    source: str | Any = Field(default=None, union_mode='left_to_right')
+
+class PosterWideItem(BaseModel):
+    model_config = ConfigDict(extra='ignore', defer_build=True)
+    width: int | Any = Field(default=None, union_mode='left_to_right')
+    height: int | Any = Field(default=None, union_mode='left_to_right')
+    type: str | Any = Field(default=None, union_mode='left_to_right')
+    source: str | Any = Field(default=None, union_mode='left_to_right')
 
 class Images(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    poster_wide: list[list[PosterWideItem]] | None = None
-    poster_tall: list[list[PosterTallItem]] | None = None
-
-class LocalizedImages(BaseModel):
-    model_config = ConfigDict(extra='ignore', defer_build=True)
-    poster_wide: str | None = None
-    poster_tall: str | None = None
+    poster_tall: list[list[PosterTallItem]] | Any = Field(default=None, union_mode='left_to_right')
+    poster_wide: list[list[PosterWideItem]] | Any = Field(default=None, union_mode='left_to_right')
 
 class ExtendedMaturityRating(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    system: str | None = None
-    rating: str | None = None
-    level: str | None = None
-
-class Award(BaseModel):
-    model_config = ConfigDict(extra='ignore', defer_build=True)
-    text: str | None = None
-    icon_url: str | None = None
-    is_current_award: bool | None = None
-    is_winner: bool | None = None
+    system: str | Any = Field(default=None, union_mode='left_to_right')
+    rating: str | Any = Field(default=None, union_mode='left_to_right')
+    level: str | Any = Field(default=None, union_mode='left_to_right')
 
 class ContentDescriptorsWithSymbolItem(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    label: str | None = None
+    label: str | Any = Field(default=None, union_mode='left_to_right')
 
 class LanguagePresentation(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    audio_notation: str | None = None
-    text_notation: str | None = None
-    is_original_audio: bool | None = None
-    audio_locale: str | None = None
-    text_locale: str | None = None
-    audio_notation_reason: str | None = None
-    text_notation_reason: str | None = None
+    audio_notation: str | Any = Field(default=None, union_mode='left_to_right')
+    text_notation: str | Any = Field(default=None, union_mode='left_to_right')
+    text_locale: str | Any = Field(default=None, union_mode='left_to_right')
+    text_notation_reason: str | Any = Field(default=None, union_mode='left_to_right')
+    is_original_audio: bool | Any = Field(default=None, union_mode='left_to_right')
+    audio_locale: str | Any = Field(default=None, union_mode='left_to_right')
+    audio_notation_reason: str | Any = Field(default=None, union_mode='left_to_right')
+
+class LocalizedImages(BaseModel):
+    model_config = ConfigDict(extra='ignore', defer_build=True)
+    poster_wide: str | Any = Field(default=None, union_mode='left_to_right')
+    poster_tall: str | Any = Field(default=None, union_mode='left_to_right')
+
+class Award(BaseModel):
+    model_config = ConfigDict(extra='ignore', defer_build=True)
+    text: str | Any = Field(default=None, union_mode='left_to_right')
+    icon_url: str | Any = Field(default=None, union_mode='left_to_right')
+    is_current_award: bool | Any = Field(default=None, union_mode='left_to_right')
+    is_winner: bool | Any = Field(default=None, union_mode='left_to_right')
 
 class SeriesModel(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    id: str | None = None
-    channel_id: str | None = None
-    title: str | None = None
-    slug: str | None = None
-    slug_title: str | None = None
-    description: str | None = None
-    extended_description: str | None = None
-    keywords: list[str] | None = None
-    season_tags: list[str] | None = None
-    images: Images | None = None
-    localized_images: LocalizedImages | None = None
-    episode_count: int | None = None
-    season_count: int | None = None
-    media_count: int | None = None
-    content_provider: str | None = None
-    maturity_ratings: list[str] | None = None
-    extended_maturity_rating: ExtendedMaturityRating | None = None
-    is_mature: bool | None = None
-    mature_blocked: bool | None = None
-    is_subbed: bool | None = None
-    is_dubbed: bool | None = None
-    is_simulcast: bool | None = None
-    seo_title: str | None = None
-    seo_description: str | None = None
-    subtitle_locales: list[str] | None = None
-    audio_locales: list[str] | None = None
-    availability_status: str | None = None
-    availability_notes: str | None = None
-    series_launch_year: int | None = None
-    awards: list[Award] | None = None
-    content_descriptors: list[str] | None = None
-    content_descriptors_with_symbol: list[ContentDescriptorsWithSymbolItem] | None = None
-    language_presentation: LanguagePresentation | None = None
+    id: str | Any = Field(default=None, union_mode='left_to_right')
+    channel_id: str | Any = Field(default=None, union_mode='left_to_right')
+    title: str | Any = Field(default=None, union_mode='left_to_right')
+    slug: str | Any = Field(default=None, union_mode='left_to_right')
+    slug_title: str | Any = Field(default=None, union_mode='left_to_right')
+    description: str | Any = Field(default=None, union_mode='left_to_right')
+    extended_description: str | Any = Field(default=None, union_mode='left_to_right')
+    keywords: list[str] | Any = Field(default=None, union_mode='left_to_right')
+    season_tags: list[str] | Any = Field(default=None, union_mode='left_to_right')
+    images: Images | Any = Field(default=None, union_mode='left_to_right')
+    episode_count: int | Any = Field(default=None, union_mode='left_to_right')
+    season_count: int | Any = Field(default=None, union_mode='left_to_right')
+    media_count: int | Any = Field(default=None, union_mode='left_to_right')
+    content_provider: str | Any = Field(default=None, union_mode='left_to_right')
+    maturity_ratings: list[str] | Any = Field(default=None, union_mode='left_to_right')
+    extended_maturity_rating: ExtendedMaturityRating | Any = Field(default=None, union_mode='left_to_right')
+    is_mature: bool | Any = Field(default=None, union_mode='left_to_right')
+    mature_blocked: bool | Any = Field(default=None, union_mode='left_to_right')
+    is_subbed: bool | Any = Field(default=None, union_mode='left_to_right')
+    is_dubbed: bool | Any = Field(default=None, union_mode='left_to_right')
+    is_simulcast: bool | Any = Field(default=None, union_mode='left_to_right')
+    seo_title: str | Any = Field(default=None, union_mode='left_to_right')
+    seo_description: str | Any = Field(default=None, union_mode='left_to_right')
+    subtitle_locales: list[str] | Any = Field(default=None, union_mode='left_to_right')
+    audio_locales: list[str] | Any = Field(default=None, union_mode='left_to_right')
+    availability_status: str | Any = Field(default=None, union_mode='left_to_right')
+    availability_notes: str | Any = Field(default=None, union_mode='left_to_right')
+    series_launch_year: int | Any = Field(default=None, union_mode='left_to_right')
+    content_descriptors: list[str] | Any = Field(default=None, union_mode='left_to_right')
+    content_descriptors_with_symbol: list[ContentDescriptorsWithSymbolItem] | Any = Field(default=None, union_mode='left_to_right')
+    language_presentation: LanguagePresentation | Any = Field(default=None, union_mode='left_to_right')
+    localized_images: LocalizedImages | Any = Field(default=None, union_mode='left_to_right')
+    awards: list[Award] | Any = Field(default=None, union_mode='left_to_right')
     _raw_input: Any = PrivateAttr(default=None)
 
     @model_validator(mode='wrap')

@@ -50,6 +50,9 @@ class LanguagePresentation(BaseModel):
     text_notation: str
     text_locale: str | None = None
     text_notation_reason: str | None = None
+    is_original_audio: bool | None = None
+    audio_locale: str | None = None
+    audio_notation_reason: str | None = None
 
 class Datum(BaseModel):
     model_config = ConfigDict(defer_build=True)
@@ -71,7 +74,7 @@ class Datum(BaseModel):
     title: str
     slug_title: str
     description: str
-    next_episode_id: str
+    next_episode_id: str | None = None
     next_episode_title: str | None = None
     hd_flag: bool
     maturity_ratings: list[str]
@@ -97,15 +100,15 @@ class Datum(BaseModel):
     subtitle_locales: list[str]
     availability_notes: str
     audio_locale: str
-    versions: list[Version]
+    versions: list[Version] | None
     closed_captions_available: bool
     identifier: str
-    content_descriptors: list[str]
-    content_descriptors_with_symbol: list[ContentDescriptorsWithSymbolItem]
+    content_descriptors: list[str] | None = None
+    content_descriptors_with_symbol: list[ContentDescriptorsWithSymbolItem] | None = None
     media_type: str
     slug: str
     images: Images
-    localized_images: LocalizedImages
+    localized_images: LocalizedImages | None = None
     duration_ms: int
     ad_breaks: list[AdBreak]
     is_premium_only: bool
@@ -118,7 +121,7 @@ class Datum(BaseModel):
 
 class Meta(BaseModel):
     model_config = ConfigDict(defer_build=True)
-    versions_considered: bool | None = None
+    versions_considered: bool
 
 class SeasonEpisodesModel(BaseModel):
     model_config = ConfigDict(defer_build=True)
