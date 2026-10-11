@@ -14,7 +14,7 @@ class ThumbnailItem(BaseModel):
 
 class Images(BaseModel):
     model_config = ConfigDict(defer_build=True)
-    thumbnail: list[ThumbnailItem]
+    thumbnail: list[ThumbnailItem] | None = None
 
 class Genre(BaseModel):
     model_config = ConfigDict(defer_build=True)
@@ -81,7 +81,7 @@ class Datum(BaseModel):
     ready_to_publish: bool = Field(..., alias='readyToPublish')
     title: str
     is_premium_only: bool = Field(..., alias='isPremiumOnly')
-    hash: UUID
+    hash: UUID | str = Field(union_mode='left_to_right')
     artists: Artists
     slug: str
     type: str

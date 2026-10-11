@@ -80,7 +80,7 @@ class Datum(BaseModel):
     ready_to_publish: bool | Any = Field(None, alias='readyToPublish', union_mode='left_to_right')
     title: str | Any = Field(default=None, union_mode='left_to_right')
     is_premium_only: bool | Any = Field(None, alias='isPremiumOnly', union_mode='left_to_right')
-    hash: UUID | Any = Field(default=None, union_mode='left_to_right')
+    hash: UUID | str | Any = Field(default=None, union_mode='left_to_right')
     artists: Artists | Any = Field(default=None, union_mode='left_to_right')
     slug: str | Any = Field(default=None, union_mode='left_to_right')
     type: str | Any = Field(default=None, union_mode='left_to_right')

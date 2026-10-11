@@ -57,7 +57,7 @@ class MusicVideoModel(BaseModel):
     original_release: AwareDatetime | Any = Field(None, alias='originalRelease', union_mode='left_to_right')
     type: str | Any = Field(default=None, union_mode='left_to_right')
     title: str | Any = Field(default=None, union_mode='left_to_right')
-    hash: UUID | Any = Field(default=None, union_mode='left_to_right')
+    hash: UUID | str | Any = Field(default=None, union_mode='left_to_right')
     anime_ids: list[str] | Any = Field(None, alias='animeIds', union_mode='left_to_right')
     availability: Availability | Any = Field(default=None, union_mode='left_to_right')
     display_artist_name: str | Any = Field(None, alias='displayArtistName', union_mode='left_to_right')

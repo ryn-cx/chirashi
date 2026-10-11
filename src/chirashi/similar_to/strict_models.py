@@ -34,15 +34,27 @@ class Field5s(BaseModel):
     percentage: int
     unit: str
 
+class Up(BaseModel):
+    model_config = ConfigDict(defer_build=True)
+    displayed: str
+    unit: str
+
+class Down(BaseModel):
+    model_config = ConfigDict(defer_build=True)
+    displayed: str
+    unit: str
+
 class Rating(BaseModel):
     model_config = ConfigDict(defer_build=True)
-    field_1s: Field1s = Field(..., alias='1s')
-    field_2s: Field2s = Field(..., alias='2s')
-    field_3s: Field3s = Field(..., alias='3s')
-    field_4s: Field4s = Field(..., alias='4s')
-    field_5s: Field5s = Field(..., alias='5s')
-    average: str
+    field_1s: Field1s | None = Field(None, alias='1s')
+    field_2s: Field2s | None = Field(None, alias='2s')
+    field_3s: Field3s | None = Field(None, alias='3s')
+    field_4s: Field4s | None = Field(None, alias='4s')
+    field_5s: Field5s | None = Field(None, alias='5s')
+    average: str | None = None
     total: int
+    up: Up | None = None
+    down: Down | None = None
 
 class SearchMetadata(BaseModel):
     model_config = ConfigDict(defer_build=True)
@@ -71,17 +83,25 @@ class PromoImageItem(BaseModel):
     type: str
     width: int
 
+class ThumbnailItem(BaseModel):
+    model_config = ConfigDict(defer_build=True)
+    height: int
+    source: str
+    type: str
+    width: int
+
 class Images(BaseModel):
     model_config = ConfigDict(defer_build=True)
-    poster_tall: list[list[PosterTallItem]]
-    poster_wide: list[list[PosterWideItem]]
+    poster_tall: list[list[PosterTallItem]] | None = None
+    poster_wide: list[list[PosterWideItem]] | None = None
     promo_image: list[list[PromoImageItem]] | None = None
+    thumbnail: list[list[ThumbnailItem]] | None = None
 
 class ExtendedMaturityRating(BaseModel):
     model_config = ConfigDict(defer_build=True)
-    level: str
-    rating: str
-    system: str
+    level: str | None = None
+    rating: str | None = None
+    system: str | None = None
 
 class LanguagePresentation(BaseModel):
     model_config = ConfigDict(defer_build=True)
@@ -137,6 +157,74 @@ class SeriesMetadata(BaseModel):
     awards: list[Award] | None = None
     livestream: Livestream | None = None
 
+class AdBreak(BaseModel):
+    model_config = ConfigDict(defer_build=True)
+    offset_ms: int
+    type: str
+
+class ExtendedMaturityRating1(BaseModel):
+    model_config = ConfigDict(defer_build=True)
+    level: str
+    rating: str
+    system: str
+
+class Version(BaseModel):
+    model_config = ConfigDict(defer_build=True)
+    audio_locale: str
+    guid: str
+    is_premium_only: bool
+    media_guid: str
+    original: bool
+    roles: list[str]
+    season_guid: str
+    variant: str
+
+class EpisodeMetadata(BaseModel):
+    model_config = ConfigDict(defer_build=True)
+    ad_breaks: list[AdBreak]
+    audio_locale: str
+    availability_ends: AwareDatetime
+    availability_notes: str
+    availability_starts: AwareDatetime
+    availability_status: str
+    available_date: None
+    available_offline: bool
+    closed_captions_available: bool
+    content_descriptors: list[str] | None = None
+    content_descriptors_with_symbol: list[ContentDescriptorsWithSymbolItem] | None = None
+    duration_ms: int
+    eligible_region: str
+    episode: str
+    episode_air_date: AwareDatetime
+    episode_number: int
+    extended_maturity_rating: ExtendedMaturityRating1
+    free_available_date: AwareDatetime
+    identifier: str
+    is_clip: bool
+    is_dubbed: bool
+    is_mature: bool
+    is_premium_only: bool
+    is_subbed: bool
+    language_presentation: LanguagePresentation
+    mature_blocked: bool
+    maturity_ratings: list[str]
+    premium_available_date: AwareDatetime
+    premium_date: None
+    roles: list[str]
+    season_display_number: str
+    season_id: str
+    season_number: int
+    season_sequence_number: int
+    season_slug_title: str
+    season_title: str
+    sequence_number: int
+    series_id: str
+    series_slug_title: str
+    series_title: str
+    subtitle_locales: list[str]
+    upload_date: AwareDatetime
+    versions: list[Version]
+
 class Datum(BaseModel):
     model_config = ConfigDict(defer_build=True)
     type: str
@@ -147,7 +235,7 @@ class Datum(BaseModel):
     slug_title: str
     channel_id: str
     images: Images
-    series_metadata: SeriesMetadata
+    series_metadata: SeriesMetadata | None = None
     title: str
     promo_title: str
     description: str
@@ -155,6 +243,7 @@ class Datum(BaseModel):
     id: str
     promo_description: str
     external_id: str
+    episode_metadata: EpisodeMetadata | None = None
 
 class SimilarToModel(BaseModel):
     model_config = ConfigDict(defer_build=True)

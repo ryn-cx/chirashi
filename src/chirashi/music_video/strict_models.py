@@ -43,7 +43,7 @@ class ThumbnailItem(BaseModel):
 
 class Images(BaseModel):
     model_config = ConfigDict(defer_build=True)
-    thumbnail: list[ThumbnailItem]
+    thumbnail: list[ThumbnailItem] | None = None
 
 class MusicVideoModel(BaseModel):
     model_config = ConfigDict(defer_build=True)
@@ -58,7 +58,7 @@ class MusicVideoModel(BaseModel):
     original_release: AwareDatetime = Field(..., alias='originalRelease')
     type: str
     title: str
-    hash: UUID
+    hash: UUID | str = Field(union_mode='left_to_right')
     anime_ids: list[str] = Field(..., alias='animeIds')
     availability: Availability
     display_artist_name: str = Field(..., alias='displayArtistName')

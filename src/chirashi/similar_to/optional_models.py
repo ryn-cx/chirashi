@@ -33,6 +33,16 @@ class Field5s(BaseModel):
     percentage: int | Any = Field(default=None, union_mode='left_to_right')
     unit: str | Any = Field(default=None, union_mode='left_to_right')
 
+class Up(BaseModel):
+    model_config = ConfigDict(extra='ignore', defer_build=True)
+    displayed: str | Any = Field(default=None, union_mode='left_to_right')
+    unit: str | Any = Field(default=None, union_mode='left_to_right')
+
+class Down(BaseModel):
+    model_config = ConfigDict(extra='ignore', defer_build=True)
+    displayed: str | Any = Field(default=None, union_mode='left_to_right')
+    unit: str | Any = Field(default=None, union_mode='left_to_right')
+
 class Rating(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
     field_1s: Field1s | Any = Field(None, alias='1s', union_mode='left_to_right')
@@ -42,6 +52,8 @@ class Rating(BaseModel):
     field_5s: Field5s | Any = Field(None, alias='5s', union_mode='left_to_right')
     average: str | Any = Field(default=None, union_mode='left_to_right')
     total: int | Any = Field(default=None, union_mode='left_to_right')
+    up: Up | Any = Field(default=None, union_mode='left_to_right')
+    down: Down | Any = Field(default=None, union_mode='left_to_right')
 
 class SearchMetadata(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
@@ -70,11 +82,19 @@ class PromoImageItem(BaseModel):
     type: str | Any = Field(default=None, union_mode='left_to_right')
     width: int | Any = Field(default=None, union_mode='left_to_right')
 
+class ThumbnailItem(BaseModel):
+    model_config = ConfigDict(extra='ignore', defer_build=True)
+    height: int | Any = Field(default=None, union_mode='left_to_right')
+    source: str | Any = Field(default=None, union_mode='left_to_right')
+    type: str | Any = Field(default=None, union_mode='left_to_right')
+    width: int | Any = Field(default=None, union_mode='left_to_right')
+
 class Images(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
     poster_tall: list[list[PosterTallItem]] | Any = Field(default=None, union_mode='left_to_right')
     poster_wide: list[list[PosterWideItem]] | Any = Field(default=None, union_mode='left_to_right')
     promo_image: list[list[PromoImageItem]] | Any = Field(default=None, union_mode='left_to_right')
+    thumbnail: list[list[ThumbnailItem]] | Any = Field(default=None, union_mode='left_to_right')
 
 class ExtendedMaturityRating(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
@@ -136,6 +156,68 @@ class SeriesMetadata(BaseModel):
     awards: list[Award] | Any = Field(default=None, union_mode='left_to_right')
     livestream: Livestream | Any = Field(default=None, union_mode='left_to_right')
 
+class AdBreak(BaseModel):
+    model_config = ConfigDict(extra='ignore', defer_build=True)
+    offset_ms: int | Any = Field(default=None, union_mode='left_to_right')
+    type: str | Any = Field(default=None, union_mode='left_to_right')
+
+class Version(BaseModel):
+    model_config = ConfigDict(extra='ignore', defer_build=True)
+    audio_locale: str | Any = Field(default=None, union_mode='left_to_right')
+    guid: str | Any = Field(default=None, union_mode='left_to_right')
+    is_premium_only: bool | Any = Field(default=None, union_mode='left_to_right')
+    media_guid: str | Any = Field(default=None, union_mode='left_to_right')
+    original: bool | Any = Field(default=None, union_mode='left_to_right')
+    roles: list[str] | Any = Field(default=None, union_mode='left_to_right')
+    season_guid: str | Any = Field(default=None, union_mode='left_to_right')
+    variant: str | Any = Field(default=None, union_mode='left_to_right')
+
+class EpisodeMetadata(BaseModel):
+    model_config = ConfigDict(extra='ignore', defer_build=True)
+    ad_breaks: list[AdBreak] | Any = Field(default=None, union_mode='left_to_right')
+    audio_locale: str | Any = Field(default=None, union_mode='left_to_right')
+    availability_ends: AwareDatetime | Any = Field(default=None, union_mode='left_to_right')
+    availability_notes: str | Any = Field(default=None, union_mode='left_to_right')
+    availability_starts: AwareDatetime | Any = Field(default=None, union_mode='left_to_right')
+    availability_status: str | Any = Field(default=None, union_mode='left_to_right')
+    available_date: Any | None = None
+    available_offline: bool | Any = Field(default=None, union_mode='left_to_right')
+    closed_captions_available: bool | Any = Field(default=None, union_mode='left_to_right')
+    content_descriptors: list[str] | Any = Field(default=None, union_mode='left_to_right')
+    content_descriptors_with_symbol: list[ContentDescriptorsWithSymbolItem] | Any = Field(default=None, union_mode='left_to_right')
+    duration_ms: int | Any = Field(default=None, union_mode='left_to_right')
+    eligible_region: str | Any = Field(default=None, union_mode='left_to_right')
+    episode: str | Any = Field(default=None, union_mode='left_to_right')
+    episode_air_date: AwareDatetime | Any = Field(default=None, union_mode='left_to_right')
+    episode_number: int | Any = Field(default=None, union_mode='left_to_right')
+    extended_maturity_rating: ExtendedMaturityRating | Any = Field(default=None, union_mode='left_to_right')
+    free_available_date: AwareDatetime | Any = Field(default=None, union_mode='left_to_right')
+    identifier: str | Any = Field(default=None, union_mode='left_to_right')
+    is_clip: bool | Any = Field(default=None, union_mode='left_to_right')
+    is_dubbed: bool | Any = Field(default=None, union_mode='left_to_right')
+    is_mature: bool | Any = Field(default=None, union_mode='left_to_right')
+    is_premium_only: bool | Any = Field(default=None, union_mode='left_to_right')
+    is_subbed: bool | Any = Field(default=None, union_mode='left_to_right')
+    language_presentation: LanguagePresentation | Any = Field(default=None, union_mode='left_to_right')
+    mature_blocked: bool | Any = Field(default=None, union_mode='left_to_right')
+    maturity_ratings: list[str] | Any = Field(default=None, union_mode='left_to_right')
+    premium_available_date: AwareDatetime | Any = Field(default=None, union_mode='left_to_right')
+    premium_date: Any | None = None
+    roles: list[str] | Any = Field(default=None, union_mode='left_to_right')
+    season_display_number: str | Any = Field(default=None, union_mode='left_to_right')
+    season_id: str | Any = Field(default=None, union_mode='left_to_right')
+    season_number: int | Any = Field(default=None, union_mode='left_to_right')
+    season_sequence_number: int | Any = Field(default=None, union_mode='left_to_right')
+    season_slug_title: str | Any = Field(default=None, union_mode='left_to_right')
+    season_title: str | Any = Field(default=None, union_mode='left_to_right')
+    sequence_number: int | Any = Field(default=None, union_mode='left_to_right')
+    series_id: str | Any = Field(default=None, union_mode='left_to_right')
+    series_slug_title: str | Any = Field(default=None, union_mode='left_to_right')
+    series_title: str | Any = Field(default=None, union_mode='left_to_right')
+    subtitle_locales: list[str] | Any = Field(default=None, union_mode='left_to_right')
+    upload_date: AwareDatetime | Any = Field(default=None, union_mode='left_to_right')
+    versions: list[Version] | Any = Field(default=None, union_mode='left_to_right')
+
 class Datum(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
     type: str | Any = Field(default=None, union_mode='left_to_right')
@@ -154,6 +236,7 @@ class Datum(BaseModel):
     id: str | Any = Field(default=None, union_mode='left_to_right')
     promo_description: str | Any = Field(default=None, union_mode='left_to_right')
     external_id: str | Any = Field(default=None, union_mode='left_to_right')
+    episode_metadata: EpisodeMetadata | Any = Field(default=None, union_mode='left_to_right')
 
 class SimilarToModel(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)

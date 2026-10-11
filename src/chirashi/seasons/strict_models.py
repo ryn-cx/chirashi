@@ -1,14 +1,32 @@
-from typing import Self
+from typing import Any, Self
 from pydantic import ModelWrapValidatorHandler, PrivateAttr, model_validator
 from pydantic import ConfigDict
 from pydantic import BaseModel
-from typing import Any
+
+class PosterWideItem(BaseModel):
+    model_config = ConfigDict(defer_build=True)
+    width: int
+    height: int
+    type: str
+    source: str
+
+class PosterTallItem(BaseModel):
+    model_config = ConfigDict(defer_build=True)
+    width: int
+    height: int
+    type: str
+    source: str
+
+class Images(BaseModel):
+    model_config = ConfigDict(defer_build=True)
+    poster_wide: list[list[PosterWideItem]] | None = None
+    poster_tall: list[list[PosterTallItem]] | None = None
 
 class ExtendedMaturityRating(BaseModel):
     model_config = ConfigDict(defer_build=True)
-    system: str
-    rating: str
-    level: str
+    system: str | None = None
+    rating: str | None = None
+    level: str | None = None
 
 class Version(BaseModel):
     model_config = ConfigDict(defer_build=True)
@@ -20,6 +38,11 @@ class Version(BaseModel):
 class ContentDescriptorsWithSymbolItem(BaseModel):
     model_config = ConfigDict(defer_build=True)
     label: str
+
+class LocalizedImages(BaseModel):
+    model_config = ConfigDict(defer_build=True)
+    poster_wide: str
+    poster_tall: str
 
 class Datum(BaseModel):
     model_config = ConfigDict(defer_build=True)
@@ -35,7 +58,7 @@ class Datum(BaseModel):
     description: str
     keywords: list[str]
     season_tags: list[str]
-    images: dict[str, Any]
+    images: Images
     extended_maturity_rating: ExtendedMaturityRating
     maturity_ratings: list[str]
     is_mature: bool
@@ -54,10 +77,11 @@ class Datum(BaseModel):
     number_of_episodes: int
     content_descriptors: list[str] | None = None
     content_descriptors_with_symbol: list[ContentDescriptorsWithSymbolItem] | None = None
+    localized_images: LocalizedImages | None = None
 
 class Meta(BaseModel):
     model_config = ConfigDict(defer_build=True)
-    versions_considered: bool
+    versions_considered: bool | None = None
 
 class SeasonsModel(BaseModel):
     model_config = ConfigDict(defer_build=True)

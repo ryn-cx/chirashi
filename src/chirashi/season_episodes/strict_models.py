@@ -5,9 +5,9 @@ from pydantic import AwareDatetime, BaseModel
 
 class ExtendedMaturityRating(BaseModel):
     model_config = ConfigDict(defer_build=True)
-    system: str
-    rating: str
-    level: str
+    system: str | None = None
+    rating: str | None = None
+    level: str | None = None
 
 class Version(BaseModel):
     model_config = ConfigDict(defer_build=True)
@@ -33,7 +33,7 @@ class ThumbnailItem(BaseModel):
 
 class Images(BaseModel):
     model_config = ConfigDict(defer_build=True)
-    thumbnail: list[list[ThumbnailItem]]
+    thumbnail: list[list[ThumbnailItem]] | None = None
 
 class LocalizedImages(BaseModel):
     model_config = ConfigDict(defer_build=True)
@@ -110,7 +110,7 @@ class Datum(BaseModel):
     images: Images
     localized_images: LocalizedImages | None = None
     duration_ms: int
-    ad_breaks: list[AdBreak]
+    ad_breaks: list[AdBreak] | None = None
     is_premium_only: bool
     listing_id: str
     recent_audio_locale: str
@@ -121,7 +121,7 @@ class Datum(BaseModel):
 
 class Meta(BaseModel):
     model_config = ConfigDict(defer_build=True)
-    versions_considered: bool
+    versions_considered: bool | None = None
 
 class SeasonEpisodesModel(BaseModel):
     model_config = ConfigDict(defer_build=True)

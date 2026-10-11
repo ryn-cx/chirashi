@@ -1,8 +1,26 @@
-from typing import Self
+from typing import Any, Self
 from pydantic import ModelWrapValidatorHandler, PrivateAttr, model_validator
 from pydantic import Field
 from pydantic import BaseModel, ConfigDict
-from typing import Any
+
+class PosterWideItem(BaseModel):
+    model_config = ConfigDict(extra='ignore', defer_build=True)
+    width: int | Any = Field(default=None, union_mode='left_to_right')
+    height: int | Any = Field(default=None, union_mode='left_to_right')
+    type: str | Any = Field(default=None, union_mode='left_to_right')
+    source: str | Any = Field(default=None, union_mode='left_to_right')
+
+class PosterTallItem(BaseModel):
+    model_config = ConfigDict(extra='ignore', defer_build=True)
+    width: int | Any = Field(default=None, union_mode='left_to_right')
+    height: int | Any = Field(default=None, union_mode='left_to_right')
+    type: str | Any = Field(default=None, union_mode='left_to_right')
+    source: str | Any = Field(default=None, union_mode='left_to_right')
+
+class Images(BaseModel):
+    model_config = ConfigDict(extra='ignore', defer_build=True)
+    poster_wide: list[list[PosterWideItem]] | Any = Field(default=None, union_mode='left_to_right')
+    poster_tall: list[list[PosterTallItem]] | Any = Field(default=None, union_mode='left_to_right')
 
 class ExtendedMaturityRating(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
@@ -21,6 +39,11 @@ class ContentDescriptorsWithSymbolItem(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
     label: str | Any = Field(default=None, union_mode='left_to_right')
 
+class LocalizedImages(BaseModel):
+    model_config = ConfigDict(extra='ignore', defer_build=True)
+    poster_wide: str | Any = Field(default=None, union_mode='left_to_right')
+    poster_tall: str | Any = Field(default=None, union_mode='left_to_right')
+
 class Datum(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
     id: str | Any = Field(default=None, union_mode='left_to_right')
@@ -35,7 +58,7 @@ class Datum(BaseModel):
     description: str | Any = Field(default=None, union_mode='left_to_right')
     keywords: list[str] | Any = Field(default=None, union_mode='left_to_right')
     season_tags: list[str] | Any = Field(default=None, union_mode='left_to_right')
-    images: dict[str, Any] | Any = Field(default=None, union_mode='left_to_right')
+    images: Images | Any = Field(default=None, union_mode='left_to_right')
     extended_maturity_rating: ExtendedMaturityRating | Any = Field(default=None, union_mode='left_to_right')
     maturity_ratings: list[str] | Any = Field(default=None, union_mode='left_to_right')
     is_mature: bool | Any = Field(default=None, union_mode='left_to_right')
@@ -54,6 +77,7 @@ class Datum(BaseModel):
     number_of_episodes: int | Any = Field(default=None, union_mode='left_to_right')
     content_descriptors: list[str] | Any = Field(default=None, union_mode='left_to_right')
     content_descriptors_with_symbol: list[ContentDescriptorsWithSymbolItem] | Any = Field(default=None, union_mode='left_to_right')
+    localized_images: LocalizedImages | Any = Field(default=None, union_mode='left_to_right')
 
 class Meta(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)

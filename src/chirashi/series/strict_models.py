@@ -24,9 +24,9 @@ class Images(BaseModel):
 
 class ExtendedMaturityRating(BaseModel):
     model_config = ConfigDict(defer_build=True)
-    system: str
-    rating: str
-    level: str
+    system: str | None = None
+    rating: str | None = None
+    level: str | None = None
 
 class ContentDescriptorsWithSymbolItem(BaseModel):
     model_config = ConfigDict(defer_build=True)
@@ -36,8 +36,8 @@ class LanguagePresentation(BaseModel):
     model_config = ConfigDict(defer_build=True)
     audio_notation: str
     text_notation: str
-    text_locale: str
-    text_notation_reason: str
+    text_locale: str | None = None
+    text_notation_reason: str | None = None
     is_original_audio: bool | None = None
     audio_locale: str | None = None
     audio_notation_reason: str | None = None
@@ -83,7 +83,7 @@ class SeriesModel(BaseModel):
     audio_locales: list[str]
     availability_status: str
     availability_notes: str
-    series_launch_year: int
+    series_launch_year: int | None = None
     content_descriptors: list[str] | None = None
     content_descriptors_with_symbol: list[ContentDescriptorsWithSymbolItem] | None = None
     language_presentation: LanguagePresentation

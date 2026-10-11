@@ -8,9 +8,12 @@ from .strict_models import SimilarToModel as StrictModel
 
 if TYPE_CHECKING:
     from .strict_models import (
+        AdBreak,
         Award,
         ContentDescriptorsWithSymbolItem,
         Datum,
+        Down,
+        EpisodeMetadata,
         ExtendedMaturityRating,
         Field1s,
         Field2s,
@@ -28,12 +31,18 @@ if TYPE_CHECKING:
         SearchMetadata,
         SeriesMetadata,
         SimilarToModel,
+        ThumbnailItem,
+        Up,
+        Version,
     )
 else:
     from .optional_models import (
+        AdBreak,
         Award,
         ContentDescriptorsWithSymbolItem,
         Datum,
+        Down,
+        EpisodeMetadata,
         ExtendedMaturityRating,
         Field1s,
         Field2s,
@@ -51,12 +60,18 @@ else:
         SearchMetadata,
         SeriesMetadata,
         SimilarToModel,
+        ThumbnailItem,
+        Up,
+        Version,
     )
 
 __all__ = [
+    "AdBreak",
     "Award",
     "ContentDescriptorsWithSymbolItem",
     "Datum",
+    "Down",
+    "EpisodeMetadata",
     "ExtendedMaturityRating",
     "Field1s",
     "Field2s",
@@ -74,6 +89,9 @@ __all__ = [
     "SearchMetadata",
     "SeriesMetadata",
     "SimilarToModel",
+    "ThumbnailItem",
+    "Up",
+    "Version",
     "model_validate_json",
 ]
 
