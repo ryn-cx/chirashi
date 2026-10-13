@@ -2,16 +2,22 @@
 
 from __future__ import annotations
 
+import re
 from logging import NullHandler, getLogger
+from typing import TYPE_CHECKING
 
 from chirashi.base_api_endpoint import BaseEndpoint
 from chirashi.exceptions import ResourceNotFoundError, SeasonNotFoundError
 from chirashi.season_episodes.models import SeasonEpisodesModel, model_validate_json
 
+if TYPE_CHECKING:
+    from chirashi.season_episodes.models import Datum
+
 logger = getLogger(__name__)
 logger.addHandler(NullHandler())
 
 
+# TODO: Validate
 class SeasonEpisodes(BaseEndpoint):
     """Manage the season episodes file.
 
@@ -77,3 +83,11 @@ class SeasonEpisodes(BaseEndpoint):
     def load(self, data: str, log_id: str = "") -> SeasonEpisodesModel:
         """Load a season episodes file into its model."""
         return model_validate_json(data, log_id or self.default_log_id)
+
+    # TODO: Validate
+    @staticmethod
+    def episode_number(episode: Datum) -> int | float | None:
+        if re.fullmatch(r"\d+\.\d+", episode.episode):
+            number = float(episode.episode)
+            return int(number) if number.is_integer() else number
+        return episode.episode_number
